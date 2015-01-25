@@ -1,8 +1,8 @@
 package org.topdank.minenet.api.world.block;
 
-import org.topdank.minenet.api.entity.BoundingBox;
+import org.topdank.minenet.api.game.BoundingBox;
+import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.World;
-import org.topdank.minenet.api.world.location.BlockLocation;
 
 public class Block {
 

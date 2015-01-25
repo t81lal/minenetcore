@@ -2,8 +2,8 @@ package org.topdank.minenet.api.event.entity;
 
 import java.util.Map;
 
+import org.topdank.minenet.api.game.location.PreciseLocation;
 import org.topdank.minenet.api.item.ItemStack;
-import org.topdank.minenet.api.world.location.PreciseLocation;
 import org.topdank.minenet.api.world.settings.GameMode;
 
 public class PlayerSpawnEvent extends MetaEntitySpawnEvent {

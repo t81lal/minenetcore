@@ -3,8 +3,8 @@ package org.topdank.minenet.api.entity.living.player;
 import java.util.Map;
 
 import org.topdank.minenet.api.entity.living.LivingEntity;
+import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.World;
-import org.topdank.minenet.api.world.location.BlockLocation;
 import org.topdank.minenet.api.world.settings.GameMode;
 
 public class PlayerEntity extends LivingEntity {

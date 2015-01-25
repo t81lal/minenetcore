@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.topdank.minenet.api.BotContext;
-import org.topdank.minenet.api.entity.BoundingBox;
 import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.event.entity.EntityHitEvent;
 import org.topdank.minenet.api.event.entity.EntityUseEvent;
 import org.topdank.minenet.api.event.player.ArmSwingEvent;
 import org.topdank.minenet.api.event.player.RequestRespawnEvent;
+import org.topdank.minenet.api.game.BoundingBox;
+import org.topdank.minenet.api.game.location.BlockLocation;
+import org.topdank.minenet.api.game.location.PreciseLocation;
 import org.topdank.minenet.api.item.Inventory;
 import org.topdank.minenet.api.item.ItemStack;
 import org.topdank.minenet.api.item.PlayerInventory;
@@ -20,8 +22,6 @@ import org.topdank.minenet.api.item.ToolType;
 import org.topdank.minenet.api.util.MathHelper;
 import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.BlockType;
-import org.topdank.minenet.api.world.location.BlockLocation;
-import org.topdank.minenet.api.world.location.PreciseLocation;
 
 import eu.bibl.eventbus.EventBus;
 
@@ -50,11 +50,12 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public void updateGravity() {
+		double dist = distanceToGround();
 		BoundingBox bb = getBoundingBox();
 		boolean inWater = world.isInMaterial(bb, BlockType.WATER, BlockType.STATIONARY_WATER);
 		boolean inLava = world.isInMaterial(bb, BlockType.LAVA, BlockType.STATIONARY_LAVA);
 		double horizFactor = 0.91;
-		if (isOnGround()) {
+		if (dist <= 0.08) {
 			// BlockType type = BlockType.getById(world.getBlockIdAt((int)
 			// Math.floor(x), (int) Math.floor(y - 0.1),
 			// (int) Math.floor(z)));
@@ -98,7 +99,7 @@ public class LocalPlayer extends PlayerEntity {
 		// z += motZ;
 	}
 
-	private void handleCollision() {
+	public void handleCollision() {
 		BoundingBox bounds = getBoundingBox();
 		Set<Block> currentCollisions = world.getCollidingBlocks(bounds);
 		final double off = 0.01;
@@ -422,20 +423,20 @@ public class LocalPlayer extends PlayerEntity {
 	private BlockLocation getOffsetBlock(BlockLocation location, int face) {
 		int x = location.getX(), y = location.getY(), z = location.getZ();
 		switch (face) {
-		case 0:
-			return new BlockLocation(x, y + 1, z);
-		case 1:
-			return new BlockLocation(x, y - 1, z);
-		case 2:
-			return new BlockLocation(x, y, z + 1);
-		case 3:
-			return new BlockLocation(x, y, z - 1);
-		case 4:
-			return new BlockLocation(x + 1, y, z);
-		case 5:
-			return new BlockLocation(x - 1, y, z);
-		default:
-			return null;
+			case 0:
+				return new BlockLocation(x, y + 1, z);
+			case 1:
+				return new BlockLocation(x, y - 1, z);
+			case 2:
+				return new BlockLocation(x, y, z + 1);
+			case 3:
+				return new BlockLocation(x, y, z - 1);
+			case 4:
+				return new BlockLocation(x + 1, y, z);
+			case 5:
+				return new BlockLocation(x - 1, y, z);
+			default:
+				return null;
 		}
 	}
 

@@ -3,7 +3,6 @@ package org.topdank.minenet.api.entity.living;
 import java.util.Map;
 
 import org.topdank.minenet.api.entity.Entity;
-import org.topdank.minenet.api.entity.EntityProperty;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.item.ItemStack;
 import org.topdank.minenet.api.world.World;
@@ -179,7 +178,8 @@ public class LivingEntity extends Entity {
 	public void updateProperty(Map<String, EntityProperty> properties) {
 		super.updateProperty(properties);
 		// if (properties.containsKey("generic.maxHealth")) {
-		// System.out.println("gen: " + properties.get("generic.maxHealth").getValue());
+		// System.out.println("gen: " +
+		// properties.get("generic.maxHealth").getValue());
 		// }
 	}
 }

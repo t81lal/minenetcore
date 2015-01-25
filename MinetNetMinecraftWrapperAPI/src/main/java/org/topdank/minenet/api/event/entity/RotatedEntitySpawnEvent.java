@@ -1,6 +1,6 @@
 package org.topdank.minenet.api.event.entity;
 
-import org.topdank.minenet.api.world.location.PreciseLocation;
+import org.topdank.minenet.api.game.location.PreciseLocation;
 
 public abstract class RotatedEntitySpawnEvent extends EntitySpawnEvent {
 	

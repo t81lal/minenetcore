@@ -3,18 +3,18 @@ package org.topdank.minenet.api.world;
 import java.util.Collection;
 import java.util.Set;
 
-import org.topdank.minenet.api.entity.BoundingBox;
+import org.topdank.minenet.api.ai.pathfinding.PathSearchProvider;
 import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.entity.living.player.PlayerEntity;
 import org.topdank.minenet.api.entity.tile.TileEntity;
-import org.topdank.minenet.api.world.ai.pathfinding.PathSearchProvider;
+import org.topdank.minenet.api.game.BoundingBox;
+import org.topdank.minenet.api.game.location.BlockLocation;
+import org.topdank.minenet.api.game.location.ChunkLocation;
+import org.topdank.minenet.api.game.location.PreciseLocation;
 import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.BlockType;
 import org.topdank.minenet.api.world.block.Chunk;
-import org.topdank.minenet.api.world.location.BlockLocation;
-import org.topdank.minenet.api.world.location.ChunkLocation;
-import org.topdank.minenet.api.world.location.PreciseLocation;
 import org.topdank.minenet.api.world.settings.WorldSettings;
 
 import eu.bibl.eventbus.EventBus;

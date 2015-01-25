@@ -1,6 +1,6 @@
 package org.topdank.minenet.api.world.block;
 
-import org.topdank.minenet.api.world.location.BlockLocation;
+import org.topdank.minenet.api.game.location.BlockLocation;
 
 public final class BlockArea implements Cloneable {
 	

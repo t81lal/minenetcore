@@ -1,7 +1,7 @@
 package org.topdank.minenet.api;
 
-import org.topdank.minenet.api.bot.BasicTaskManager;
-import org.topdank.minenet.api.bot.TaskManager;
+import org.topdank.minenet.api.ai.task.BasicTaskManager;
+import org.topdank.minenet.api.ai.task.TaskManager;
 import org.topdank.minenet.api.world.World;
 import org.topdank.minenet.client.MCClient;
 

@@ -1,7 +1,7 @@
 package org.topdank.minenet.api.entity.living.player;
 
 import org.topdank.minenet.api.BotContext;
-import org.topdank.minenet.api.Controller;
+import org.topdank.minenet.api.provider.Controller;
 
 public abstract class PlayerController extends Controller<LocalPlayer> {
 	

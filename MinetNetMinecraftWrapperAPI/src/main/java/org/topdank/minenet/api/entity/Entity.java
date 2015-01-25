@@ -1,11 +1,14 @@
 package org.topdank.minenet.api.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.topdank.minenet.api.game.location.BlockLocation;
+import org.topdank.minenet.api.game.location.PreciseLocation;
 import org.topdank.minenet.api.world.WatchableObject;
 import org.topdank.minenet.api.world.World;
-import org.topdank.minenet.api.world.location.BlockLocation;
-import org.topdank.minenet.api.world.location.PreciseLocation;
 
 public abstract class Entity extends WatchableObject {
 
@@ -286,5 +289,59 @@ public abstract class Entity extends WatchableObject {
 		x += motX;
 		y += motY;
 		z += motZ;
+	}
+
+	public static class EntityProperty {
+
+		private final String name;
+		private final double value;
+		private final List<Modifier> modifiers;
+
+		public EntityProperty(String name, double value) {
+			this.name = name;
+			this.value = value;
+			modifiers = new ArrayList<>();
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public double getValue() {
+			return value;
+		}
+
+		public Modifier[] getModifiers() {
+			return modifiers.toArray(new Modifier[modifiers.size()]);
+		}
+
+		public void addModifier(UUID uuid, double amount, int operation) {
+			modifiers.add(new Modifier(uuid, amount, operation));
+		}
+
+		public final class Modifier {
+
+			private final UUID uuid;
+			private final double amount;
+			private final int operation;
+
+			private Modifier(UUID uuid, double amount, int operation) {
+				this.uuid = uuid;
+				this.amount = amount;
+				this.operation = operation;
+			}
+
+			public UUID getUUID() {
+				return uuid;
+			}
+
+			public double getAmount() {
+				return amount;
+			}
+
+			public int getOperation() {
+				return operation;
+			}
+		}
 	}
 }

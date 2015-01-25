@@ -2,7 +2,7 @@ package org.topdank.minenet.api.event.entity;
 
 import java.util.Map;
 
-import org.topdank.minenet.api.world.location.PreciseLocation;
+import org.topdank.minenet.api.game.location.PreciseLocation;
 
 public class LivingEntitySpawnEvent extends MetaEntitySpawnEvent {
 	

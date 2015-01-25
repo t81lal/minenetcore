@@ -1,6 +1,5 @@
 package org.topdank.minenet.api.world;
 
-import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,11 +7,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.topdank.minenet.api.BotContext;
-import org.topdank.minenet.api.entity.BoundingBox;
+import org.topdank.minenet.api.ai.pathfinding.ManhattanHeuristic;
+import org.topdank.minenet.api.ai.pathfinding.PathSearchProvider;
+import org.topdank.minenet.api.ai.pathfinding.astar.AStarPathSearchProvider;
 import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.entity.living.LivingEntity;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.entity.living.player.PlayerEntity;
+import org.topdank.minenet.api.entity.object.ObjectEntity;
 import org.topdank.minenet.api.entity.object.projectile.thrown.ThrownEntity;
 import org.topdank.minenet.api.entity.tile.TileEntity;
 import org.topdank.minenet.api.event.TickEvent;
@@ -34,17 +36,13 @@ import org.topdank.minenet.api.event.world.InternalChunkLoadEvent;
 import org.topdank.minenet.api.event.world.RespawnEvent;
 import org.topdank.minenet.api.event.world.TileEntityUpdateEvent;
 import org.topdank.minenet.api.event.world.TimeUpdateEvent;
-import org.topdank.minenet.api.nbt.tag.builtin.CompoundTag;
-import org.topdank.minenet.api.world.ai.pathfinding.ManhattanHeuristic;
-import org.topdank.minenet.api.world.ai.pathfinding.PathSearchProvider;
-import org.topdank.minenet.api.world.ai.pathfinding.SimpleWorldPhysics;
-import org.topdank.minenet.api.world.ai.pathfinding.astar.AStarPathSearchProvider;
+import org.topdank.minenet.api.game.BoundingBox;
+import org.topdank.minenet.api.game.location.BlockLocation;
+import org.topdank.minenet.api.game.location.ChunkLocation;
+import org.topdank.minenet.api.game.location.PreciseLocation;
 import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.BlockType;
 import org.topdank.minenet.api.world.block.Chunk;
-import org.topdank.minenet.api.world.location.BlockLocation;
-import org.topdank.minenet.api.world.location.ChunkLocation;
-import org.topdank.minenet.api.world.location.PreciseLocation;
 import org.topdank.minenet.api.world.settings.WorldSettings;
 
 import eu.bibl.eventbus.EventBus;
@@ -110,8 +108,7 @@ public class MinecraftWorld implements World {
 		synchronized (chunks) {
 			chunks.clear();
 		}
-		worldSettings.setDifficulty(event.getDifficulty()).setDimension(event.getRespawnDimension())
-				.setGameMode(event.getGameMode()).setWorldType(event.getWorldType());
+		worldSettings.setDifficulty(event.getDifficulty()).setDimension(event.getRespawnDimension()).setGameMode(event.getGameMode()).setWorldType(event.getWorldType());
 	}
 
 	@EventTarget(priority = EventPriority.HIGHEST)
@@ -135,19 +132,7 @@ public class MinecraftWorld implements World {
 
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onObjectEntitySpawn(ObjectEntitySpawnEvent e) {
-		Class<? extends Entity> entityClass = context.getVersionProvider().getObjectEntityRegistry().getById(e.getEntityType());
-		if (entityClass == null) {
-			System.out.println("Unsupported object: " + e.getEntityType());
-			return;
-		}
-		Entity entity;
-		try {
-			Constructor<? extends Entity> constructor = entityClass.getConstructor(World.class, Integer.TYPE);
-			entity = constructor.newInstance(this, e.getEntityId());
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			return;
-		}
+		ObjectEntity entity = context.getVersionProvider().getEntityProvider().getObjectEntityProvider().getFactory().create(e.getEntityType(), this, e.getEntityId());
 		entity.setLocation(e.getLocation());
 		entity.setYaw(e.getYaw());
 		entity.setPitch(e.getPitch());
@@ -165,20 +150,7 @@ public class MinecraftWorld implements World {
 
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onLivingEntitySpawn(LivingEntitySpawnEvent e) {
-		Class<? extends LivingEntity> entityClass = context.getVersionProvider().getLivingEntityRegistry()
-				.getById(e.getEntityType());
-		if (entityClass == null) {
-			System.out.println("Unsupported living entity: " + e.getEntityType());
-			return;
-		}
-		LivingEntity entity;
-		try {
-			Constructor<? extends LivingEntity> constructor = entityClass.getConstructor(World.class, Integer.TYPE);
-			entity = constructor.newInstance(this, e.getEntityId());
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			return;
-		}
+		LivingEntity entity = context.getVersionProvider().getEntityProvider().getLivingEntityProvider().getFactory().create(e.getEntityType(), this, e.getEntityId());
 		entity.setLocation(e.getLocation());
 		entity.setYaw(e.getYaw());
 		entity.setPitch(e.getPitch());
@@ -310,21 +282,10 @@ public class MinecraftWorld implements World {
 	public void onTileEntityUpdate(TileEntityUpdateEvent event) {
 		System.out.println(event);
 		BlockLocation location = new BlockLocation(event.getX(), event.getY(), event.getZ());
-		Class<? extends TileEntity> entityClass = context.getVersionProvider().getTileEntityRegistry().getById(event.getType());
-		if (entityClass == null)
-			return;
-		TileEntity entity;
-		try {
-			Constructor<? extends TileEntity> constructor = entityClass.getConstructor(World.class, Integer.TYPE,
-					CompoundTag.class);
-			entity = constructor.newInstance(this, event.getCompound());
-			entity.setX(event.getX());
-			entity.setY(event.getY());
-			entity.setZ(event.getZ());
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			return;
-		}
+		TileEntity entity = context.getVersionProvider().getEntityProvider().getTileEntityProvider().getFactory().create(event.getType(), this, event.getCompound());
+		entity.setX(event.getX());
+		entity.setY(event.getY());
+		entity.setZ(event.getZ());
 		setTileEntityAt(entity, location);
 	}
 
@@ -483,8 +444,7 @@ public class MinecraftWorld implements World {
 		Chunk chunk = getChunkAt(location);
 		if (chunk == null)
 			return 0;
-		int id = chunk.getBlocks().getBlock(blockLocation.getX() - chunkBlockOffset.getX(),
-				blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
+		int id = chunk.getBlocks().getBlock(blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
 		return id;
 	}
 
@@ -500,8 +460,7 @@ public class MinecraftWorld implements World {
 		Chunk chunk = getChunkAt(location);
 		if (chunk == null)
 			return;
-		chunk.getBlocks().setBlock(blockLocation.getX() - chunkBlockOffset.getX(),
-				blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ(), id);
+		chunk.getBlocks().setBlock(blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ(), id);
 	}
 
 	@Override
@@ -516,8 +475,8 @@ public class MinecraftWorld implements World {
 		Chunk chunk = getChunkAt(location);
 		if (chunk == null)
 			return 0;
-		int metadata = chunk.getBlocks().getData(blockLocation.getX() - chunkBlockOffset.getX(),
-				blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
+		int metadata = chunk.getBlocks().getData(blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(),
+				blockLocation.getZ() - chunkBlockOffset.getZ());
 		return metadata;
 	}
 
@@ -533,8 +492,7 @@ public class MinecraftWorld implements World {
 		Chunk chunk = getChunkAt(location);
 		if (chunk == null)
 			return;
-		chunk.getBlocks().setData(metadata, blockLocation.getX() - chunkBlockOffset.getX(),
-				blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
+		chunk.getBlocks().setData(metadata, blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
 	}
 
 	@Override
@@ -641,8 +599,7 @@ public class MinecraftWorld implements World {
 			for (int x = minX; x <= maxX; x++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					for (int y = minY; y <= maxY; y++) {
-						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16
-								|| chunkBase.getZ() - z >= 16) {
+						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16 || chunkBase.getZ() - z >= 16) {
 							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
 							chunk = getChunkAt(chunkLocation);
 							if (chunk != null)
@@ -653,10 +610,8 @@ public class MinecraftWorld implements World {
 						if (chunk != null) {
 							Block block = null;
 							if (chunk.getBlocks().contains(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ())) {
-								int id = chunk.getBlocks().getBlock(x - chunkBase.getX(), y - chunkBase.getY(),
-										z - chunkBase.getZ());
-								int metadata = chunk.getBlocks().getData(x - chunkBase.getX(), y - chunkBase.getY(),
-										z - chunkBase.getZ());
+								int id = chunk.getBlocks().getBlock(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
+								int metadata = chunk.getBlocks().getData(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
 								if (id >= 0)
 									block = new Block(this, chunk, chunkBase, id, metadata);
 							}
@@ -696,8 +651,7 @@ public class MinecraftWorld implements World {
 			for (int x = minX; x <= maxX; x++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					for (int y = minY; y <= maxY; y++) {
-						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16
-								|| chunkBase.getZ() - z >= 16) {
+						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16 || chunkBase.getZ() - z >= 16) {
 							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
 							chunk = getChunkAt(chunkLocation);
 							if (chunk != null)
@@ -708,10 +662,8 @@ public class MinecraftWorld implements World {
 						if (chunk != null) {
 							Block block = null;
 							if (chunk.getBlocks().contains(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ())) {
-								int id = chunk.getBlocks().getBlock(x - chunkBase.getX(), y - chunkBase.getY(),
-										z - chunkBase.getZ());
-								int metadata = chunk.getBlocks().getData(x - chunkBase.getX(), y - chunkBase.getY(),
-										z - chunkBase.getZ());
+								int id = chunk.getBlocks().getBlock(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
+								int metadata = chunk.getBlocks().getData(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
 								if (id >= 0)
 									block = new Block(this, chunk, chunkBase, id, metadata);
 							}
@@ -749,8 +701,7 @@ public class MinecraftWorld implements World {
 			for (int x = minX; x <= maxX; x++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					for (int y = minY; y <= maxY; y++) {
-						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16
-								|| chunkBase.getZ() - z >= 16) {
+						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16 || chunkBase.getZ() - z >= 16) {
 							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
 							chunk = getChunkAt(chunkLocation);
 							if (chunk != null)
@@ -761,10 +712,8 @@ public class MinecraftWorld implements World {
 						if (chunk != null) {
 							Block block = null;
 							if (chunk.getBlocks().contains(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ())) {
-								int id = chunk.getBlocks().getBlock(x - chunkBase.getX(), y - chunkBase.getY(),
-										z - chunkBase.getZ());
-								int metadata = chunk.getBlocks().getData(x - chunkBase.getX(), y - chunkBase.getY(),
-										z - chunkBase.getZ());
+								int id = chunk.getBlocks().getBlock(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
+								int metadata = chunk.getBlocks().getData(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
 								if (id >= 0)
 									block = new Block(this, chunk, chunkBase, id, metadata);
 							}
