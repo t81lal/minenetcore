@@ -51,6 +51,14 @@ public class BlockData {
 		return maxStack;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof BlockData))
+			return false;
+		BlockData db = (BlockData) o;
+		return id.equals(db.id);
+	}
+
 	public static class Builder {
 
 		private BlockId id;

@@ -242,55 +242,62 @@ public class VanillaBlockRegistry extends BlockRegistry {
 
 		register(builder("Wall Sign", MATERIAL_WOOD_KEY)                                .id(new BlockId(68, 0)).hardness(1.0F).blastResistence(5.0F).create());
 		register(builder("Lever", MATERIAL_CIRCUITS_KEY)                                .id(new BlockId(69, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Stone Pressure Plate", MATERIAL_REDSTONELIGHT_KEY)            .id(new BlockId(70, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Iron Door", MATERIAL_REDSTONELIGHT_KEY)                       .id(new BlockId(71, 0)).hardness(5.0F).blastResistence(25.0F).create());
-		register(builder("Wooden Pressure Plate", MATERIAL_REDSTONELIGHT_KEY)           .id(new BlockId(72, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Redstone Ore", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(73, 0)).hardness(3.0F).blastResistence(15.0F).create());
-		register(builder("Glowing Redstone Ore", MATERIAL_REDSTONELIGHT_KEY)            .id(new BlockId(74, 0)).hardness(3.0F).blastResistence(15.0F).create());
-		register(builder("Redstone Torch (inactive)", MATERIAL_REDSTONELIGHT_KEY)       .id(new BlockId(75, 0)).create());
-		register(builder("Redstone Torch (active)", MATERIAL_REDSTONELIGHT_KEY)         .id(new BlockId(76, 0)).create());
-		register(builder("Stone Button", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(77, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Snow (Layer)", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(78, 0)).hardness(0.1F).blastResistence(0.5F).create());
-		register(builder("Ice", MATERIAL_REDSTONELIGHT_KEY)                             .id(new BlockId(79, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Snow", MATERIAL_REDSTONELIGHT_KEY)                            .id(new BlockId(80, 0)).hardness(0.2F).blastResistence(1.0F).create());
-		register(builder("Cactus", MATERIAL_REDSTONELIGHT_KEY)                          .id(new BlockId(81, 0)).hardness(0.4F).blastResistence(2.0F).create());
-		register(builder("Clay", MATERIAL_REDSTONELIGHT_KEY)                            .id(new BlockId(82, 0)).hardness(0.6F).blastResistence(3.0F).create());
-		register(builder("Sugar Cane", MATERIAL_REDSTONELIGHT_KEY)                      .id(new BlockId(83, 0)).create());
-		register(builder("Jukebox", MATERIAL_REDSTONELIGHT_KEY)                         .id(new BlockId(84, 0)).hardness(2.0F).blastResistence(30.0F).create());
-		register(builder("Fence", MATERIAL_REDSTONELIGHT_KEY)                           .id(new BlockId(85, 0)).hardness(2.0F).blastResistence(15.0F).create());
-		register(builder("Pumpkin", MATERIAL_REDSTONELIGHT_KEY)                         .id(new BlockId(86, 0)).hardness(1.0F).blastResistence(5.0F).create());
-		register(builder("Netherrack", MATERIAL_REDSTONELIGHT_KEY)                      .id(new BlockId(87, 0)).hardness(0.4F).blastResistence(2.0F).create());
-		register(builder("Soul Sand", MATERIAL_REDSTONELIGHT_KEY)                       .id(new BlockId(88, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Glowstone", MATERIAL_REDSTONELIGHT_KEY)                       .id(new BlockId(89, 0)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Nether Portal", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(90, 0)).create());
-		register(builder("Jack o'Lantern", MATERIAL_REDSTONELIGHT_KEY)                  .id(new BlockId(91, 0)).hardness(1.0F).blastResistence(5.0F).create());
-		register(builder("Cake", MATERIAL_REDSTONELIGHT_KEY)                            .id(new BlockId(92, 0)).hardness(0.5F).blastResistence(2.5F).create());
-		register(builder("Redstone Repeater (inactive)", MATERIAL_REDSTONELIGHT_KEY)    .id(new BlockId(93, 0)).create());
-		register(builder("Redstone Repeater (active)", MATERIAL_REDSTONELIGHT_KEY)      .id(new BlockId(94, 0)).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 0)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 1)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 2)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 3)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 4)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 5)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 6)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 7)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 8)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 9)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 10)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 11)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 12)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 13)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 14)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Stained Glass", MATERIAL_REDSTONELIGHT_KEY)                   .id(new BlockId(95, 15)).hardness(0.3F).blastResistence(1.5F).create());
-		register(builder("Trapdoor", MATERIAL_REDSTONELIGHT_KEY)                        .id(new BlockId(96, 0)).hardness(3.0F).blastResistence(15.0F).create());
-		register(builder("Monster Egg", MATERIAL_REDSTONELIGHT_KEY)                     .id(new BlockId(97, 0)).hardness(0.75F).blastResistence(3.75F).create());
-		register(builder("Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(98, 0)).create());
-		register(builder("Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(98, 1)).create());
-		register(builder("Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(98, 2)).create());
-		register(builder("Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(98, 3)).create());
-		register(builder("Brown Mushroom Block", MATERIAL_REDSTONELIGHT_KEY)            .id(new BlockId(99, 0)).hardness(0.2F).blastResistence(1.0F).create());
-		register(builder("Red Mushroom Block", MATERIAL_REDSTONELIGHT_KEY)              .id(new BlockId(100, 0)).hardness(0.2F).blastResistence(1.0F).create());
+		register(builder("Stone Pressure Plate", MATERIAL_ROCK_KEY)                     .id(new BlockId(70, 0)).hardness(0.5F).blastResistence(2.5F).create());
+		register(builder("Iron Door", MATERIAL_IRON_KEY)                                .id(new BlockId(71, 0)).hardness(5.0F).blastResistence(25.0F).create());
+		register(builder("Wooden Pressure Plate", MATERIAL_WOOD_KEY)                    .id(new BlockId(72, 0)).hardness(0.5F).blastResistence(2.5F).create());
+		register(builder("Redstone Ore", MATERIAL_ROCK_KEY)                             .id(new BlockId(73, 0)).hardness(3.0F).blastResistence(15.0F).create());
+		register(builder("Glowing Redstone Ore", MATERIAL_ROCK_KEY)                     .id(new BlockId(74, 0)).hardness(3.0F).blastResistence(15.0F).create());
+		register(builder("Redstone Torch", MATERIAL_CIRCUITS_KEY)                       .id(new BlockId(75, 0)).create());
+		register(builder("Active Redstone Torch", MATERIAL_CIRCUITS_KEY)                .id(new BlockId(76, 0)).create());
+		register(builder("Stone Button", MATERIAL_CIRCUITS_KEY)                         .id(new BlockId(77, 0)).hardness(0.5F).blastResistence(2.5F).create());
+		register(builder("Snow Layer", MATERIAL_SNOW_KEY)                               .id(new BlockId(78, 0)).hardness(0.1F).blastResistence(0.5F).create());
+		register(builder("Ice", MATERIAL_ICE_KEY)                                       .id(new BlockId(79, 0)).hardness(0.5F).blastResistence(2.5F).create());
+		register(builder("Snow", MATERIAL_CRAFTEDSNOW_KEY)                              .id(new BlockId(80, 0)).hardness(0.2F).blastResistence(1.0F).create());
+		register(builder("Cactus", MATERIAL_CACTUS_KEY)                                 .id(new BlockId(81, 0)).hardness(0.4F).blastResistence(2.0F).create());
+		register(builder("Clay", MATERIAL_CLAY_KEY)                                     .id(new BlockId(82, 0)).hardness(0.6F).blastResistence(3.0F).create());
+		register(builder("Sugar Cane", MATERIAL_PLANTS_KEY)                             .id(new BlockId(83, 0)).create());
+		register(builder("Jukebox", MATERIAL_WOOD_KEY)                                  .id(new BlockId(84, 0)).hardness(2.0F).blastResistence(30.0F).create());
+		register(builder("Fence", MATERIAL_WOOD_KEY)                                    .id(new BlockId(85, 0)).hardness(2.0F).blastResistence(15.0F).create());
+		register(builder("Pumpkin", MATERIAL_GOURD_KEY)                                 .id(new BlockId(86, 0)).hardness(1.0F).blastResistence(5.0F).create());
+		register(builder("Netherrack", MATERIAL_ROCK_KEY)                               .id(new BlockId(87, 0)).hardness(0.4F).blastResistence(2.0F).create());
+
+		register(builder("Soul Sand", MATERIAL_SAND_KEY)                                .id(new BlockId(88, 0)).hardness(0.5F).blastResistence(2.5F).friction(0.4F).create());
+
+		register(builder("Glowstone", MATERIAL_GLASS_KEY)                               .id(new BlockId(89, 0)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Nether Portal", MATERIAL_PORTAL_KEY)                          .id(new BlockId(90, 0)).create());
+		register(builder("Jack o'Lantern", MATERIAL_GOURD_KEY)                          .id(new BlockId(91, 0)).hardness(1.0F).blastResistence(5.0F).create());
+		register(builder("Cake", MATERIAL_CAKE_KEY)                                     .id(new BlockId(92, 0)).hardness(0.5F).blastResistence(2.5F).create());
+		register(builder("Redstone Repeater", MATERIAL_CIRCUITS_KEY)                    .id(new BlockId(93, 0)).create());
+		register(builder("Powered Redstone Repeater", MATERIAL_CIRCUITS_KEY)            .id(new BlockId(94, 0)).create());
+
+		//stain glass TODO: Colours
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 0)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 1)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 2)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 3)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 4)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 5)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 6)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 7)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 8)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 9)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 10)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 11)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 12)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 13)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 14)).hardness(0.3F).blastResistence(1.5F).create());
+		register(builder("Stained Glass", MATERIAL_GLASS_KEY)                           .id(new BlockId(95, 15)).hardness(0.3F).blastResistence(1.5F).create());
+
+		register(builder("Trapdoor", MATERIAL_WOOD_KEY)                                 .id(new BlockId(96, 0)).hardness(3.0F).blastResistence(15.0F).create());
+		register(builder("Monster Egg", MATERIAL_DRAGONEGG_KEY)                         .id(new BlockId(97, 0)).hardness(0.75F).blastResistence(3.75F).create());
+		register(builder("Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)                    .id(new BlockId(98, 0)).hardness(1.5F).blastResistence(30.0F).create());
+		register(builder("Mossy Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)              .id(new BlockId(98, 1)).hardness(1.5F).blastResistence(30.0F).create());
+		register(builder("Cracked Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)            .id(new BlockId(98, 2)).hardness(1.5F).blastResistence(30.0F).create());
+		register(builder("Chiseled Stone Bricks", MATERIAL_REDSTONELIGHT_KEY)           .id(new BlockId(98, 3)).hardness(1.5F).blastResistence(30.0F).create());
+
+		//mushroom blocks
+		register(builder("Brown Mushroom Block", MATERIAL_WOOD_KEY)                     .id(new BlockId(99, 0)).hardness(0.2F).blastResistence(1.0F).create());
+		register(builder("Red Mushroom Block", MATERIAL_WOOD_KEY)                       .id(new BlockId(100, 0)).hardness(0.2F).blastResistence(1.0F).create());
 
 
 		//wooden slab
