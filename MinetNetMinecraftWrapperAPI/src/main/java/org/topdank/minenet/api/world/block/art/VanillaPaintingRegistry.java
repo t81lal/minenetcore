@@ -1,6 +1,5 @@
 package org.topdank.minenet.api.world.block.art;
 
-
 public class VanillaPaintingRegistry extends PaintingRegistry {
 
 	@Override

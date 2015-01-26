@@ -2,10 +2,11 @@ package org.topdank.minenet.api;
 
 import org.topdank.minenet.api.entity.living.player.PlayerController;
 import org.topdank.minenet.api.entity.provider.EntityProvider;
+import org.topdank.minenet.api.provider.Provider;
 import org.topdank.minenet.api.world.WorldController;
 import org.topdank.minenet.api.world.block.art.PaintingRegistry;
 
-public abstract class BotVersionProvider {
+public abstract class BotVersionProvider extends Provider {
 
 	private final EntityProvider entityProvider;
 	private final PaintingRegistry paintingRegistry;
@@ -13,8 +14,7 @@ public abstract class BotVersionProvider {
 	private final WorldController worldController;
 	private final PlayerController playerController;
 
-	public BotVersionProvider(EntityProvider entityProvider, PaintingRegistry paintingRegistry, WorldController worldController,
-			PlayerController playerController) {
+	public BotVersionProvider(EntityProvider entityProvider, PaintingRegistry paintingRegistry, WorldController worldController, PlayerController playerController) {
 		this.entityProvider = entityProvider;
 		this.paintingRegistry = paintingRegistry;
 		this.worldController = worldController;

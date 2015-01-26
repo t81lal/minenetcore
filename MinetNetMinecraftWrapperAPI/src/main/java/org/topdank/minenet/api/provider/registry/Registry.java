@@ -20,8 +20,13 @@ public abstract class Registry<T, K> {
 
 	protected final Map<T, K> cache = new HashMap<T, K>();
 
+	public Registry(boolean register) {
+		if (register)
+			register();
+	}
+
 	public Registry() {
-		register();
+		this(true);
 	}
 
 	protected void register(T t, K k) {

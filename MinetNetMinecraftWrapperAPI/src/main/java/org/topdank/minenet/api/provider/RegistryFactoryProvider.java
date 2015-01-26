@@ -1,14 +1,14 @@
 package org.topdank.minenet.api.provider;
 
-import org.topdank.minenet.api.entity.provider.EntityFactory;
+import org.topdank.minenet.api.provider.factory.Factory;
 import org.topdank.minenet.api.provider.registry.NameRegistry;
 
-public class RegistryFactoryProvider<T, K> {
+public class RegistryFactoryProvider<T, F extends Factory<T>> extends Provider {
 
 	private final NameRegistry registry;
-	private final EntityFactory<T, K> factory;
+	private final F factory;
 
-	public RegistryFactoryProvider(NameRegistry registry, EntityFactory<T, K> factory) {
+	public RegistryFactoryProvider(NameRegistry registry, F factory) {
 		this.registry = registry;
 		this.factory = factory;
 	}
@@ -17,7 +17,7 @@ public class RegistryFactoryProvider<T, K> {
 		return registry;
 	}
 
-	public EntityFactory<T, K> getFactory() {
+	public F getFactory() {
 		return factory;
 	}
 }
