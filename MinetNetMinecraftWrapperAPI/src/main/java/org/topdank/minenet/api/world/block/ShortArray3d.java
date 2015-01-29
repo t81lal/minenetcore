@@ -16,7 +16,7 @@ public class ShortArray3d {
 
 	public boolean contains(int x, int y, int z) {
 		int index = (y << 8) | (z << 4) | x;
-		return !(index > data.length);
+		return (index > 0) && (index < (data.length - 1));
 	}
 
 	public short[] getData() {

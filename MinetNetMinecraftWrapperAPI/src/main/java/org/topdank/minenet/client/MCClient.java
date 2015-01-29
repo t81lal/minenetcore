@@ -85,6 +85,7 @@ public class MCClient extends TcpClient {
 						try {
 							Thread.sleep(timer.getFPSCoolDown());
 						} catch (InterruptedException exception) {
+							exception.printStackTrace();
 						}
 					}
 				}

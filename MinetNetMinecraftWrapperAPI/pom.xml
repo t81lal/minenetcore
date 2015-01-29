@@ -10,4 +10,16 @@
   <version>0.4.3-ALPHA</version>
   <name>MinetNetMinecraftWrapperAPI</name>
   <description>Vanilla Minecraft wrapper and API.</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.google.guava</groupId>
+  		<artifactId>guava-collections</artifactId>
+  		<version>r03</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.google.guava</groupId>
+  		<artifactId>guava-base</artifactId>
+  		<version>r03</version>
+  	</dependency>
+  </dependencies>
 </project>

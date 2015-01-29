@@ -1,7 +1,6 @@
 package org.topdank.minenet.api.world;
 
 import org.topdank.minenet.api.game.location.BlockLocation;
-import org.topdank.minenet.api.world.block.BlockType;
 
 public class SimpleWorldPhysics implements WorldPhysics {
 
@@ -22,12 +21,12 @@ public class SimpleWorldPhysics implements WorldPhysics {
 	static {
 		emptyBlocks = new boolean[256];
 		// int len = BlockType.values().length;
-		for (BlockType type : BlockType.values()) {
-			if ((type.getId() >= 0) && (type.getId() < 256)) {
-				emptyBlocks[type.getId()] = !type.isSolid();
-				System.out.println(type.getId() + " " + !type.isSolid());
-			}
-		}
+		// for (BlockType type : BlockType.values()) {
+		// if ((type.getId() >= 0) && (type.getId() < 256)) {
+		// emptyBlocks[type.getId()] = !type.isSolid();
+		// System.out.println(type.getId() + " " + !type.isSolid());
+		// }
+		// }
 		// for (int i = len + 1; i < 256; i++) {
 		// emptyBlocks[i] = false;
 		// }
@@ -65,7 +64,10 @@ public class SimpleWorldPhysics implements WorldPhysics {
 		valid = valid && isEmpty(toX, toY + 1, toZ); // Block above must be
 														// non-solid
 
-		int lowerBlock = world.getBlockIdAt(toX, toY - 1, toZ);
+		int lowerBlock = world.getBlockIdAt(new BlockLocation(toX, toY - 1, toZ));
+
+		System.out.println("lower " + lowerBlock + " at " + to);
+
 		valid = valid && (lowerBlock != 10);
 		valid = valid && (lowerBlock != 11);
 		if (isEmpty(fromX, fromY - 1, fromZ))
@@ -106,7 +108,7 @@ public class SimpleWorldPhysics implements WorldPhysics {
 				valid = valid && isEmpty(fromX, toY + 1, fromZ);
 			valid = false;
 		}
-		int nodeBlockUnder = world.getBlockIdAt(toX, toY - 1, toZ);
+		int nodeBlockUnder = world.getBlockIdAt(new BlockLocation(toX, toY - 1, toZ));
 		if ((nodeBlockUnder == 85) || (nodeBlockUnder == 107) || (nodeBlockUnder == 113))
 			valid = false;
 		// int id = world.getBlockIdAt(x2, y2, z2);
@@ -130,7 +132,7 @@ public class SimpleWorldPhysics implements WorldPhysics {
 	}
 
 	private boolean isEmpty(int x, int y, int z) {
-		int id = world.getBlockIdAt(x, y, z);
+		int id = world.getBlockIdAt(new BlockLocation(x, y, z));
 		if ((id == 10) || (id == 11)) {
 			return false;
 		}

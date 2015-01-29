@@ -6,6 +6,18 @@ public final class ChunkLocation {
 	private final int y;
 	private final int z;
 
+	public ChunkLocation(int x, int y, int z, boolean chunk) {
+		if (chunk) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		} else {
+			this.x = x >> 4;
+			this.y = y >> 4;
+			this.z = z >> 4;
+		}
+	}
+
 	public ChunkLocation(int x, int y, int z) {
 		this.x = x;
 		this.y = y;

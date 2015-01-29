@@ -8,13 +8,13 @@ import org.topdank.minenet.api.world.World;
 import org.topdank.minenet.api.world.block.BlockType;
 
 public class FallTask implements Task {
-	
+
 	private final BotContext context;
-	
+
 	public FallTask(BotContext context) {
 		this.context = context;
 	}
-	
+
 	@Override
 	public synchronized boolean isPreconditionMet() {
 		LocalPlayer player = context.getWorld().getLocalPlayer();
@@ -22,16 +22,16 @@ public class FallTask implements Task {
 			return false;
 		return !player.isOnGround();
 	}
-	
+
 	@Override
 	public synchronized boolean start(String... options) {
 		return isPreconditionMet();
 	}
-	
+
 	@Override
 	public synchronized void stop() {
 	}
-	
+
 	@Override
 	public synchronized void run() {
 		World world = context.getWorld();
@@ -46,7 +46,7 @@ public class FallTask implements Task {
 			speed *= WalkActivity.FALL_FACTOR;
 		int lowestY = location.getY();
 		while (true) {
-			int id = world.getBlockIdAt(location.getX(), (lowestY - 1), location.getZ());
+			int id = world.getBlockIdAt(new BlockLocation(location.getX(), (lowestY - 1), location.getZ()));
 			BlockType type = BlockType.getById(id);
 			if (type.isSolid() || (lowestY <= 0))
 				break;
@@ -54,7 +54,7 @@ public class FallTask implements Task {
 		}
 		player.setY(player.getY() + Math.max(-speed, lowestY - player.getY()));
 	}
-	
+
 	@Override
 	public synchronized boolean isActive() {
 		LocalPlayer player = context.getWorld().getLocalPlayer();
@@ -62,29 +62,29 @@ public class FallTask implements Task {
 			return false;
 		return !player.isOnGround();
 	}
-	
+
 	@Override
 	public TaskPriority getPriority() {
 		return TaskPriority.NORMAL;
 	}
-	
+
 	@Override
 	public boolean isExclusive() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean ignoresExclusive() {
 		if (context.getTaskManager().hasActivity() && (context.getTaskManager().getActivity() instanceof WalkActivity))
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Fall";
 	}
-	
+
 	@Override
 	public String getOptionDescription() {
 		return "";

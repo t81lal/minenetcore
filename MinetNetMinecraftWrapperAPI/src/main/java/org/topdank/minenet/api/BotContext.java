@@ -50,7 +50,7 @@ public class BotContext {
 		return taskManager;
 	}
 
-	public BotVersionProvider getVersionProvider() {
-		return provider;
-	}
+	// public BotVersionProvider getVersionProvider() {
+	// return provider;
+	// }
 }

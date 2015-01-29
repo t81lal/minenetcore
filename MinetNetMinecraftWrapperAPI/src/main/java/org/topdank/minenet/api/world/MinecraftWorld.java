@@ -30,18 +30,16 @@ import org.topdank.minenet.api.event.entity.EntityTeleportEvent;
 import org.topdank.minenet.api.event.entity.LivingEntitySpawnEvent;
 import org.topdank.minenet.api.event.entity.ObjectEntitySpawnEvent;
 import org.topdank.minenet.api.event.entity.PlayerSpawnEvent;
+import org.topdank.minenet.api.event.internal.InternalBlockChangeEvent;
+import org.topdank.minenet.api.event.internal.InternalChunkLoadEvent;
 import org.topdank.minenet.api.event.world.ChunkLoadEvent;
-import org.topdank.minenet.api.event.world.InternalBlockChangeEvent;
-import org.topdank.minenet.api.event.world.InternalChunkLoadEvent;
 import org.topdank.minenet.api.event.world.RespawnEvent;
 import org.topdank.minenet.api.event.world.TileEntityUpdateEvent;
 import org.topdank.minenet.api.event.world.TimeUpdateEvent;
 import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.ChunkLocation;
-import org.topdank.minenet.api.game.location.PreciseLocation;
 import org.topdank.minenet.api.world.block.Block;
-import org.topdank.minenet.api.world.block.BlockType;
 import org.topdank.minenet.api.world.block.Chunk;
 import org.topdank.minenet.api.world.settings.WorldSettings;
 
@@ -53,6 +51,8 @@ public class MinecraftWorld implements World {
 
 	protected BotContext context;
 	protected EventBus bus;
+
+	// protected
 
 	protected WorldSettings worldSettings;
 	protected long worldAge;
@@ -264,7 +264,6 @@ public class MinecraftWorld implements World {
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(InternalChunkLoadEvent event) {
 		ChunkLocation location = new ChunkLocation(event.getX(), event.getY(), event.getZ());
-		// System.out.println("at " + location);
 		synchronized (chunks) {
 			chunks.put(location, event.getChunk());
 		}
@@ -273,9 +272,7 @@ public class MinecraftWorld implements World {
 
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onBlockChange(InternalBlockChangeEvent event) {
-		setBlockIdAt(event.getId(), event.getX(), event.getY(), event.getZ());
-		if (event.getMetadata() != -1)
-			setBlockMetadataAt(event.getMetadata(), event.getX(), event.getY(), event.getZ());
+		setBlockIdAt(event.getId(), new BlockLocation(event.getX(), event.getY(), event.getZ()));
 	}
 
 	@EventTarget(priority = EventPriority.HIGHEST)
@@ -413,144 +410,55 @@ public class MinecraftWorld implements World {
 	}
 
 	@Override
-	public Block getBlockAt(int x, int y, int z) {
-		return getBlockAt(new BlockLocation(x, y, z));
-	}
-
-	@Override
 	public Block getBlockAt(BlockLocation location) {
 		ChunkLocation chunkLocation = new ChunkLocation(location);
 		Chunk chunk = getChunkAt(chunkLocation);
+		System.out.println("chunk " + chunk);
 		if (chunk == null)
 			return null;
 		BlockLocation chunkBlockOffset = new BlockLocation(chunkLocation);
 		int chunkOffsetX = location.getX() - chunkBlockOffset.getX();
 		int chunkOffsetY = location.getY() - chunkBlockOffset.getY();
 		int chunkOffsetZ = location.getZ() - chunkBlockOffset.getZ();
-		int id = chunk.getBlocks().getBlock(chunkOffsetX, chunkOffsetY, chunkOffsetZ);
+		int id = chunk.getBlocks().getBlock(chunkOffsetX, chunkOffsetY, chunkOffsetZ) >> 4;
 		int metadata = chunk.getBlocks().getData(chunkOffsetX, chunkOffsetY, chunkOffsetZ);
+		System.out.println("id " + id);
 		return new Block(this, chunk, location, id, metadata);
 	}
 
 	@Override
-	public int getBlockIdAt(int x, int y, int z) {
-		return getBlockIdAt(new BlockLocation(x, y, z));
-	}
-
-	@Override
-	public int getBlockIdAt(BlockLocation blockLocation) {
-		ChunkLocation location = new ChunkLocation(blockLocation);
+	public int getBlockIdAt(BlockLocation loc) {
+		ChunkLocation location = new ChunkLocation(loc);
 		BlockLocation chunkBlockOffset = new BlockLocation(location);
 		Chunk chunk = getChunkAt(location);
 		if (chunk == null)
 			return 0;
-		int id = chunk.getBlocks().getBlock(blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
-		return id;
+		int id = chunk.getBlocks().getBlock(loc.getX() - chunkBlockOffset.getX(), loc.getY() - chunkBlockOffset.getY(), loc.getZ() - chunkBlockOffset.getZ());
+		return id >> 4;
 	}
 
 	@Override
-	public void setBlockIdAt(int id, int x, int y, int z) {
-		setBlockIdAt(id, new BlockLocation(x, y, z));
-	}
-
-	@Override
-	public void setBlockIdAt(int id, BlockLocation blockLocation) {
-		ChunkLocation location = new ChunkLocation(blockLocation);
+	public void setBlockIdAt(int id, BlockLocation loc) {
+		ChunkLocation location = new ChunkLocation(loc);
 		BlockLocation chunkBlockOffset = new BlockLocation(location);
 		Chunk chunk = getChunkAt(location);
 		if (chunk == null)
 			return;
-		chunk.getBlocks().setBlock(blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ(), id);
+		chunk.getBlocks().setBlock(loc.getX() - chunkBlockOffset.getX(), loc.getY() - chunkBlockOffset.getY(), loc.getZ() - chunkBlockOffset.getZ(), id);
 	}
 
 	@Override
-	public int getBlockMetadataAt(int x, int y, int z) {
-		return getBlockMetadataAt(new BlockLocation(x, y, z));
+	public TileEntity getTileEntityAt(BlockLocation loc) {
+		return tileEntities.get(loc);
 	}
 
 	@Override
-	public int getBlockMetadataAt(BlockLocation blockLocation) {
-		ChunkLocation location = new ChunkLocation(blockLocation);
-		BlockLocation chunkBlockOffset = new BlockLocation(location);
-		Chunk chunk = getChunkAt(location);
-		if (chunk == null)
-			return 0;
-		int metadata = chunk.getBlocks().getData(blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(),
-				blockLocation.getZ() - chunkBlockOffset.getZ());
-		return metadata;
-	}
-
-	@Override
-	public void setBlockMetadataAt(int metadata, int x, int y, int z) {
-		setBlockMetadataAt(metadata, new BlockLocation(x, y, z));
-	}
-
-	@Override
-	public void setBlockMetadataAt(int metadata, BlockLocation blockLocation) {
-		ChunkLocation location = new ChunkLocation(blockLocation);
-		BlockLocation chunkBlockOffset = new BlockLocation(location);
-		Chunk chunk = getChunkAt(location);
-		if (chunk == null)
-			return;
-		chunk.getBlocks().setData(metadata, blockLocation.getX() - chunkBlockOffset.getX(), blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ() - chunkBlockOffset.getZ());
-	}
-
-	@Override
-	public TileEntity getTileEntityAt(int x, int y, int z) {
-		return getTileEntityAt(new BlockLocation(x, y, z));
-	}
-
-	@Override
-	public TileEntity getTileEntityAt(BlockLocation blockLocation) {
-		return tileEntities.get(blockLocation);
-		// ChunkLocation location = new ChunkLocation(blockLocation);
-		// BlockLocation chunkBlockOffset = new BlockLocation(location);
-		// Chunk chunk = getChunkAt(location);
-		// if (chunk == null)
-		// return null;
-		// TileEntity tileEntity = tileEntities.get(new
-		// BlockLocation(blockLocation.getX() - chunkBlockOffset.getX(),
-		// blockLocation.getY() - chunkBlockOffset.getY(), blockLocation.getZ()
-		// - chunkBlockOffset.getZ()));
-		// return tileEntity;
-	}
-
-	@Override
-	public void setTileEntityAt(TileEntity tileEntity, int x, int y, int z) {
-		setTileEntityAt(tileEntity, new BlockLocation(x, y, z));
-	}
-
-	@Override
-	public void setTileEntityAt(TileEntity tileEntity, BlockLocation blockLocation) {
-		// ChunkLocation location = new ChunkLocation(blockLocation);
-		// BlockLocation chunkBlockOffset = new BlockLocation(location);
-		// Chunk chunk = getChunkAt(location);
-		// if (chunk == null)
-		// return;
-		// tileEntities.put(new BlockLocation(blockLocation.getX() -
-		// chunkBlockOffset.getX(), blockLocation.getY() -
-		// chunkBlockOffset.getY(), blockLocation.getZ() -
-		// chunkBlockOffset.getZ()), tileEntity);
-		tileEntities.put(blockLocation, tileEntity);
-	}
-
-	// @Override
-	// public Chunk getChunkAt(int x, int z) {
-	// return getChunkAt(new ChunkLocation(x, z));
-	// }
-
-	@Override
-	public Chunk getChunkAt(int x, int y, int z) {
-		return getChunkAt(new ChunkLocation(x >> 4, y >> 4, z >> 4));
+	public void setTileEntityAt(TileEntity tileEntity, BlockLocation loc) {
+		tileEntities.put(loc, tileEntity);
 	}
 
 	@Override
 	public Chunk getChunkAt(BlockLocation loc) {
-		return getChunkAt(new ChunkLocation(loc));
-	}
-
-	@Override
-	public Chunk getChunkAt(PreciseLocation loc) {
 		return getChunkAt(new ChunkLocation(loc));
 	}
 
@@ -599,7 +507,7 @@ public class MinecraftWorld implements World {
 			for (int x = minX; x <= maxX; x++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					for (int y = minY; y <= maxY; y++) {
-						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16 || chunkBase.getZ() - z >= 16) {
+						if ((chunkBase == null) || ((chunkBase.getY() - y) >= 16) || ((chunkBase.getX() - x) >= 16) || ((chunkBase.getZ() - z) >= 16)) {
 							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
 							chunk = getChunkAt(chunkLocation);
 							if (chunk != null)
@@ -651,7 +559,7 @@ public class MinecraftWorld implements World {
 			for (int x = minX; x <= maxX; x++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					for (int y = minY; y <= maxY; y++) {
-						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16 || chunkBase.getZ() - z >= 16) {
+						if ((chunkBase == null) || ((chunkBase.getY() - y) >= 16) || ((chunkBase.getX() - x) >= 16) || ((chunkBase.getZ() - z) >= 16)) {
 							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
 							chunk = getChunkAt(chunkLocation);
 							if (chunk != null)
@@ -688,7 +596,7 @@ public class MinecraftWorld implements World {
 	}
 
 	@Override
-	public boolean isInMaterial(BoundingBox box, BlockType... materials) {
+	public boolean isInMaterial(BoundingBox box, int... ids) {
 		int minX = (int) Math.floor(box.getMinX());
 		int minY = (int) Math.floor(box.getMinY());
 		int minZ = (int) Math.floor(box.getMinZ());
@@ -701,7 +609,7 @@ public class MinecraftWorld implements World {
 			for (int x = minX; x <= maxX; x++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					for (int y = minY; y <= maxY; y++) {
-						if (chunkBase == null || chunkBase.getY() - y >= 16 || chunkBase.getX() - x >= 16 || chunkBase.getZ() - z >= 16) {
+						if ((chunkBase == null) || ((chunkBase.getY() - y) >= 16) || ((chunkBase.getX() - x) >= 16) || ((chunkBase.getZ() - z) >= 16)) {
 							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
 							chunk = getChunkAt(chunkLocation);
 							if (chunk != null)
@@ -720,8 +628,8 @@ public class MinecraftWorld implements World {
 							if (block == null)
 								continue;
 							boolean matches = false;
-							for (BlockType material : materials) {
-								if (material == block.getBlockType()) {
+							for (int i : ids) {
+								if (i == block.getId()) {
 									matches = true;
 									break;
 								}

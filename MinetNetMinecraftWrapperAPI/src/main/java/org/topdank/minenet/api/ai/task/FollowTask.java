@@ -10,28 +10,28 @@ import org.topdank.minenet.api.world.World;
 import org.topdank.minenet.api.world.block.BlockType;
 
 public class FollowTask implements Task {
-	
+
 	private final BotContext context;
 	private Entity following = null;
 	private BlockLocation lastLocation;
-	
+
 	public FollowTask(BotContext context) {
 		this.context = context;
 	}
-	
+
 	public synchronized void follow(Entity entity) {
 		following = entity;
 	}
-	
+
 	public synchronized Entity following() {
 		return following;
 	}
-	
+
 	@Override
 	public synchronized boolean isPreconditionMet() {
 		return following != null;
 	}
-	
+
 	@Override
 	public synchronized boolean start(String... options) {
 		if (options.length > 0) {
@@ -40,12 +40,12 @@ public class FollowTask implements Task {
 		}
 		return following != null;
 	}
-	
+
 	@Override
 	public void stop() {
 		following = null;
 	}
-	
+
 	@Override
 	public void run() {
 		World world = context.getWorld();
@@ -67,7 +67,7 @@ public class FollowTask implements Task {
 			System.out.println("set");
 		}
 	}
-	
+
 	@Override
 	public boolean isActive() {
 		boolean active = following != null;
@@ -80,33 +80,34 @@ public class FollowTask implements Task {
 			if ((activity == null) || !(activity instanceof WalkActivity))
 				return active;
 			WalkActivity walkActivity = (WalkActivity) activity;
-			if (walkActivity.isActive() && (((player.getLocation().distance(following.getLocation()) < 1) || (following.getLocation().distance(walkActivity.getTarget()) > 3)) && player.isOnGround())) {
+			if (walkActivity.isActive()
+					&& (((player.getLocation().distance(following.getLocation()) < 1) || (following.getLocation().distance(walkActivity.getTarget()) > 3)) && player.isOnGround())) {
 				context.getTaskManager().setActivity(null);
 			}
 		}
 		return active;
 	}
-	
+
 	@Override
 	public TaskPriority getPriority() {
 		return TaskPriority.NORMAL;
 	}
-	
+
 	@Override
 	public boolean isExclusive() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean ignoresExclusive() {
 		return false;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "Follow";
 	}
-	
+
 	@Override
 	public String getOptionDescription() {
 		return "[player]";

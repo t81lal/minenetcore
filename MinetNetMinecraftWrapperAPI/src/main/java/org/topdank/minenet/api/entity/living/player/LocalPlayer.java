@@ -51,25 +51,32 @@ public class LocalPlayer extends PlayerEntity {
 
 	public void updateGravity() {
 		double dist = distanceToGround();
-		BoundingBox bb = getBoundingBox();
-		boolean inWater = world.isInMaterial(bb, BlockType.WATER, BlockType.STATIONARY_WATER);
-		boolean inLava = world.isInMaterial(bb, BlockType.LAVA, BlockType.STATIONARY_LAVA);
-		double horizFactor = 0.91;
+		// BoundingBox bb = getBoundingBox();
+		// boolean inWater = world.isInMaterial(bb, BlockType.WATER,
+		// BlockType.STATIONARY_WATER);
+		// boolean inLava = world.isInMaterial(bb, BlockType.LAVA,
+		// BlockType.STATIONARY_LAVA);
+		// double horizFactor = 0.91;
 		if (dist <= 0.08) {
 			// BlockType type = BlockType.getById(world.getBlockIdAt((int)
 			// Math.floor(x), (int) Math.floor(y - 0.1),
 			// (int) Math.floor(z)));
 			// if (type.isSolid())
 			// horizFactor *= friction; 1F atm
-		} else if (!inWater && !inLava)
-			accelerate(0, -Math.PI / 2, 0.08, 3.92);
+			motY = 0;
+		} else {
+			if (motY > 3.92)
+				motY -= 0.08;
+		}
+		// } else if (!inWater && !inLava)
+		// accelerate(0, -Math.PI / 2, 0.08, 3.92);
 
-		motX *= horizFactor;
-		motZ *= horizFactor;
-
-		x += motX;
-		y += motY;
-		z += motZ;
+		// motX *= horizFactor;
+		// motZ *= horizFactor;
+		//
+		// x += motX;
+		// y += motY;
+		// z += motZ;
 
 		// motX *= horizFactor;
 		// motY *= 0.98;
@@ -104,18 +111,15 @@ public class LocalPlayer extends PlayerEntity {
 		Set<Block> currentCollisions = world.getCollidingBlocks(bounds);
 		final double off = 0.01;
 		double velocity = 0;
-		for (double v = 0, target = Math.abs(motX), sign = Math.signum(motX); v < target + off
-				&& !collides(bounds.offset(sign * v, 0, 0), currentCollisions); v += off)
+		for (double v = 0, target = Math.abs(motX), sign = Math.signum(motX); (v < (target + off)) && !collides(bounds.offset(sign * v, 0, 0), currentCollisions); v += off)
 			velocity = sign * Math.min(v, target);
 		motX = velocity;
 		velocity = 0;
-		for (double v = 0, target = Math.abs(motZ), sign = Math.signum(motZ); v < target + off
-				&& !collides(bounds.offset(0, 0, sign * v), currentCollisions); v += off)
+		for (double v = 0, target = Math.abs(motZ), sign = Math.signum(motZ); (v < (target + off)) && !collides(bounds.offset(0, 0, sign * v), currentCollisions); v += off)
 			velocity = sign * Math.min(v, target);
 		motZ = velocity;
 		velocity = 0;
-		for (double v = 0, target = Math.abs(motY), sign = Math.signum(motY); v < target + off
-				&& !collides(bounds.offset(0, sign * v, 0), currentCollisions); v += off)
+		for (double v = 0, target = Math.abs(motY), sign = Math.signum(motY); (v < (target + off)) && !collides(bounds.offset(0, sign * v, 0), currentCollisions); v += off)
 			velocity = sign * Math.min(v, target);
 		motY = velocity;
 		if (collides(bounds.offset(motX, 0, 0), currentCollisions))
@@ -149,7 +153,7 @@ public class LocalPlayer extends PlayerEntity {
 	public int distToGround(double dx, int y, double dz) {
 		int x = (int) Math.floor(dx), z = (int) Math.floor(dz);
 		while (y > 0) {
-			int id = world.getBlockIdAt(x, (y - 1), z);
+			int id = world.getBlockIdAt(new BlockLocation(x, (y - 1), z));
 			BlockType type = BlockType.getById(id);
 			if (type.isSolid())
 				break;
@@ -178,16 +182,16 @@ public class LocalPlayer extends PlayerEntity {
 		BlockLocation block4 = new BlockLocation(x - 0.3D, y, z - 0.3D);
 
 		// cache never reaches 5 (shouldn't :|)
-		if (!locs.contains(thisLocation) && BlockType.getById(world.getBlockIdAt(thisLocation)).isSolid())
+		if (!locs.contains(thisLocation) && BlockType.getById(world.getBlockIdAt(new BlockLocation(thisLocation.getX(), thisLocation.getY(), thisLocation.getZ()))).isSolid())
 			locs.add(thisLocation);
 
-		if (!locs.contains(block1) && BlockType.getById(world.getBlockIdAt(block1)).isSolid())
+		if (!locs.contains(block1) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block1.getX(), block1.getY(), block1.getZ()))).isSolid())
 			locs.add(block1);
-		if (!locs.contains(block2) && BlockType.getById(world.getBlockIdAt(block2)).isSolid())
+		if (!locs.contains(block2) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block2.getX(), block2.getY(), block2.getZ()))).isSolid())
 			locs.add(block2);
-		if (!locs.contains(block3) && BlockType.getById(world.getBlockIdAt(block3)).isSolid())
+		if (!locs.contains(block3) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block3.getX(), block3.getY(), block3.getZ()))).isSolid())
 			locs.add(block3);
-		if (!locs.contains(block4) && BlockType.getById(world.getBlockIdAt(block4)).isSolid())
+		if (!locs.contains(block4) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block4.getX(), block4.getY(), block4.getZ()))).isSolid())
 			locs.add(block4);
 
 		// System.out.println("on " + locs.size() + " blocks.");
@@ -216,7 +220,7 @@ public class LocalPlayer extends PlayerEntity {
 				int x = (int) Math.floor(loc.getX());
 				int z = (int) Math.floor(loc.getZ());
 				while (currentY > 0) {
-					int id = world.getBlockIdAt(x, currentY, z);
+					int id = world.getBlockIdAt(new BlockLocation(x, currentY, z));
 					BlockType type = BlockType.getById(id);
 					if (type.isSolid()) {
 						double d = (y - currentY) - 1;
@@ -234,7 +238,7 @@ public class LocalPlayer extends PlayerEntity {
 			int x = (int) Math.floor(this.x);
 			int z = (int) Math.floor(this.z);
 			while (currentY > 0) {
-				int id = world.getBlockIdAt(x, currentY, z);
+				int id = world.getBlockIdAt(new BlockLocation(x, currentY, z));
 				BlockType type = BlockType.getById(id);
 				if (type.isSolid()) {
 					double d = (y - currentY) - 1;
@@ -454,16 +458,17 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public BoundingBox getBoundingBoxAt(double x, double y, double z) {
-		return BoundingBox.getBoundingBox(x - width / 2.0, y - height / 2.0, z - width / 2.0, x + width / 2.0, y + height / 2.0,
-				z + width / 2.0);
+		return BoundingBox.getBoundingBox(x - (width / 2.0), y - (height / 2.0), z - (width / 2.0), x + (width / 2.0), y + (height / 2.0), z + (width / 2.0));
 	}
 
 	@Override
 	public boolean isOnGround() {
-		BoundingBox bounds = getBoundingBox();
-		Set<Block> colliding = world.getCollidingBlocks(bounds.offset(0, -0.1, 0));
-		colliding.removeAll(world.getCollidingBlocks(bounds));
-		return !colliding.isEmpty();
+		return distanceToGround() < 0.08;
+		// BoundingBox bounds = getBoundingBox();
+		// Set<Block> colliding = world.getCollidingBlocks(bounds.offset(0,
+		// -0.1, 0));
+		// colliding.removeAll(world.getCollidingBlocks(bounds));
+		// return !colliding.isEmpty();
 	}
 
 	public void accelerate(double horizAngle, double vertAngle, double accel) {
@@ -479,17 +484,17 @@ public class LocalPlayer extends PlayerEntity {
 		double vxb = velocityBound * Math.cos(horizAngle) * Math.cos(vertAngle);
 		double vzb = velocityBound * Math.sin(horizAngle) * Math.cos(vertAngle);
 		double vyb = velocityBound * Math.sin(vertAngle);
-		if (vxb < 0 && motX > vxb)
+		if ((vxb < 0) && (motX > vxb))
 			motX = Math.max(vxb, motX - ax);
-		else if (vxb > 0 && motX < vxb)
+		else if ((vxb > 0) && (motX < vxb))
 			motX = Math.min(vxb, motX + ax);
-		if (vzb < 0 && motZ > vzb)
+		if ((vzb < 0) && (motZ > vzb))
 			motZ = Math.max(vzb, motZ - az);
-		else if (vzb > 0 && motZ < vzb)
+		else if ((vzb > 0) && (motZ < vzb))
 			motZ = Math.min(vzb, motZ + az);
-		if (vyb < 0 && motY > vyb)
+		if ((vyb < 0) && (motY > vyb))
 			motY = Math.max(vyb, motY - ay);
-		else if (vyb > 0 && motY < vyb)
+		else if ((vyb > 0) && (motY < vyb))
 			motY = Math.min(vyb, motY + ay);
 		System.out.println("motx " + motX + " moty " + motY + " motz " + motZ);
 	}
@@ -507,17 +512,15 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	private boolean isInBlockType(BlockType type) {
-		return checkBlockType(type, x + 0.3, y, z + 0.3) || checkBlockType(type, x + 0.3, y, z - 0.3)
-				|| checkBlockType(type, x - 0.3, y, z + 0.3) || checkBlockType(type, x - 0.3, y, z - 0.3)
-				|| checkBlockType(type, x + 0.3, y + 1, z + 0.3) || checkBlockType(type, x + 0.3, y + 1, z - 0.3)
-				|| checkBlockType(type, x - 0.3, y + 1, z + 0.3) || checkBlockType(type, x - 0.3, y + 1, z - 0.3)
-				|| checkBlockType(type, x + 0.3, y + 1.8, z + 0.3) || checkBlockType(type, x + 0.3, y + 1.8, z - 0.3)
-				|| checkBlockType(type, x - 0.3, y + 1.8, z + 0.3) || checkBlockType(type, x - 0.3, y + 1.8, z - 0.3);
+		return checkBlockType(type, x + 0.3, y, z + 0.3) || checkBlockType(type, x + 0.3, y, z - 0.3) || checkBlockType(type, x - 0.3, y, z + 0.3)
+				|| checkBlockType(type, x - 0.3, y, z - 0.3) || checkBlockType(type, x + 0.3, y + 1, z + 0.3) || checkBlockType(type, x + 0.3, y + 1, z - 0.3)
+				|| checkBlockType(type, x - 0.3, y + 1, z + 0.3) || checkBlockType(type, x - 0.3, y + 1, z - 0.3) || checkBlockType(type, x + 0.3, y + 1.8, z + 0.3)
+				|| checkBlockType(type, x + 0.3, y + 1.8, z - 0.3) || checkBlockType(type, x - 0.3, y + 1.8, z + 0.3) || checkBlockType(type, x - 0.3, y + 1.8, z - 0.3);
 	}
 
 	private boolean checkBlockType(BlockType type, double dx, double dy, double dz) {
 		int x = (int) Math.floor(dx), y = (int) Math.floor(dy), z = (int) Math.floor(dz);
-		return type.getId() == world.getBlockIdAt(x, y, z);
+		return type.getId() == world.getBlockIdAt(new BlockLocation(x, y, z));
 	}
 
 	@Override

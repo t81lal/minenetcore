@@ -1,4 +1,4 @@
-package org.topdank.minenet.api.event.world;
+package org.topdank.minenet.api.event.internal;
 
 import org.topdank.minenet.api.world.block.Chunk;
 

@@ -54,7 +54,7 @@ public class AStarPathSearch implements PathSearch {
 		if (isDone())
 			return;
 		PathNode current = openSet.poll();
-		if (complete == null && current.getLocation().equals(end)) {
+		if ((complete == null) && current.getLocation().equals(end)) {
 			complete = reconstructPath(current);
 			return;
 		}
@@ -62,7 +62,7 @@ public class AStarPathSearch implements PathSearch {
 		if (completeReverse != null)
 			return;
 		PathNode currentReverse = openSetReverse.poll();
-		if (completeReverse == null && start.equals(currentReverse.getLocation()))
+		if ((completeReverse == null) && start.equals(currentReverse.getLocation()))
 			completeReverse = reconstructPath(currentReverse);
 		else if (completeReverse == null)
 			calculate(currentReverse, true);
@@ -84,13 +84,14 @@ public class AStarPathSearch implements PathSearch {
 				adjacent = nodeWorld.get(adjacentLocation);
 			if (closedSet.contains(adjacent))
 				continue;
-			if (!physics.canWalk(location, adjacentLocation))
+			if (!physics.canWalk(location, adjacentLocation)) {
 				continue;
+			}
 			if (reverse && !physics.canWalk(adjacentLocation, location))
 				continue;
 			double cost = current.getCost() + heuristic.calculateCost(location, adjacentLocation);
 			boolean contained = openSet.contains(adjacent);
-			if (!contained || cost < adjacent.getCost()) {
+			if (!contained || (cost < adjacent.getCost())) {
 				if (!contained)
 					openSet.offer(adjacent);
 				adjacent.setPrevious(current);
@@ -113,7 +114,7 @@ public class AStarPathSearch implements PathSearch {
 
 	@Override
 	public boolean isDone() {
-		return complete != null || openSet.isEmpty() || (openSetReverse.isEmpty() && completeReverse == null);
+		return (complete != null) || openSet.isEmpty() || (openSetReverse.isEmpty() && (completeReverse == null));
 	}
 
 	@Override

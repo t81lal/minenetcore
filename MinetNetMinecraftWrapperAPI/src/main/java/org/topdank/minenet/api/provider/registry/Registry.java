@@ -34,10 +34,10 @@ public abstract class Registry<T, K> {
 	}
 
 	public final boolean exists(T t, K k) {
-		return cache.get(t).equals(k);
+		return getByKey(t).equals(k);
 	}
 
-	public final K getByKey(T t) {
+	public K getByKey(T t) {
 		return cache.get(t);
 	}
 

@@ -4,19 +4,19 @@ import org.topdank.minenet.api.entity.living.player.PlayerController;
 import org.topdank.minenet.api.entity.provider.EntityProvider;
 import org.topdank.minenet.api.provider.Provider;
 import org.topdank.minenet.api.world.WorldController;
-import org.topdank.minenet.api.world.block.art.PaintingRegistry;
+import org.topdank.minenet.api.world.provider.WorldProvider;
 
 public abstract class BotVersionProvider extends Provider {
 
 	private final EntityProvider entityProvider;
-	private final PaintingRegistry paintingRegistry;
+	private final WorldProvider worldProvider;
 
 	private final WorldController worldController;
 	private final PlayerController playerController;
 
-	public BotVersionProvider(EntityProvider entityProvider, PaintingRegistry paintingRegistry, WorldController worldController, PlayerController playerController) {
+	public BotVersionProvider(EntityProvider entityProvider, WorldProvider worldProvider, WorldController worldController, PlayerController playerController) {
 		this.entityProvider = entityProvider;
-		this.paintingRegistry = paintingRegistry;
+		this.worldProvider = worldProvider;
 		this.worldController = worldController;
 		this.playerController = playerController;
 
@@ -26,8 +26,8 @@ public abstract class BotVersionProvider extends Provider {
 		return entityProvider;
 	}
 
-	public PaintingRegistry getPaintingRegistry() {
-		return paintingRegistry;
+	public WorldProvider getWorldProvider() {
+		return worldProvider;
 	}
 
 	public WorldController getWorldController() {

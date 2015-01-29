@@ -1,6 +1,6 @@
 package org.topdank.minenet.api.world.block.provider.registry;
 
-import org.topdank.minenet.api.world.block.BlockId;
+import org.topdank.minenet.api.world.block.id.BlockId;
 import org.topdank.minenet.api.world.block.material.Material;
 
 public class BlockData {
@@ -59,15 +59,20 @@ public class BlockData {
 		return id.equals(db.id);
 	}
 
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
 	public static class Builder {
 
-		private BlockId id;
-		private Material material;
-		private String name;
-		private float hardness;
-		private float blastResistence;
-		private float friction;
-		private int maxStack;
+		protected BlockId id;
+		protected Material material;
+		protected String name;
+		protected float hardness;
+		protected float blastResistence;
+		protected float friction;
+		protected int maxStack;
 
 		protected Builder() {
 		}

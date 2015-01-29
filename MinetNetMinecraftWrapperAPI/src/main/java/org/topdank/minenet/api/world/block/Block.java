@@ -12,7 +12,7 @@ public class Block {
 	private final Chunk chunk;
 	private final BlockLocation location;
 	private final int id, metadata;
-	private final BlockType type;
+	// private final BlockType type;
 	private final BoundingBox boundingBox;
 	private final BoundingBox[] asArray;
 
@@ -22,7 +22,7 @@ public class Block {
 		this.location = location;
 		this.id = id;
 		this.metadata = metadata;
-		type = BlockType.getById(id);
+		// type = BlockType.getById(id);
 		boundingBox = DEFAULT.offset(location);
 		asArray = new BoundingBox[] { boundingBox };
 	}
@@ -47,9 +47,9 @@ public class Block {
 		return metadata;
 	}
 
-	public BlockType getBlockType() {
-		return type;
-	}
+	// public BlockType getBlockType() {
+	// return type;
+	// }
 
 	public BoundingBox[] getBoundingBoxes() {
 		return asArray;
