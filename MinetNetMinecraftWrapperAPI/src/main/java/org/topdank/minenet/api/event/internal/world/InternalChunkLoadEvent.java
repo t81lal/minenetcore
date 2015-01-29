@@ -1,4 +1,4 @@
-package org.topdank.minenet.api.event.internal;
+package org.topdank.minenet.api.event.internal.world;
 
 import org.topdank.minenet.api.world.block.Chunk;
 
@@ -18,15 +18,15 @@ public class InternalChunkLoadEvent implements Event {
 		this.biomes = biomes;
 	}
 	
-	public int getX() {
+	public int getChunkX() {
 		return x;
 	}
 	
-	public int getY() {
+	public int getChunkY() {
 		return y;
 	}
 	
-	public int getZ() {
+	public int getChunkZ() {
 		return z;
 	}
 	

@@ -153,7 +153,7 @@ public class LocalPlayer extends PlayerEntity {
 	public int distToGround(double dx, int y, double dz) {
 		int x = (int) Math.floor(dx), z = (int) Math.floor(dz);
 		while (y > 0) {
-			int id = world.getBlockIdAt(new BlockLocation(x, (y - 1), z));
+			int id = world.getBlockData(new BlockLocation(x, (y - 1), z));
 			BlockType type = BlockType.getById(id);
 			if (type.isSolid())
 				break;
@@ -182,16 +182,16 @@ public class LocalPlayer extends PlayerEntity {
 		BlockLocation block4 = new BlockLocation(x - 0.3D, y, z - 0.3D);
 
 		// cache never reaches 5 (shouldn't :|)
-		if (!locs.contains(thisLocation) && BlockType.getById(world.getBlockIdAt(new BlockLocation(thisLocation.getX(), thisLocation.getY(), thisLocation.getZ()))).isSolid())
+		if (!locs.contains(thisLocation) && BlockType.getById(world.getBlockData(new BlockLocation(thisLocation.getX(), thisLocation.getY(), thisLocation.getZ()))).isSolid())
 			locs.add(thisLocation);
 
-		if (!locs.contains(block1) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block1.getX(), block1.getY(), block1.getZ()))).isSolid())
+		if (!locs.contains(block1) && BlockType.getById(world.getBlockData(new BlockLocation(block1.getX(), block1.getY(), block1.getZ()))).isSolid())
 			locs.add(block1);
-		if (!locs.contains(block2) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block2.getX(), block2.getY(), block2.getZ()))).isSolid())
+		if (!locs.contains(block2) && BlockType.getById(world.getBlockData(new BlockLocation(block2.getX(), block2.getY(), block2.getZ()))).isSolid())
 			locs.add(block2);
-		if (!locs.contains(block3) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block3.getX(), block3.getY(), block3.getZ()))).isSolid())
+		if (!locs.contains(block3) && BlockType.getById(world.getBlockData(new BlockLocation(block3.getX(), block3.getY(), block3.getZ()))).isSolid())
 			locs.add(block3);
-		if (!locs.contains(block4) && BlockType.getById(world.getBlockIdAt(new BlockLocation(block4.getX(), block4.getY(), block4.getZ()))).isSolid())
+		if (!locs.contains(block4) && BlockType.getById(world.getBlockData(new BlockLocation(block4.getX(), block4.getY(), block4.getZ()))).isSolid())
 			locs.add(block4);
 
 		// System.out.println("on " + locs.size() + " blocks.");
@@ -220,7 +220,7 @@ public class LocalPlayer extends PlayerEntity {
 				int x = (int) Math.floor(loc.getX());
 				int z = (int) Math.floor(loc.getZ());
 				while (currentY > 0) {
-					int id = world.getBlockIdAt(new BlockLocation(x, currentY, z));
+					int id = world.getBlockData(new BlockLocation(x, currentY, z));
 					BlockType type = BlockType.getById(id);
 					if (type.isSolid()) {
 						double d = (y - currentY) - 1;
@@ -238,7 +238,7 @@ public class LocalPlayer extends PlayerEntity {
 			int x = (int) Math.floor(this.x);
 			int z = (int) Math.floor(this.z);
 			while (currentY > 0) {
-				int id = world.getBlockIdAt(new BlockLocation(x, currentY, z));
+				int id = world.getBlockData(new BlockLocation(x, currentY, z));
 				BlockType type = BlockType.getById(id);
 				if (type.isSolid()) {
 					double d = (y - currentY) - 1;
@@ -520,7 +520,7 @@ public class LocalPlayer extends PlayerEntity {
 
 	private boolean checkBlockType(BlockType type, double dx, double dy, double dz) {
 		int x = (int) Math.floor(dx), y = (int) Math.floor(dy), z = (int) Math.floor(dz);
-		return type.getId() == world.getBlockIdAt(new BlockLocation(x, y, z));
+		return type.getData() == world.getBlockData(new BlockLocation(x, y, z));
 	}
 
 	@Override

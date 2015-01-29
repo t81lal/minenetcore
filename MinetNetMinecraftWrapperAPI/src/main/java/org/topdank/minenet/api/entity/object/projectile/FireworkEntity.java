@@ -3,13 +3,13 @@ package org.topdank.minenet.api.entity.object.projectile;
 import java.util.Map;
 
 import org.topdank.minenet.api.item.ItemStack;
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class FireworkEntity extends ProjectileEntity {
 
 	private ItemStack data;
 
-	public FireworkEntity(World world, int id) {
+	public FireworkEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id, 0.25F, 0.25F);
 	}
 

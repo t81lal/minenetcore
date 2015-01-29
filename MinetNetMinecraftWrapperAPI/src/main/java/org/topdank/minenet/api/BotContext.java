@@ -2,7 +2,7 @@ package org.topdank.minenet.api;
 
 import org.topdank.minenet.api.ai.task.BasicTaskManager;
 import org.topdank.minenet.api.ai.task.TaskManager;
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 import org.topdank.minenet.client.MCClient;
 
 import eu.bibl.eventbus.EventBus;
@@ -14,7 +14,7 @@ public class BotContext {
 	protected final MCClient client;
 	protected final EventBus bus;
 	protected BotVersionProvider provider;
-	protected World world;
+	protected DefaultMinecraftWorld world;
 	protected TaskManager taskManager;
 
 	protected BotContext(MCClient client, EventBus bus) {
@@ -36,11 +36,11 @@ public class BotContext {
 		return bus;
 	}
 
-	public World getWorld() {
+	public DefaultMinecraftWorld getWorld() {
 		return world;
 	}
 
-	public void setWorld(World w) {
+	public void setWorld(DefaultMinecraftWorld w) {
 		if (world != null)
 			world.destroy();
 		world = w;
@@ -50,7 +50,7 @@ public class BotContext {
 		return taskManager;
 	}
 
-	// public BotVersionProvider getVersionProvider() {
-	// return provider;
-	// }
+	public BotVersionProvider getVersionProvider() {
+		return provider;
+	}
 }

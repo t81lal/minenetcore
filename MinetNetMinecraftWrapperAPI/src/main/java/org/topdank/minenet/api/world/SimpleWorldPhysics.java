@@ -64,7 +64,7 @@ public class SimpleWorldPhysics implements WorldPhysics {
 		valid = valid && isEmpty(toX, toY + 1, toZ); // Block above must be
 														// non-solid
 
-		int lowerBlock = world.getBlockIdAt(new BlockLocation(toX, toY - 1, toZ));
+		int lowerBlock = world.getBlockData(new BlockLocation(toX, toY - 1, toZ));
 
 		System.out.println("lower " + lowerBlock + " at " + to);
 
@@ -108,7 +108,7 @@ public class SimpleWorldPhysics implements WorldPhysics {
 				valid = valid && isEmpty(fromX, toY + 1, fromZ);
 			valid = false;
 		}
-		int nodeBlockUnder = world.getBlockIdAt(new BlockLocation(toX, toY - 1, toZ));
+		int nodeBlockUnder = world.getBlockData(new BlockLocation(toX, toY - 1, toZ));
 		if ((nodeBlockUnder == 85) || (nodeBlockUnder == 107) || (nodeBlockUnder == 113))
 			valid = false;
 		// int id = world.getBlockIdAt(x2, y2, z2);
@@ -119,7 +119,7 @@ public class SimpleWorldPhysics implements WorldPhysics {
 
 	@Override
 	public boolean canClimb(BlockLocation location) {
-		int id = world.getBlockIdAt(location);
+		int id = world.getBlockData(location);
 		if ((id == 8) || (id == 9) || (id == 65)) // Water / Moving Water /
 													// Ladder
 			return true;
@@ -132,7 +132,7 @@ public class SimpleWorldPhysics implements WorldPhysics {
 	}
 
 	private boolean isEmpty(int x, int y, int z) {
-		int id = world.getBlockIdAt(new BlockLocation(x, y, z));
+		int id = world.getBlockData(new BlockLocation(x, y, z));
 		if ((id == 10) || (id == 11)) {
 			return false;
 		}

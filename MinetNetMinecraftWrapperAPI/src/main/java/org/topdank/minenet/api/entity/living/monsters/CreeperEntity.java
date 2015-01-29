@@ -3,14 +3,14 @@ package org.topdank.minenet.api.entity.living.monsters;
 import java.util.Map;
 
 import org.topdank.minenet.api.entity.living.LivingEntity;
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class CreeperEntity extends LivingEntity {
 
 	private CreeperState state;
 	private boolean isSuperCharged;
 
-	public CreeperEntity(World world, int id) {
+	public CreeperEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id, 0.6F, 1.8F);
 	}
 
@@ -44,6 +44,7 @@ public class CreeperEntity extends LivingEntity {
 	}
 
 	public enum CreeperState {
-		IDLE, FUSED;
+		IDLE,
+		FUSED;
 	}
 }

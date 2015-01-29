@@ -46,7 +46,7 @@ public class FallTask implements Task {
 			speed *= WalkActivity.FALL_FACTOR;
 		int lowestY = location.getY();
 		while (true) {
-			int id = world.getBlockIdAt(new BlockLocation(location.getX(), (lowestY - 1), location.getZ()));
+			int id = world.getBlockData(new BlockLocation(location.getX(), (lowestY - 1), location.getZ()));
 			BlockType type = BlockType.getById(id);
 			if (type.isSolid() || (lowestY <= 0))
 				break;

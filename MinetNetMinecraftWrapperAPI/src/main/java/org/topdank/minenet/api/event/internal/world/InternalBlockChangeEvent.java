@@ -1,4 +1,4 @@
-package org.topdank.minenet.api.event.internal;
+package org.topdank.minenet.api.event.internal.world;
 
 import org.topdank.minenet.api.game.location.BlockLocation;
 
@@ -6,31 +6,25 @@ import eu.bibl.eventbus.Event;
 
 public class InternalBlockChangeEvent implements Event {
 
-	private final int id, x, y, z;
+	private final int data, x, y, z;
 
-	public InternalBlockChangeEvent(int id, BlockLocation loc) {
-		this.id = id;
-		// metadata = metdata;
+	public InternalBlockChangeEvent(int data, BlockLocation loc) {
+		this.data = data;
 		x = loc.getX();
 		y = loc.getY();
 		z = loc.getZ();
 	}
 
-	public InternalBlockChangeEvent(int id, int x, int y, int z) {
-		this.id = id;
-		// this.metadata = metadata;
+	public InternalBlockChangeEvent(int data, int x, int y, int z) {
+		this.data = data;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
-	public int getId() {
-		return id;
+	public int getData() {
+		return data;
 	}
-
-	// public int getMetadata() {
-	// return metadata;
-	// }
 
 	public int getX() {
 		return x;

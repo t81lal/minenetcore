@@ -1,10 +1,10 @@
 package org.topdank.minenet.api.entity.object.vehicle;
 
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class PoweredMinecartEntity extends MinecartEntity {
-	
-	public PoweredMinecartEntity(World world, int id) {
+
+	public PoweredMinecartEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id);
 	}
 }

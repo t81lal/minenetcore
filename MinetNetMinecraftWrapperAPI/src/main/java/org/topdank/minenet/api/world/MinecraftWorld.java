@@ -30,8 +30,8 @@ import org.topdank.minenet.api.event.entity.EntityTeleportEvent;
 import org.topdank.minenet.api.event.entity.LivingEntitySpawnEvent;
 import org.topdank.minenet.api.event.entity.ObjectEntitySpawnEvent;
 import org.topdank.minenet.api.event.entity.PlayerSpawnEvent;
-import org.topdank.minenet.api.event.internal.InternalBlockChangeEvent;
-import org.topdank.minenet.api.event.internal.InternalChunkLoadEvent;
+import org.topdank.minenet.api.event.internal.world.InternalBlockChangeEvent;
+import org.topdank.minenet.api.event.internal.world.InternalChunkLoadEvent;
 import org.topdank.minenet.api.event.world.ChunkLoadEvent;
 import org.topdank.minenet.api.event.world.RespawnEvent;
 import org.topdank.minenet.api.event.world.TileEntityUpdateEvent;
@@ -185,7 +185,7 @@ public class MinecraftWorld implements World {
 		Entity entity = getEntityById(e.getEntityId());
 		if (entity == null)
 			return;
-		entity.setLocation(entity.getX() + e.getX(), entity.getY() + e.getY(), entity.getZ() + e.getZ());
+		entity.setLocation(entity.getX() + e.getChunkX(), entity.getY() + e.getChunkY(), entity.getZ() + e.getChunkZ());
 	}
 
 	@EventTarget(priority = EventPriority.HIGHEST)
@@ -216,7 +216,7 @@ public class MinecraftWorld implements World {
 		Entity entity = getEntityById(event.getEntityId());
 		if (entity == null)
 			return;
-		entity.setLocation(event.getX(), event.getY(), event.getZ());
+		entity.setLocation(event.getChunkX(), event.getChunkY(), event.getChunkZ());
 		entity.setYaw(event.getYaw());
 		entity.setPitch(event.getPitch());
 		if (event.setOnGround()) {
@@ -263,7 +263,7 @@ public class MinecraftWorld implements World {
 
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onChunkLoad(InternalChunkLoadEvent event) {
-		ChunkLocation location = new ChunkLocation(event.getX(), event.getY(), event.getZ());
+		ChunkLocation location = new ChunkLocation(event.getChunkX(), event.getChunkY(), event.getChunkZ());
 		synchronized (chunks) {
 			chunks.put(location, event.getChunk());
 		}
@@ -272,17 +272,17 @@ public class MinecraftWorld implements World {
 
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onBlockChange(InternalBlockChangeEvent event) {
-		setBlockIdAt(event.getId(), new BlockLocation(event.getX(), event.getY(), event.getZ()));
+		setBlockData(event.getData(), new BlockLocation(event.getX(), event.getY(), event.getZ()));
 	}
 
 	@EventTarget(priority = EventPriority.HIGHEST)
 	public void onTileEntityUpdate(TileEntityUpdateEvent event) {
 		System.out.println(event);
-		BlockLocation location = new BlockLocation(event.getX(), event.getY(), event.getZ());
+		BlockLocation location = new BlockLocation(event.getChunkX(), event.getChunkY(), event.getChunkZ());
 		TileEntity entity = context.getVersionProvider().getEntityProvider().getTileEntityProvider().getFactory().create(event.getType(), this, event.getCompound());
-		entity.setX(event.getX());
-		entity.setY(event.getY());
-		entity.setZ(event.getZ());
+		entity.setX(event.getChunkX());
+		entity.setY(event.getChunkY());
+		entity.setZ(event.getChunkZ());
 		setTileEntityAt(entity, location);
 	}
 
@@ -427,7 +427,7 @@ public class MinecraftWorld implements World {
 	}
 
 	@Override
-	public int getBlockIdAt(BlockLocation loc) {
+	public int getBlockData(BlockLocation loc) {
 		ChunkLocation location = new ChunkLocation(loc);
 		BlockLocation chunkBlockOffset = new BlockLocation(location);
 		Chunk chunk = getChunkAt(location);
@@ -438,7 +438,7 @@ public class MinecraftWorld implements World {
 	}
 
 	@Override
-	public void setBlockIdAt(int id, BlockLocation loc) {
+	public void setBlockData(int id, BlockLocation loc) {
 		ChunkLocation location = new ChunkLocation(loc);
 		BlockLocation chunkBlockOffset = new BlockLocation(location);
 		Chunk chunk = getChunkAt(location);

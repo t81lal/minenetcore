@@ -7,12 +7,12 @@ import java.util.UUID;
 
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.PreciseLocation;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 import org.topdank.minenet.api.world.WatchableObject;
-import org.topdank.minenet.api.world.World;
 
 public abstract class Entity extends WatchableObject {
 
-	protected final World world;
+	protected final DefaultMinecraftWorld world;
 
 	protected boolean isOnFire;
 	protected boolean isCrouching;
@@ -41,7 +41,7 @@ public abstract class Entity extends WatchableObject {
 	protected boolean isDead;
 	protected boolean isOnGround;
 
-	public Entity(final World world, final int id, float defaultWidth, float defaultHeight) {
+	public Entity(final DefaultMinecraftWorld world, final int id, float defaultWidth, float defaultHeight) {
 		super(id);
 		this.world = world;
 		width = defaultWidth;

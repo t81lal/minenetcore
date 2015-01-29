@@ -2,10 +2,10 @@ package org.topdank.minenet.api.entity.living.ageable;
 
 import java.util.Map;
 
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class HorseEntity extends AgeableEntity {
-	
+
 	private boolean isTame;
 	private boolean hasSaddle;
 	private boolean hasChest;
@@ -13,118 +13,118 @@ public class HorseEntity extends AgeableEntity {
 	private boolean isEating;
 	private boolean isRearing;
 	private boolean isMouthOpen;
-	
+
 	private HorseType type;
 	private HorseColour colour;
 	private HorseStyle style;
 	private HorseArmour armour;
-	
+
 	private String owner;
-	
-	public HorseEntity(World world, int id) {
+
+	public HorseEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id, 1.4F, 1.6F);
 	}
-	
+
 	public boolean isTame() {
 		return isTame;
 	}
-	
+
 	public void setTame(boolean isTame) {
 		this.isTame = isTame;
 	}
-	
+
 	public boolean isHasSaddle() {
 		return hasSaddle;
 	}
-	
+
 	public void setHasSaddle(boolean hasSaddle) {
 		this.hasSaddle = hasSaddle;
 	}
-	
+
 	public boolean isHasChest() {
 		return hasChest;
 	}
-	
+
 	public void setHasChest(boolean hasChest) {
 		this.hasChest = hasChest;
 	}
-	
+
 	public boolean isBred() {
 		return isBred;
 	}
-	
+
 	public void setBred(boolean isBred) {
 		this.isBred = isBred;
 	}
-	
+
 	public boolean isEating() {
 		return isEating;
 	}
-	
+
 	public void setEating(boolean isEating) {
 		this.isEating = isEating;
 	}
-	
+
 	public boolean isRearing() {
 		return isRearing;
 	}
-	
+
 	public void setRearing(boolean isRearing) {
 		this.isRearing = isRearing;
 	}
-	
+
 	public boolean isMouthOpen() {
 		return isMouthOpen;
 	}
-	
+
 	public void setMouthOpen(boolean isMouthOpen) {
 		this.isMouthOpen = isMouthOpen;
 	}
-	
+
 	public HorseType getType() {
 		return type;
 	}
-	
+
 	public void setType(HorseType type) {
 		this.type = type;
 	}
-	
+
 	public HorseColour getColour() {
 		return colour;
 	}
-	
+
 	public void setColour(HorseColour colour) {
 		this.colour = colour;
 	}
-	
+
 	public HorseStyle getStyle() {
 		return style;
 	}
-	
+
 	public void setStyle(HorseStyle style) {
 		this.style = style;
 	}
-	
+
 	public HorseArmour getArmour() {
 		return armour;
 	}
-	
+
 	public void setArmour(HorseArmour armour) {
 		this.armour = armour;
 	}
-	
+
 	public String getOwner() {
 		return owner;
 	}
-	
+
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-	
+
 	@Override
 	public void updateMetadata(Map<Integer, Object> metadata) {
 		super.updateMetadata(metadata);
-		
+
 		if (metadata.containsKey(16)) {
 			int flags = (int) metadata.get(16);
 			setTame((flags & 0x02) != 0);
@@ -135,30 +135,30 @@ public class HorseEntity extends AgeableEntity {
 			setRearing((flags & 0x40) != 0);
 			setMouthOpen((flags & 0x80) != 0);
 		}
-		
+
 		if (metadata.containsKey(19)) {
 			type = HorseType.values()[(byte) metadata.get(19)];
 		}
-		
+
 		if (metadata.containsKey(20)) {
 			int flags = (int) metadata.get(20);
-			
+
 			int colourIndex = flags & 0x00FF;
 			int styleIndex = flags & 0xFF00;
-			
+
 			colour = HorseColour.values()[colourIndex];
 			style = HorseStyle.values()[styleIndex];
 		}
-		
+
 		if (metadata.containsKey(21)) {
 			owner = (String) metadata.get(21);
 		}
-		
+
 		if (metadata.containsKey(22)) {
 			armour = HorseArmour.values()[(int) metadata.get(22)];
 		}
 	}
-	
+
 	public enum HorseType {
 		HORSE,
 		DONKEY,
@@ -166,7 +166,7 @@ public class HorseEntity extends AgeableEntity {
 		ZOMBIE,
 		SKELETON;
 	}
-	
+
 	public enum HorseColour {
 		WHITE,
 		CREAM,
@@ -176,7 +176,7 @@ public class HorseEntity extends AgeableEntity {
 		GREY,
 		DARK_DOWN;
 	}
-	
+
 	public enum HorseStyle {
 		NONE,
 		WHITE,
@@ -184,7 +184,7 @@ public class HorseEntity extends AgeableEntity {
 		WHITE_DOTS,
 		BLACK_DOTS;
 	}
-	
+
 	public enum HorseArmour {
 		NONE,
 		IRON,

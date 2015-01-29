@@ -33,12 +33,12 @@ import org.topdank.minenet.api.entity.living.monsters.WitchEntity;
 import org.topdank.minenet.api.entity.living.monsters.WitherEntity;
 import org.topdank.minenet.api.entity.living.monsters.ZombieEntity;
 import org.topdank.minenet.api.entity.living.monsters.ZombiePigmanEntity;
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class VanillaLivingEntityFactory extends LivingEntityFactory {
 
 	@Override
-	public LivingEntity create(int typeId, World world, Integer id) throws IllegalArgumentException {
+	public LivingEntity create(int typeId, DefaultMinecraftWorld world, Integer id) throws IllegalArgumentException {
 		switch (typeId) {
 			case 50:
 				return new CreeperEntity(world, id);

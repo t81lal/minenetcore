@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.topdank.minenet.api.entity.living.LivingEntity;
 import org.topdank.minenet.api.game.location.BlockLocation;
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 import org.topdank.minenet.api.world.settings.GameMode;
 
 public class PlayerEntity extends LivingEntity {
@@ -16,7 +16,7 @@ public class PlayerEntity extends LivingEntity {
 	protected GameMode gameMode;
 	protected BlockLocation bedLocation;
 
-	public PlayerEntity(World world, int id, String name, GameMode gameMode) {
+	public PlayerEntity(DefaultMinecraftWorld world, int id, String name, GameMode gameMode) {
 		super(world, id, 0.6F, 1.8F);
 		this.name = name;
 		this.gameMode = gameMode;

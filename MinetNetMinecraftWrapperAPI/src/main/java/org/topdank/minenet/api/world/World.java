@@ -4,6 +4,10 @@ import org.topdank.minenet.api.entity.tile.TileEntity;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.ChunkLocation;
 import org.topdank.minenet.api.world.block.Chunk;
+import org.topdank.minenet.api.world.block.art.PaintingRegistry;
+import org.topdank.minenet.api.world.block.material.MaterialRegistry;
+import org.topdank.minenet.api.world.block.provider.factory.BlockFactory;
+import org.topdank.minenet.api.world.block.provider.registry.BlockRegistry;
 import org.topdank.minenet.api.world.settings.WorldSettings;
 
 public abstract interface World extends WorldPhysics {
@@ -14,13 +18,13 @@ public abstract interface World extends WorldPhysics {
 
 	public abstract long getTime();
 
-	public abstract int getBlockIdAt(BlockLocation loc);
+	public abstract int getBlockData(BlockLocation loc);
 
-	public abstract int getBlockIdAt(int x, int y, int z);
+	public abstract int getBlockData(int x, int y, int z);
 
-	public abstract void setBlockIdAt(int id, BlockLocation loc);
+	public abstract void setBlockData(int id, BlockLocation loc);
 
-	public abstract void setBlockIdAt(int id, int x, int y, int z);
+	public abstract void setBlockData(int id, int x, int y, int z);
 
 	public abstract TileEntity getTileEntityAt(BlockLocation loc);
 
@@ -31,4 +35,12 @@ public abstract interface World extends WorldPhysics {
 	public abstract Chunk getChunkAt(ChunkLocation location);
 
 	public abstract void destroy();
+
+	public abstract BlockFactory getBlockFactory();
+
+	public abstract BlockRegistry getBlockRegistry();
+
+	public abstract MaterialRegistry getMaterialRegistry();
+
+	public abstract PaintingRegistry getPaintingRegistry();
 }

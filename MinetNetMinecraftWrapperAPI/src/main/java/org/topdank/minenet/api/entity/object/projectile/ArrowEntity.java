@@ -2,13 +2,13 @@ package org.topdank.minenet.api.entity.object.projectile;
 
 import java.util.Map;
 
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class ArrowEntity extends ProjectileEntity {
 
 	private boolean isCrit;
 
-	public ArrowEntity(World world, int id) {
+	public ArrowEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id, 0.5F, 0.5F);
 	}
 

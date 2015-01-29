@@ -5,7 +5,7 @@ import java.util.Map;
 import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.item.ItemStack;
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class LivingEntity extends Entity {
 
@@ -25,7 +25,7 @@ public class LivingEntity extends Entity {
 	protected ItemStack[] armor = new ItemStack[4];
 	protected ItemStack heldItem = null;
 
-	public LivingEntity(World world, int id, float width, float height) {
+	public LivingEntity(DefaultMinecraftWorld world, int id, float width, float height) {
 		super(world, id, width, height);
 	}
 

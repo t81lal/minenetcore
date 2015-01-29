@@ -1,10 +1,10 @@
 package org.topdank.minenet.api.entity.object.projectile;
 
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class SmallFireBallEntity extends FireBallEntity {
-	
-	public SmallFireBallEntity(World world, int id) {
+
+	public SmallFireBallEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id);
 	}
 }

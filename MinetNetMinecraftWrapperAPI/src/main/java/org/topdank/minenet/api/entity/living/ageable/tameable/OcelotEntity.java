@@ -2,24 +2,24 @@ package org.topdank.minenet.api.entity.living.ageable.tameable;
 
 import java.util.Map;
 
-import org.topdank.minenet.api.world.World;
+import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 
 public class OcelotEntity extends TameableEntity {
-	
+
 	private byte type;
-	
-	public OcelotEntity(World world, int id) {
+
+	public OcelotEntity(DefaultMinecraftWorld world, int id) {
 		super(world, id, 0.6F, 0.7F);
 	}
-	
+
 	public byte getType() {
 		return type;
 	}
-	
+
 	public void setType(byte type) {
 		this.type = type;
 	}
-	
+
 	@Override
 	public void updateMetadata(Map<Integer, Object> metadata) {
 		if (metadata.containsKey(18)) {
