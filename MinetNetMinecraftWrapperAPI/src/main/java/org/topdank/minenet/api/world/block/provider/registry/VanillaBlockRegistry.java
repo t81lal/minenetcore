@@ -93,6 +93,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Bed", MATERIAL_CLOTH_KEY, 0.2F, 1.0F, new int[] { 416, 417, 418, 419, 424, 425, 426, 427, 428, 429, 430, 431 });
 
 		BoundingBox railBB = BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
+		railBB = null;
 		register("Powered Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 432, 433, 434, 435, 436, 437, 440, 441, 442, 443, 444, 445 });
 		register("Detector Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 448, 449, 450, 451, 452, 453, 456, 457, 458, 459, 460, 461 });
 		register("Sticky Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, railBB, new int[] { 464, 465, 466, 467, 468, 469, 472, 473, 474, 475, 476, 477 });
@@ -109,10 +110,12 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Piston Head", MATERIAL_PISTON_KEY, -1.0F, 0.0F, new int[] { 576, 577, 578, 579, 580, 581, 584, 585, 586, 587, 588, 589 });
 
         BoundingBox flowerBb = BoundingBox.create(0.3F, 0F, 0.3F, 0.7F, 0.6F, 0.7F);
+        flowerBb = null;
 		register("Yellow Flower", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, flowerBb,new int[] { 592 });
 		register("Red Flower", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, flowerBb, new int[] { 608, 609, 610, 611, 612, 613, 614, 615, 616 });
 
         BoundingBox mushroomBb = BoundingBox.create(0.3F, 0F, 0.3F, 0.7F, 0.6F, 0.7F);
+        mushroomBb = null;
 		register("Brown Mushroom", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, mushroomBb, new int[] { 624 });
 		register("Red Mushroom", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, mushroomBb, new int[] { 640 });
 
@@ -375,45 +378,82 @@ public class VanillaBlockRegistry extends BlockRegistry {
 				new BoundingBoxStatePair(2331, calcAnvilBounds(2331)),
 		});
 
-		register("Trapped Chest", MATERIAL_WOOD_KEY, 2.5F, 12.5F, new int[] { 2338, 2339, 2340, 2341 });
+		register("Trapped Chest", MATERIAL_WOOD_KEY, 2.5F, 12.5F, BoundingBox.create(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F), new int[] { 2338, 2339, 2340, 2341 });
 		register("Weighted Pressure Plate (Light)", MATERIAL_IRON_KEY, 0.5F, 2.5F,
-				new int[] { 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365, 2366, 2367 });
+				null, new int[] { 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365, 2366, 2367 });
 		register("Weighted Pressure Plate (Heavy)", MATERIAL_IRON_KEY, 0.5F, 2.5F,
-				new int[] { 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381, 2382, 2383 });
-		register("tile.comparator.name", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, new int[] { 2384, 2385, 2386, 2387, 2388, 2389, 2390, 2391, 2392, 2393, 2394, 2395, 2396, 2397, 2398, 2399 });
-		register("tile.comparator.name", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, new int[] { 2400, 2401, 2402, 2403, 2404, 2405, 2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415 });
-		register("Daylight Sensor", MATERIAL_WOOD_KEY, 0.2F, 1.0F, new int[] { 2416, 2417, 2418, 2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2427, 2428, 2429, 2430, 2431 });
+				null, new int[] { 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381, 2382, 2383 });
+		register("Comparator", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F), new int[] { 2384, 2385, 2386, 2387, 2388, 2389, 2390, 2391, 2392, 2393, 2394, 2395, 2396, 2397, 2398, 2399 });
+		register("Comparator", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F), new int[] { 2400, 2401, 2402, 2403, 2404, 2405, 2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415 });
+		register("Daylight Sensor", MATERIAL_WOOD_KEY, 0.2F, 1.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F), new int[] { 2416, 2417, 2418, 2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2427, 2428, 2429, 2430, 2431 });
 		register("Block of Redstone", MATERIAL_IRON_KEY, 5.0F, 30.0F, new int[] { 2432 });
 		register("Nether Quartz Ore", MATERIAL_ROCK_KEY, 3.0F, 15.0F, new int[] { 2448 });
+
 		register("Hopper", MATERIAL_IRON_KEY, 3.0F, 24.0F, new int[] { 2464, 2466, 2467, 2468, 2469, 2472, 2474, 2475, 2476, 2477 });
+
 		register("Block of Quartz", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2480, 2481, 2482, 2483, 2484 });
+
 		register("Quartz Stairs", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2496, 2497, 2498, 2499, 2500, 2501, 2502, 2503 });
-		register("Activator Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, new int[] { 2512, 2513, 2514, 2515, 2516, 2517, 2520, 2521, 2522, 2523, 2524, 2525 });
+
+		register("Activator Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 2512, 2513, 2514, 2515, 2516, 2517, 2520, 2521, 2522, 2523, 2524, 2525 });
+
 		register("Dropper", MATERIAL_ROCK_KEY, 3.5F, 17.5F, new int[] { 2528, 2529, 2530, 2531, 2532, 2533, 2536, 2537, 2538, 2539, 2540, 2541 });
+
 		register("Stained Clay", MATERIAL_ROCK_KEY, 1.25F, 21.0F, new int[] { 2544, 2545, 2546, 2547, 2548, 2549, 2550, 2551, 2552, 2553, 2554, 2555, 2556, 2557, 2558, 2559 });
-		register("Stained Glass Pane", MATERIAL_GLASS_KEY, 0.3F, 1.5F, new int[] { 2560, 2561, 2562, 2563, 2564, 2565, 2566, 2567, 2568, 2569, 2570, 2571, 2572, 2573, 2574, 2575 });
+
+		//TODO: calculate at runtime
+		register("Stained Glass Pane", MATERIAL_GLASS_KEY, 0.3F, 1.5F, null, new int[] { 2560, 2561, 2562, 2563, 2564, 2565, 2566, 2567, 2568, 2569, 2570, 2571, 2572, 2573, 2574, 2575 });
+
 		register("Leaves", MATERIAL_LEAVES_KEY, 0.2F, 1.0F, new int[] { 2576, 2577, 2580, 2581, 2584, 2585, 2588, 2589 });
 		register("Wood", MATERIAL_WOOD_KEY, 2.0F, 10.0F, new int[] { 2592, 2593, 2596, 2597, 2600, 2601, 2604, 2605 });
+
+		//TODO: calculate at runtime
 		register("Acacia Wood Stairs", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 2608, 2609, 2610, 2611, 2612, 2613, 2614, 2615 });
 		register("Dark Oak Wood Stairs", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 2624, 2625, 2626, 2627, 2628, 2629, 2630, 2631 });
+
 		register("Slime Block", MATERIAL_CLAY_KEY, 0.0F, 0.0F, new int[] { 2640 });
+
 		register("Barrier", MATERIAL_BARRIER_KEY, -1.0F, 1.8000004E7F, new int[] { 2656 });
-		register("Iron Trapdoor", MATERIAL_IRON_KEY, 5.0F, 25.0F, new int[] { 2672, 2673, 2674, 2675, 2676, 2677, 2678, 2679, 2680, 2681, 2682, 2683, 2684, 2685, 2686, 2687 });
-		register("tile.prismarine.name", MATERIAL_ROCK_KEY, 1.5F, 30.0F, new int[] { 2688, 2689, 2690 });
+
+		register("Iron Trapdoor", MATERIAL_IRON_KEY, 5.0F, 25.0F, new BoundingBoxStatePair[]{
+				new BoundingBoxStatePair(2672, calcTrapdoorBounds(2672)),
+				new BoundingBoxStatePair(2673, calcTrapdoorBounds(2673)),
+				new BoundingBoxStatePair(2674, calcTrapdoorBounds(2674)),
+				new BoundingBoxStatePair(2675, calcTrapdoorBounds(2675)),
+				new BoundingBoxStatePair(2676, calcTrapdoorBounds(2676)),
+				new BoundingBoxStatePair(2677, calcTrapdoorBounds(2677)),
+				new BoundingBoxStatePair(2678, calcTrapdoorBounds(2678)),
+				new BoundingBoxStatePair(2679, calcTrapdoorBounds(2679)),
+				new BoundingBoxStatePair(2680, calcTrapdoorBounds(2680)),
+				new BoundingBoxStatePair(2681, calcTrapdoorBounds(2681)),
+				new BoundingBoxStatePair(2682, calcTrapdoorBounds(2682)),
+				new BoundingBoxStatePair(2683, calcTrapdoorBounds(2683)),
+				new BoundingBoxStatePair(2684, calcTrapdoorBounds(2684)),
+				new BoundingBoxStatePair(2685, calcTrapdoorBounds(2685)),
+				new BoundingBoxStatePair(2686, calcTrapdoorBounds(2686)),
+				new BoundingBoxStatePair(2687, calcTrapdoorBounds(2687))
+		});
+
+		register("Prismarine", MATERIAL_ROCK_KEY, 1.5F, 30.0F, new int[] { 2688, 2689, 2690 });
 		register("Sea Lantern", MATERIAL_GLASS_KEY, 0.3F, 1.5F, new int[] { 2704 });
 		register("Hay Bale", MATERIAL_GRASS_KEY, 0.5F, 2.5F, new int[] { 2720, 2724, 2728 });
-		register("Carpet", MATERIAL_CARPET_KEY, 0.1F, 0.5F, new int[] { 2736, 2737, 2738, 2739, 2740, 2741, 2742, 2743, 2744, 2745, 2746, 2747, 2748, 2749, 2750, 2751 });
+		register("Carpet", MATERIAL_CARPET_KEY, 0.1F, 0.5F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F), new int[] { 2736, 2737, 2738, 2739, 2740, 2741, 2742, 2743, 2744, 2745, 2746, 2747, 2748, 2749, 2750, 2751 });
 		register("Hardened Clay", MATERIAL_ROCK_KEY, 1.25F, 21.0F, new int[] { 2752 });
 		register("Block of Coal", MATERIAL_ROCK_KEY, 5.0F, 30.0F, new int[] { 2768 });
 		register("Packed Ice", MATERIAL_PACKEDICE_KEY, 0.5F, 2.5F, new int[] { 2784 });
-		register("Plant", MATERIAL_VINE_KEY, 0.0F, 0.0F, new int[] { 2800, 2801, 2802, 2803, 2804, 2805, 2808 });
-		register("tile.banner.name", MATERIAL_WOOD_KEY, 1.0F, 5.0F, new int[] { 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831 });
-		register("tile.banner.name", MATERIAL_WOOD_KEY, 1.0F, 5.0F, new int[] { 2834, 2835, 2836, 2837 });
-		register("Daylight Sensor", MATERIAL_WOOD_KEY, 0.2F, 1.0F, new int[] { 2848, 2849, 2850, 2851, 2852, 2853, 2854, 2855, 2856, 2857, 2858, 2859, 2860, 2861, 2862, 2863 });
+
+		register("Plant", MATERIAL_VINE_KEY, 0.0F, 0.0F, null, new int[] { 2800, 2801, 2802, 2803, 2804, 2805, 2808 });
+
+		register("Banner", MATERIAL_WOOD_KEY, 1.0F, 5.0F, null, new int[] { 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831 });
+		register("Banner", MATERIAL_WOOD_KEY, 1.0F, 5.0F, null, new int[] { 2834, 2835, 2836, 2837 });
+		register("Daylight Sensor", MATERIAL_WOOD_KEY, 0.2F, 1.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F), new int[] { 2848, 2849, 2850, 2851, 2852, 2853, 2854, 2855, 2856, 2857, 2858, 2859, 2860, 2861, 2862, 2863 });
 		register("Red Sandstone", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2864, 2865, 2866 });
 		register("Red Sandstone Stairs", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2880, 2881, 2882, 2883, 2884, 2885, 2886, 2887 });
-		register("tile.stoneSlab2.name", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 2896, 2904 });
-		register("tile.stoneSlab2.name", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 2912, 2920 });
+
+		register("Double Red Sandstone Slab", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 2896, 2904 });
+		registerSlabs("Red Sandstone Slab", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 2912, 2920 });
+
+		//TOOD: calculate at runtime
 		register("Spruce Fence Gate", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 2928, 2929, 2930, 2931, 2932, 2933, 2934, 2935, 2936, 2937, 2938, 2939, 2940, 2941, 2942, 2943 });
 		register("Birch Fence Gate", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 2944, 2945, 2946, 2947, 2948, 2949, 2950, 2951, 2952, 2953, 2954, 2955, 2956, 2957, 2958, 2959 });
 		register("Jungle Fence Gate", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 2960, 2961, 2962, 2963, 2964, 2965, 2966, 2967, 2968, 2969, 2970, 2971, 2972, 2973, 2974, 2975 });
@@ -424,11 +464,77 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Jungle Fence", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 3040 });
 		register("Dark Oak Fence", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 3056 });
 		register("Acacia Fence", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 3072 });
-		register("tile.doorSpruce.name", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new int[] { 3088, 3089, 3090, 3091, 3092, 3093, 3094, 3095, 3096, 3097, 3098, 3099 });
-		register("tile.doorBirch.name", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new int[] { 3104, 3105, 3106, 3107, 3108, 3109, 3110, 3111, 3112, 3113, 3114, 3115 });
-		register("tile.doorJungle.name", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new int[] { 3120, 3121, 3122, 3123, 3124, 3125, 3126, 3127, 3128, 3129, 3130, 3131 });
-		register("tile.doorAcacia.name", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new int[] { 3136, 3137, 3138, 3139, 3140, 3141, 3142, 3143, 3144, 3145, 3146, 3147 });
-		register("tile.doorDarkOak.name", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new int[] { 3152, 3153, 3154, 3155, 3156, 3157, 3158, 3159, 3160, 3161, 3162, 3163 });
+
+		register("Spruce Door", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new BoundingBoxStatePair[]{
+				new BoundingBoxStatePair(3088, calcDoorBounds(3088)),
+				new BoundingBoxStatePair(3089, calcDoorBounds(3089)),
+				new BoundingBoxStatePair(3090, calcDoorBounds(3090)),
+				new BoundingBoxStatePair(3091, calcDoorBounds(3091)),
+				new BoundingBoxStatePair(3092, calcDoorBounds(3092)),
+				new BoundingBoxStatePair(3093, calcDoorBounds(3093)),
+				new BoundingBoxStatePair(3094, calcDoorBounds(3094)),
+				new BoundingBoxStatePair(3095, calcDoorBounds(3095)),
+				new BoundingBoxStatePair(3096, calcDoorBounds(3096)),
+				new BoundingBoxStatePair(3097, calcDoorBounds(3097)),
+				new BoundingBoxStatePair(3098, calcDoorBounds(3098)),
+				new BoundingBoxStatePair(3099, calcDoorBounds(3099))
+		});
+		register("Birch Door", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new BoundingBoxStatePair[]{
+				new BoundingBoxStatePair(3104, calcDoorBounds(3104)),
+				new BoundingBoxStatePair(3105, calcDoorBounds(3105)),
+				new BoundingBoxStatePair(3106, calcDoorBounds(3106)),
+				new BoundingBoxStatePair(3107, calcDoorBounds(3107)),
+				new BoundingBoxStatePair(3108, calcDoorBounds(3108)),
+				new BoundingBoxStatePair(3109, calcDoorBounds(3109)),
+				new BoundingBoxStatePair(3110, calcDoorBounds(3110)),
+				new BoundingBoxStatePair(3111, calcDoorBounds(3111)),
+				new BoundingBoxStatePair(3112, calcDoorBounds(3112)),
+				new BoundingBoxStatePair(3113, calcDoorBounds(3113)),
+				new BoundingBoxStatePair(3114, calcDoorBounds(3114)),
+				new BoundingBoxStatePair(3115, calcDoorBounds(3115))
+		});
+		register("Jungle Door", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new BoundingBoxStatePair[]{
+				new BoundingBoxStatePair(3120, calcDoorBounds(3120)),
+				new BoundingBoxStatePair(3121, calcDoorBounds(3121)),
+				new BoundingBoxStatePair(3122, calcDoorBounds(3122)),
+				new BoundingBoxStatePair(3123, calcDoorBounds(3123)),
+				new BoundingBoxStatePair(3124, calcDoorBounds(3124)),
+				new BoundingBoxStatePair(3125, calcDoorBounds(3125)),
+				new BoundingBoxStatePair(3126, calcDoorBounds(3126)),
+				new BoundingBoxStatePair(3127, calcDoorBounds(3127)),
+				new BoundingBoxStatePair(3128, calcDoorBounds(3128)),
+				new BoundingBoxStatePair(3129, calcDoorBounds(3129)),
+				new BoundingBoxStatePair(3130, calcDoorBounds(3130)),
+				new BoundingBoxStatePair(3131, calcDoorBounds(3131))
+		});
+		register("Acacia Door", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new BoundingBoxStatePair[]{
+				new BoundingBoxStatePair(3136, calcDoorBounds(3136)),
+				new BoundingBoxStatePair(3137, calcDoorBounds(3137)),
+				new BoundingBoxStatePair(3138, calcDoorBounds(3138)),
+				new BoundingBoxStatePair(3139, calcDoorBounds(3139)),
+				new BoundingBoxStatePair(3140, calcDoorBounds(3140)),
+				new BoundingBoxStatePair(3141, calcDoorBounds(3141)),
+				new BoundingBoxStatePair(3142, calcDoorBounds(3142)),
+				new BoundingBoxStatePair(3143, calcDoorBounds(3143)),
+				new BoundingBoxStatePair(3144, calcDoorBounds(3144)),
+				new BoundingBoxStatePair(3145, calcDoorBounds(3145)),
+				new BoundingBoxStatePair(3146, calcDoorBounds(3146)),
+				new BoundingBoxStatePair(3147, calcDoorBounds(3147))
+		});
+		register("Dark Oak Door", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new BoundingBoxStatePair[]{
+				new BoundingBoxStatePair(3152, calcDoorBounds(3152)),
+				new BoundingBoxStatePair(3153, calcDoorBounds(3153)),
+				new BoundingBoxStatePair(3154, calcDoorBounds(3154)),
+				new BoundingBoxStatePair(3155, calcDoorBounds(3155)),
+				new BoundingBoxStatePair(3156, calcDoorBounds(3156)),
+				new BoundingBoxStatePair(3157, calcDoorBounds(3157)),
+				new BoundingBoxStatePair(3158, calcDoorBounds(3158)),
+				new BoundingBoxStatePair(3159, calcDoorBounds(3159)),
+				new BoundingBoxStatePair(3160, calcDoorBounds(3160)),
+				new BoundingBoxStatePair(3161, calcDoorBounds(3161)),
+				new BoundingBoxStatePair(3162, calcDoorBounds(3162)),
+				new BoundingBoxStatePair(3163, calcDoorBounds(3163))
+		});
 		//@formatter:on
 	}
 
@@ -573,7 +679,6 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		float cakeFactor = 0.0625F;
 		float slicesFactor = (float) (1 + ((id & 7) * 2)) / 16.0F;
 		float height = 0.5F;
-		System.out.println(BoundingBox.create(slicesFactor, 0F, cakeFactor, 1 - cakeFactor, height, 1 - cakeFactor));
 		return BoundingBox.create(slicesFactor, 0F, cakeFactor, 1 - cakeFactor, height, 1 - cakeFactor);
 	}
 
@@ -612,12 +717,4 @@ public class VanillaBlockRegistry extends BlockRegistry {
 	protected Builder builder(String name, String material) {
 		return new Builder().name(name).material(worldProvider.getMaterialRegistry().getByKey(material.toUpperCase())).maxStack(64).friction(0.6F);
 	}
-
-	// public static void main(String[] args) {
-	// VanillaWorldProvider p = new VanillaWorldProvider();
-	// int[] ints = new int[] { 1042, 1043, 1044, 1045 };
-	// for (int id : ints) {
-	// System.out.println(Integer.toBinaryString(id & 3));
-	// }
-	// }
 }
