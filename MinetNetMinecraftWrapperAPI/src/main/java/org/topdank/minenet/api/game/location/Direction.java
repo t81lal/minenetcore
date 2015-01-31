@@ -40,15 +40,15 @@ public enum Direction {
 		this.zOffset = zOffset;
 	}
 
-	public int getxOffset() {
+	public int getOffsetX() {
 		return xOffset;
 	}
 
-	public int getyOffset() {
+	public int getOffsetY() {
 		return yOffset;
 	}
 
-	public int getzOffset() {
+	public int getOffsetZ() {
 		return zOffset;
 	}
 }

@@ -10,14 +10,18 @@ public final class BoundingBox {
 
 	public static final BoundingBox NORMAL_BOUNDING_BOX = create(0, 0, 0, 1, 1, 1);
 
-	private final float minX, minY, minZ;
-	private final float maxX, maxY, maxZ;
+	private final double minX, minY, minZ;
+	private final double maxX, maxY, maxZ;
 
-	public static BoundingBox create(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+	public static BoundingBox create(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 		return new BoundingBox(Math.min(minX, maxX), Math.min(minY, maxY), Math.min(minZ, maxZ), Math.max(minX, maxX), Math.max(minY, maxY), Math.max(minZ, maxZ));
 	}
 
-	protected BoundingBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+	public static BoundingBox create(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+		return create((double) minX, (double) minY, (double) minZ, (double) maxX, (double) maxY, (double) maxZ);
+	}
+
+	protected BoundingBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
 		this.minX = minX;
 		this.minY = minY;
 		this.minZ = minZ;
@@ -26,11 +30,11 @@ public final class BoundingBox {
 		this.maxZ = maxZ;
 	}
 
-	public BoundingBox expandBy(float x, float y, float z) {
+	public BoundingBox expandBy(double x, double y, double z) {
 		if (((x + 0.0) == 0) && ((y + 0.0) == 0) && ((z + 0.0) == 0))
 			return this;
-		float newMinX = minX, newMinY = minY, newMinZ = minZ;
-		float newMaxX = maxX, newMaxY = maxY, newMaxZ = maxZ;
+		double newMinX = minX, newMinY = minY, newMinZ = minZ;
+		double newMaxX = maxX, newMaxY = maxY, newMaxZ = maxZ;
 		if (x < 0)
 			newMinX += x;
 		else
@@ -46,81 +50,81 @@ public final class BoundingBox {
 		return create(newMinX, newMinY, newMinZ, newMaxX, newMaxY, newMaxZ);
 	}
 
-	public BoundingBox expand(float offX, float offY, float offZ) {
+	public BoundingBox expand(double offX, double offY, double offZ) {
 		if (((offX + 0.0) == 0) && ((offY + 0.0) == 0) && ((offZ + 0.0) == 0))
 			return this;
-		float newMinX = minX - offX, newMinY = minY - offY, newMinZ = minZ - offZ;
-		float newMaxX = maxX + offX, newMaxY = maxY + offY, newMaxZ = maxZ + offZ;
+		double newMinX = minX - offX, newMinY = minY - offY, newMinZ = minZ - offZ;
+		double newMaxX = maxX + offX, newMaxY = maxY + offY, newMaxZ = maxZ + offZ;
 		if (newMinX > newMaxX)
-			newMinX = newMaxX = (float) ((newMinX + newMaxX) / 2.0);
+			newMinX = newMaxX = (double) ((newMinX + newMaxX) / 2.0);
 		if (newMinY > newMaxY)
-			newMinY = newMaxY = (float) ((newMinY + newMaxY) / 2.0);
+			newMinY = newMaxY = (double) ((newMinY + newMaxY) / 2.0);
 		if (newMinZ > newMaxZ)
-			newMinZ = newMaxZ = (float) ((newMinZ + newMaxZ) / 2.0);
+			newMinZ = newMaxZ = (double) ((newMinZ + newMaxZ) / 2.0);
 		return create(newMinX, newMinY, newMinZ, newMaxX, newMaxY, newMaxZ);
 	}
 
-	public BoundingBox contract(float offX, float offY, float offZ) {
+	public BoundingBox contract(double offX, double offY, double offZ) {
 		return expand(-offX, -offY, -offZ);
 	}
 
-	public BoundingBox offset(float offX, float offY, float offZ) {
+	public BoundingBox offset(double offX, double offY, double offZ) {
 		if (((offX + 0.0) == 0) && ((offY + 0.0) == 0) && ((offZ + 0.0) == 0))
 			return this;
 		return create(minX + offX, minY + offY, minZ + offZ, maxX + offX, maxY + offY, maxZ + offZ);
 	}
 
 	public BoundingBox offset(PreciseLocation location) {
-		return offset((float) location.getX(), (float) location.getY(), (float) location.getZ());
+		return offset((double) location.getX(), (double) location.getY(), (double) location.getZ());
 	}
 
 	public BoundingBox offset(BlockLocation location) {
 		return offset(location.getX(), location.getY(), location.getZ());
 	}
 
-	public BoundingBox include(float x, float y, float z) {
+	public BoundingBox include(double x, double y, double z) {
 		return create(Math.min(minX, x), Math.min(minY, y), Math.min(minZ, z), Math.max(maxX, x), Math.max(maxY, y), Math.max(maxZ, z));
 	}
 
-	public float boundedShiftX(BoundingBox other, float offX) {
+	public double boundedShiftX(BoundingBox other, double offX) {
 		if ((minY >= other.getMaxY()) || (maxY <= other.getMinY()) || (minZ >= other.getMaxZ()) || (maxZ <= other.getMinZ()))
 			return offX;
 		if ((offX > 0) && (minX >= other.getMaxX())) {
-			float diffX = minX - other.getMaxX();
+			double diffX = minX - other.getMaxX();
 			if (diffX < offX)
 				return diffX;
 		} else if ((offX < 0) && (maxX <= other.getMinX())) {
-			float diffX = maxX - other.getMinX();
+			double diffX = maxX - other.getMinX();
 			if (diffX > offX)
 				return diffX;
 		}
 		return offX;
 	}
 
-	public float boundedShiftY(BoundingBox other, float offY) {
+	public double boundedShiftY(BoundingBox other, double offY) {
 		if ((minX >= other.getMaxX()) || (maxX <= other.getMinX()) || (minZ >= other.getMaxZ()) || (maxZ <= other.getMinZ()))
 			return offY;
 		if ((offY > 0) && (minY >= other.getMaxY())) {
-			float diffY = minY - other.getMaxY();
+			double diffY = minY - other.getMaxY();
 			if (diffY < offY)
 				return diffY;
 		} else if ((offY < 0) && (maxY <= other.getMinY())) {
-			float diffY = maxY - other.getMinY();
+			double diffY = maxY - other.getMinY();
 			if (diffY > offY)
 				return diffY;
 		}
 		return offY;
 	}
 
-	public float boundedShiftZ(BoundingBox other, float offZ) {
+	public double boundedShiftZ(BoundingBox other, double offZ) {
 		if ((minX >= other.getMaxX()) || (maxX <= other.getMinX()) || (minY >= other.getMaxY()) || (maxY <= other.getMinY()))
 			return offZ;
 		if ((offZ > 0) && (minZ >= other.getMaxZ())) {
-			float diffZ = minZ - other.getMaxZ();
+			double diffZ = minZ - other.getMaxZ();
 			if (diffZ < offZ)
 				return diffZ;
 		} else if ((offZ < 0) && (maxZ <= other.getMinZ())) {
-			float diffZ = maxZ - other.getMinZ();
+			double diffZ = maxZ - other.getMinZ();
 			if (diffZ > offZ)
 				return diffZ;
 		}
@@ -141,7 +145,7 @@ public final class BoundingBox {
 		return contains(location.getX(), location.getY(), location.getZ());
 	}
 
-	public boolean contains(float x, float y, float z) {
+	public boolean contains(double x, double y, double z) {
 		if ((minX >= x) || (maxX <= x))
 			return false;
 		if ((minY >= y) || (maxY <= y))
@@ -151,27 +155,27 @@ public final class BoundingBox {
 		return true;
 	}
 
-	public float getMinX() {
+	public double getMinX() {
 		return minX;
 	}
 
-	public float getMinY() {
+	public double getMinY() {
 		return minY;
 	}
 
-	public float getMinZ() {
+	public double getMinZ() {
 		return minZ;
 	}
 
-	public float getMaxX() {
+	public double getMaxX() {
 		return maxX;
 	}
 
-	public float getMaxY() {
+	public double getMaxY() {
 		return maxY;
 	}
 
-	public float getMaxZ() {
+	public double getMaxZ() {
 		return maxZ;
 	}
 
@@ -183,15 +187,15 @@ public final class BoundingBox {
 		return new BlockLocation(maxX, maxY, maxZ);
 	}
 
-	public float getWidth() {
+	public double getWidth() {
 		return maxX - minX;
 	}
 
-	public float getLength() {
+	public double getLength() {
 		return maxZ - minZ;
 	}
 
-	public float getHeight() {
+	public double getHeight() {
 		return maxY - minY;
 	}
 
@@ -199,12 +203,19 @@ public final class BoundingBox {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + Float.floatToIntBits(maxX);
-		result = (prime * result) + Float.floatToIntBits(maxY);
-		result = (prime * result) + Float.floatToIntBits(maxZ);
-		result = (prime * result) + Float.floatToIntBits(minX);
-		result = (prime * result) + Float.floatToIntBits(minY);
-		result = (prime * result) + Float.floatToIntBits(minZ);
+		long temp;
+		temp = Double.doubleToLongBits(maxX);
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(maxY);
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(maxZ);
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(minX);
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(minY);
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(minZ);
+		result = (prime * result) + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -217,17 +228,17 @@ public final class BoundingBox {
 		if (getClass() != obj.getClass())
 			return false;
 		BoundingBox other = (BoundingBox) obj;
-		if (Float.floatToIntBits(maxX) != Float.floatToIntBits(other.maxX))
+		if (Double.doubleToLongBits(maxX) != Double.doubleToLongBits(other.maxX))
 			return false;
-		if (Float.floatToIntBits(maxY) != Float.floatToIntBits(other.maxY))
+		if (Double.doubleToLongBits(maxY) != Double.doubleToLongBits(other.maxY))
 			return false;
-		if (Float.floatToIntBits(maxZ) != Float.floatToIntBits(other.maxZ))
+		if (Double.doubleToLongBits(maxZ) != Double.doubleToLongBits(other.maxZ))
 			return false;
-		if (Float.floatToIntBits(minX) != Float.floatToIntBits(other.minX))
+		if (Double.doubleToLongBits(minX) != Double.doubleToLongBits(other.minX))
 			return false;
-		if (Float.floatToIntBits(minY) != Float.floatToIntBits(other.minY))
+		if (Double.doubleToLongBits(minY) != Double.doubleToLongBits(other.minY))
 			return false;
-		if (Float.floatToIntBits(minZ) != Float.floatToIntBits(other.minZ))
+		if (Double.doubleToLongBits(minZ) != Double.doubleToLongBits(other.minZ))
 			return false;
 		return true;
 	}
