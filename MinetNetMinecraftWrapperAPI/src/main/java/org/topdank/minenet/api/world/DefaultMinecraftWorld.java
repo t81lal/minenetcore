@@ -15,6 +15,7 @@ import org.topdank.minenet.api.event.internal.world.InternalBlockChangeEvent;
 import org.topdank.minenet.api.event.internal.world.InternalChunkLoadEvent;
 import org.topdank.minenet.api.event.internal.world.InternalMultiBlockChangeEvent;
 import org.topdank.minenet.api.event.internal.world.InternalMultiChunkLoadEvent;
+import org.topdank.minenet.api.event.world.TimeUpdateEvent;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.ChunkLocation;
 import org.topdank.minenet.api.nbt.tag.builtin.CompoundTag;
@@ -114,8 +115,11 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 		// optimised so less objects
 		int x = e.getX(), y = e.getY(), z = e.getZ();
 		int chunkX = x >> 4, chunkY = y >> 4, chunkZ = z >> 4;
-		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		Chunk chunk = getChunkAt(new ChunkLocation(chunkX, chunkY, chunkZ));
+		if (chunk == null)
+			return;
+
+		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		chunk.getBlocks().set(x - chunkBaseX, y - chunkBaseY, z - chunkBaseZ, e.getData());
 	}
 
@@ -127,10 +131,18 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 		for (int i = 0; i < length; i++) {
 			int x = xs[i], y = ys[i], z = zs[i];
 			int chunkX = x >> 4, chunkY = y >> 4, chunkZ = z >> 4;
-			int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 			Chunk chunk = getChunkAt(new ChunkLocation(chunkX, chunkY, chunkZ));
+			if (chunk == null)
+				continue;
+			int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 			chunk.getBlocks().set(x - chunkBaseX, y - chunkBaseY, z - chunkBaseZ, datas[i]);
 		}
+	}
+
+	@EventTarget(priority = EventPriority.HIGHEST)
+	private void onTimeUpdateEvent(TimeUpdateEvent e) {
+		worldTime = e.getTime();
+		worldAge = e.getAge();
 	}
 
 	@Override
@@ -156,8 +168,11 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 	@Override
 	public int getBlockData(int x, int y, int z) {
 		int chunkX = x >> 4, chunkY = y >> 4, chunkZ = z >> 4;
-		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		Chunk chunk = getChunkAt(new ChunkLocation(chunkX, chunkY, chunkZ));
+		if (chunk == null)
+			return -1;
+
+		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		return chunk.getBlocks().get(x - chunkBaseX, y - chunkBaseY, z - chunkBaseZ);
 	}
 
@@ -169,19 +184,22 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 	@Override
 	public void setBlockData(int data, int x, int y, int z) {
 		int chunkX = x >> 4, chunkY = y >> 4, chunkZ = z >> 4;
-		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		Chunk chunk = getChunkAt(new ChunkLocation(chunkX, chunkY, chunkZ));
+		if (chunk == null)
+			return;
+
+		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		chunk.getBlocks().set(x - chunkBaseX, y - chunkBaseY, z - chunkBaseZ, data);
 	}
 
 	@Override
 	public TileEntity getTileEntityAt(BlockLocation loc) {
-		return null;
+		throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support tile/block entities.");
 	}
 
 	@Override
 	public void setTileEntityAt(TileEntity tileEntity, BlockLocation loc) {
-
+		throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support tile/block entities.");
 	}
 
 	@Override

@@ -458,7 +458,7 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public BoundingBox getBoundingBoxAt(double x, double y, double z) {
-		return BoundingBox.getBoundingBox(x - (width / 2.0), y - (height / 2.0), z - (width / 2.0), x + (width / 2.0), y + (height / 2.0), z + (width / 2.0));
+		return BoundingBox.create(x - (width / 2.0), y - (height / 2.0), z - (width / 2.0), x + (width / 2.0), y + (height / 2.0), z + (width / 2.0));
 	}
 
 	@Override

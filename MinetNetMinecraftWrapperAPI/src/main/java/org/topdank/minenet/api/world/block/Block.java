@@ -6,7 +6,7 @@ import org.topdank.minenet.api.world.World;
 
 public class Block {
 
-	private static final BoundingBox DEFAULT = BoundingBox.getBoundingBox(0, 0, 0, 1, 1, 1);
+	private static final BoundingBox DEFAULT = BoundingBox.create(0, 0, 0, 1, 1, 1);
 
 	private final World world;
 	private final Chunk chunk;

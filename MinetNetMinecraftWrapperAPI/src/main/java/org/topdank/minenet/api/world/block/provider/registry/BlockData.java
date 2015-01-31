@@ -1,5 +1,6 @@
 package org.topdank.minenet.api.world.block.provider.registry;
 
+import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.world.block.id.BlockId;
 import org.topdank.minenet.api.world.block.material.Material;
 
@@ -12,8 +13,9 @@ public class BlockData {
 	private final float blastResistence;
 	private final float friction;
 	private final int maxStack;
+	private final BoundingBox boundingBox;
 
-	protected BlockData(BlockId id, Material material, String name, float hardness, float blastResistence, float friction, int maxStack) {
+	protected BlockData(BlockId id, Material material, String name, float hardness, float blastResistence, float friction, int maxStack, BoundingBox boundingBox) {
 		this.id = id;
 		this.material = material;
 		this.name = name;
@@ -21,6 +23,7 @@ public class BlockData {
 		this.blastResistence = blastResistence;
 		this.friction = friction;
 		this.maxStack = maxStack;
+		this.boundingBox = boundingBox;
 	}
 
 	public BlockId getId() {
@@ -51,6 +54,10 @@ public class BlockData {
 		return maxStack;
 	}
 
+	public BoundingBox getBoundingBox() {
+		return boundingBox;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof BlockData))
@@ -73,6 +80,7 @@ public class BlockData {
 		protected float blastResistence;
 		protected float friction;
 		protected int maxStack;
+		protected BoundingBox boundingBox;
 
 		protected Builder() {
 		}
@@ -112,8 +120,32 @@ public class BlockData {
 			return this;
 		}
 
+		public Builder boundingBox(BoundingBox box) {
+			boundingBox = box;
+			return this;
+		}
+
 		public BlockData create() {
-			return new BlockData(id, material, name, hardness, blastResistence, friction, maxStack);
+			return new BlockData(id, material, name, hardness, blastResistence, friction, maxStack, boundingBox);
+		}
+	}
+
+	public static class BoundingBoxStatePair {
+
+		private final int state;
+		private final BoundingBox box;
+
+		public BoundingBoxStatePair(int state, BoundingBox box) {
+			this.state = state;
+			this.box = box;
+		}
+
+		public int getState() {
+			return state;
+		}
+
+		public BoundingBox getBox() {
+			return box;
 		}
 	}
 }
