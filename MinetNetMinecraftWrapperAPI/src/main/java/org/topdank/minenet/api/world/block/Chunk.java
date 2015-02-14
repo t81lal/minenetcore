@@ -1,19 +1,34 @@
 package org.topdank.minenet.api.world.block;
 
+import org.topdank.minenet.api.game.location.BlockLocation;
+import org.topdank.minenet.api.game.location.ChunkLocation;
+
 public class Chunk {
 
+	private ChunkLocation chunkLocation;
+	private BlockLocation blockLocation;
 	private ShortArray3d blocks;
 	private NibbleArray3d blocklight;
 	private NibbleArray3d skylight;
 
-	public Chunk(boolean skylight) {
-		this(new ShortArray3d(4096), new NibbleArray3d(4096), skylight ? new NibbleArray3d(4096) : null);
+	public Chunk(boolean skylight, ChunkLocation loc) {
+		this(loc, new ShortArray3d(4096), new NibbleArray3d(4096), skylight ? new NibbleArray3d(4096) : null);
 	}
 
-	public Chunk(ShortArray3d blocks, NibbleArray3d blocklight, NibbleArray3d skylight) {
+	public Chunk(ChunkLocation chunkLocation, ShortArray3d blocks, NibbleArray3d blocklight, NibbleArray3d skylight) {
+		this.chunkLocation = chunkLocation;
+		blockLocation = new BlockLocation(chunkLocation);
 		this.blocks = blocks;
 		this.blocklight = blocklight;
 		this.skylight = skylight;
+	}
+
+	public ChunkLocation getChunkLocation() {
+		return chunkLocation;
+	}
+
+	public BlockLocation getBlockLocation() {
+		return blockLocation;
 	}
 
 	public ShortArray3d getBlocks() {

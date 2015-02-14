@@ -1,6 +1,5 @@
 package org.topdank.minenet.api.world.block.provider.factory;
 
-import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.provider.factory.Factory;
 import org.topdank.minenet.api.world.World;
 import org.topdank.minenet.api.world.block.Block;
@@ -15,5 +14,5 @@ public abstract class BlockFactory extends Factory<Block> {
 		this.worldProvider = worldProvider;
 	}
 
-	public abstract Block create(World world, BlockLocation location, BlockId blockId);
+	public abstract Block create(World world, int x, int y, int z, BlockId blockId);
 }

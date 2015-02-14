@@ -1,14 +1,12 @@
 package org.topdank.minenet.api.world.block.provider.factory;
 
 import org.topdank.minenet.api.game.BoundingBox;
-import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.Direction;
 import org.topdank.minenet.api.world.World;
 import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.id.BlockId;
 import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 import org.topdank.minenet.api.world.block.provider.registry.BlockRegistry;
-import org.topdank.minenet.api.world.provider.VanillaWorldProvider;
 import org.topdank.minenet.api.world.provider.WorldProvider;
 
 public class VanillaBlockFactory extends BlockFactory {
@@ -38,7 +36,7 @@ public class VanillaBlockFactory extends BlockFactory {
 	private BlockRegistry registry;
 
 	@Override
-	public Block create(World world, BlockLocation location, BlockId blockId) {
+	public Block create(World world, int x, int y, int z, BlockId blockId) {
 		if (registry == null)
 			registry = worldProvider.getBlockProvider().getBlockRegistry();
 
@@ -52,19 +50,16 @@ public class VanillaBlockFactory extends BlockFactory {
 		int id = data >> 4;
 
 		if (STAIR_IDS[id] == id) {
-			BoundingBox[] bb = calcStairBbs(world, location, data);
-			return new Block(world, location, id, data & 0x0F, bb);
+			BoundingBox[] bb = calcStairBbs(world, x, y, z, data);
+			return new Block(world, x, y, z, id, data & 0x0F, bb);
 		}
 
-		return new Block(world, location, id, data & 0x0F);
+		return new Block(world, x, y, z, id, data & 0x0F);
 	}
 
-	public static BoundingBox[] calcStairBbs(World world, BlockLocation loc, int data) {
+	public static BoundingBox[] calcStairBbs(World world, int x, int y, int z, int data) {
 		Direction direction = orientation(data);
 		boolean upsideDown = (data & 4) != 0;
-		int x = loc.getX();
-		int y = loc.getY();
-		int z = loc.getZ();
 		double by = y, ty = y + 0.5;
 		if (upsideDown) {
 			by = y + 0.5;
@@ -170,9 +165,5 @@ public class VanillaBlockFactory extends BlockFactory {
 			}
 		}
 		return direction;
-	}
-
-	public static void main(String[] args) {
-		VanillaWorldProvider p = new VanillaWorldProvider();
 	}
 }

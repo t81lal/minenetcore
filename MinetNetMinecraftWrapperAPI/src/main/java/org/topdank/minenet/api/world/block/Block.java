@@ -1,7 +1,6 @@
 package org.topdank.minenet.api.world.block;
 
 import org.topdank.minenet.api.game.BoundingBox;
-import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.World;
 
 public class Block {
@@ -10,24 +9,28 @@ public class Block {
 	private static final BoundingBox NONE = BoundingBox.create(0, 0, 0, 0, 0, 0);
 
 	private final World world;
-	private final BlockLocation location;
+	private final int x, y, z;
 	private final int id, metadata;
 	private final BoundingBox[] boxes;
 	private final BoundingBox concatBox;
 
-	public Block(World world, BlockLocation location, int id, int metadata) {
+	public Block(World world, int x, int y, int z, int id, int metadata) {
 		this.world = world;
-		this.location = location;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		this.id = id;
 		this.metadata = metadata;
-		BoundingBox box = DEFAULT.offset(location);
+		BoundingBox box = DEFAULT.offset(x, y, z);
 		boxes = new BoundingBox[] { box };
 		concatBox = box;
 	}
 
-	public Block(World world, BlockLocation location, int id, int metadata, BoundingBox... bbs) {
+	public Block(World world, int x, int y, int z, int id, int metadata, BoundingBox... bbs) {
 		this.world = world;
-		this.location = location;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		this.id = id;
 		this.metadata = metadata;
 		boxes = bbs;
@@ -56,8 +59,16 @@ public class Block {
 		return world;
 	}
 
-	public BlockLocation getLocation() {
-		return location;
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getZ() {
+		return z;
 	}
 
 	public int getId() {

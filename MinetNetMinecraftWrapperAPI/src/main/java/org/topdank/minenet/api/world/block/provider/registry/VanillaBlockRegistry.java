@@ -57,7 +57,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		registered = true;
 
 		//@formatter:off
-		register("Air", MATERIAL_AIR_KEY, 0.0F, 0.0F, null, 0);
+		register("Air", MATERIAL_AIR_KEY, 0.0F, 0.0F, false, null, 0);
 
 		register("Stone", MATERIAL_ROCK_KEY, 1.5F, 30.0F, new int[]{16,17,18,19,20,21,22});
 		register("Grass", MATERIAL_GRASS_KEY, 0.6F, 3.0F, 32);
@@ -65,7 +65,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Cobblestone", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 64 });
 		register("Wooden Planks", MATERIAL_WOOD_KEY, 2.0F, 15.0F, new int[] { 80, 81, 82, 83, 84, 85 });
 
-		register("Sappling", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, BoundingBox.create(0.1F, 0, 0.1F, 0.9F, 0.8F, 0.9F), new int[] { 96, 97, 98, 99, 100, 101, 104, 105, 106, 107, 108, 109 });
+		register("Sappling", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, BoundingBox.create(0.1F, 0, 0.1F, 0.9F, 0.8F, 0.9F), new int[] { 96, 97, 98, 99, 100, 101, 104, 105, 106, 107, 108, 109 });
 
 		register("Bedrock", MATERIAL_ROCK_KEY, -1.0F, 1.8E7F, new int[] { 112 });
 
@@ -94,15 +94,15 @@ public class VanillaBlockRegistry extends BlockRegistry {
 
 		BoundingBox railBB = BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 		railBB = null;
-		register("Powered Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 432, 433, 434, 435, 436, 437, 440, 441, 442, 443, 444, 445 });
-		register("Detector Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 448, 449, 450, 451, 452, 453, 456, 457, 458, 459, 460, 461 });
-		register("Sticky Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, railBB, new int[] { 464, 465, 466, 467, 468, 469, 472, 473, 474, 475, 476, 477 });
+		register("Powered Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, false, railBB, new int[] { 432, 433, 434, 435, 436, 437, 440, 441, 442, 443, 444, 445 });
+		register("Detector Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, false, railBB, new int[] { 448, 449, 450, 451, 452, 453, 456, 457, 458, 459, 460, 461 });
+		register("Sticky Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, false, railBB, new int[] { 464, 465, 466, 467, 468, 469, 472, 473, 474, 475, 476, 477 });
 
 		register("Cobweb", MATERIAL_WEB_KEY, 4.0F, 20.0F, new int[] { 480 });
 
 
 		register("Grass", MATERIAL_VINE_KEY, 0.0F, 0.0F, BoundingBox.create(0.1F, 0.0F, 0.1F, 0.9F, 0.8F, 0.9F), new int[] { 496, 497, 498 });
-		register("Dead Bush", MATERIAL_VINE_KEY, 0.0F, 0.0F, BoundingBox.create(0.1F, 0.0F, 0.1F, 0.9F, 0.8F, 0.9F), new int[] { 512 });
+		register("Dead Bush", MATERIAL_VINE_KEY, 0.0F, 0.0F, false, BoundingBox.create(0.1F, 0.0F, 0.1F, 0.9F, 0.8F, 0.9F), new int[] { 512 });
 
 		register("Sticky Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, new int[] { 528, 529, 530, 531, 532, 533, 536, 537, 538, 539, 540, 541 });
 		register("Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, new int[] { 544, 545, 546, 547, 548, 549, 552, 553, 554, 555, 556, 557 });
@@ -111,13 +111,13 @@ public class VanillaBlockRegistry extends BlockRegistry {
 
         BoundingBox flowerBb = BoundingBox.create(0.3F, 0F, 0.3F, 0.7F, 0.6F, 0.7F);
         flowerBb = null;
-		register("Yellow Flower", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, flowerBb,new int[] { 592 });
-		register("Red Flower", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, flowerBb, new int[] { 608, 609, 610, 611, 612, 613, 614, 615, 616 });
+		register("Yellow Flower", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, flowerBb,new int[] { 592 });
+		register("Red Flower", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, flowerBb, new int[] { 608, 609, 610, 611, 612, 613, 614, 615, 616 });
 
         BoundingBox mushroomBb = BoundingBox.create(0.3F, 0F, 0.3F, 0.7F, 0.6F, 0.7F);
         mushroomBb = null;
-		register("Brown Mushroom", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, mushroomBb, new int[] { 624 });
-		register("Red Mushroom", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, mushroomBb, new int[] { 640 });
+		register("Brown Mushroom", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, mushroomBb, new int[] { 624 });
+		register("Red Mushroom", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, mushroomBb, new int[] { 640 });
 
 		register("Block of Gold", MATERIAL_IRON_KEY, 3.0F, 30.0F, new int[] { 656 });
 		register("Block of Iron", MATERIAL_IRON_KEY, 5.0F, 30.0F, new int[] { 672 });
@@ -131,9 +131,9 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Moss Stone", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 768 });
 		register("Obsidian", MATERIAL_ROCK_KEY, 50.0F, 6000.0F, new int[] { 784 });
 
-		register("Torch", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, null, new int[] { 801, 802, 803, 804, 805 });
+		register("Torch", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, null, new int[] { 801, 802, 803, 804, 805 });
 
-		register("Fire", MATERIAL_FIRE_KEY, 0.0F, 0.0F, null, new int[] { 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831 });
+		register("Fire", MATERIAL_FIRE_KEY, 0.0F, 0.0F, false, null, new int[] { 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831 });
 
 		register("Monster Spawner", MATERIAL_ROCK_KEY, 5.0F, 25.0F, new int[] { 832 });
 
@@ -149,14 +149,14 @@ public class VanillaBlockRegistry extends BlockRegistry {
 
 		register("Crafting Table", MATERIAL_WOOD_KEY, 2.5F, 12.5F, new int[] { 928 });
 
-		register("Crops", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, BoundingBox.create(0F, 0.0F, 0F, 1F, 0.25F, 1F), new int[] { 944, 945, 946, 947, 948, 949, 950, 951 });
+		register("Crops", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, BoundingBox.create(0F, 0.0F, 0F, 1F, 0.25F, 1F), new int[] { 944, 945, 946, 947, 948, 949, 950, 951 });
 
 		register("Farmland", MATERIAL_GROUND_KEY, 0.6F, 3.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.9375F, 1.0F), new int[] { 960, 961, 962, 963, 964, 965, 966, 967 });
 
 		register("Furnace", MATERIAL_ROCK_KEY, 3.5F, 17.5F, new int[] { 978, 979, 980, 981 });
 		register("Furnace", MATERIAL_ROCK_KEY, 3.5F, 17.5F, new int[] { 994, 995, 996, 997 });
 
-		register("Sign", MATERIAL_WOOD_KEY, 1.0F, 5.0F, null, new int[] { 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023 });
+		register("Sign", MATERIAL_WOOD_KEY, 1.0F, 5.0F, false, null, new int[] { 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023 });
 
 		register("Oak Door", MATERIAL_WOOD_KEY, 3.0F, 15.0F, new BoundingBoxStatePair[]{
 				new BoundingBoxStatePair(1024, calcDoorBounds(1024)),
@@ -180,20 +180,20 @@ public class VanillaBlockRegistry extends BlockRegistry {
 				new BoundingBoxStatePair(1045, calcLadderBounds(1045)),
 		});
 
-		register("Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1063, 1064, 1065 });
+		register("Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, false, railBB, new int[] { 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1063, 1064, 1065 });
 
 		//TODO: calculate at runtime
 		register("Cobblestone Stairs", MATERIAL_ROCK_KEY, 2.0F, 30.0F, null, new int[] { 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079 });
 
-		register("Sign", MATERIAL_WOOD_KEY, 1.0F, 5.0F, null, new int[] { 1090, 1091, 1092, 1093 });
+		register("Sign", MATERIAL_WOOD_KEY, 1.0F, 5.0F, false, null, new int[] { 1090, 1091, 1092, 1093 });
 
-		register("Lever", MATERIAL_CIRCUITS_KEY, 0.5F, 2.5F, null, new int[] { 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119 });
-		register("Stone Pressure Plate", MATERIAL_ROCK_KEY, 0.5F, 2.5F, null, new int[] { 1120, 1121 });
+		register("Lever", MATERIAL_CIRCUITS_KEY, 0.5F, 2.5F, false, null, new int[] { 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119 });
+		register("Stone Pressure Plate", MATERIAL_ROCK_KEY, 0.5F, 2.5F, false, null, new int[] { 1120, 1121 });
 
 		//TODO: calculate at runtime
 		register("Iron Door", MATERIAL_IRON_KEY, 5.0F, 25.0F, null, new int[] { 1136, 1137, 1138, 1139, 1140, 1141, 1142, 1143, 1144, 1145, 1146, 1147 });
 
-		register("Wooden Pressure Plate", MATERIAL_WOOD_KEY, 0.5F, 2.5F, null, new int[] { 1152, 1153 });
+		register("Wooden Pressure Plate", MATERIAL_WOOD_KEY, 0.5F, 2.5F, false, null, new int[] { 1152, 1153 });
 
 		register("Redstone Ore", MATERIAL_ROCK_KEY, 3.0F, 15.0F, new int[] { 1168 });
 		register("Redstone Ore", MATERIAL_ROCK_KEY, 3.0F, 15.0F, new int[] { 1184 });
@@ -201,10 +201,10 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Redstone Torch", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, null, new int[] { 1201, 1202, 1203, 1204, 1205 });
 		register("Redstone Torch", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, null, new int[] { 1217, 1218, 1219, 1220, 1221 });
 
-		register("Button", MATERIAL_CIRCUITS_KEY, 0.5F, 2.5F, null, new int[] { 1232, 1233, 1234, 1235, 1236, 1237, 1240, 1241, 1242, 1243, 1244, 1245 });
+		register("Button", MATERIAL_CIRCUITS_KEY, 0.5F, 2.5F, false, null, new int[] { 1232, 1233, 1234, 1235, 1236, 1237, 1240, 1241, 1242, 1243, 1244, 1245 });
 
 		BoundingBox snowLayerBb = BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
-		register("Snow", MATERIAL_SNOW_KEY, 0.1F, 0.5F, new BoundingBoxStatePair[]{
+		register("Snow", MATERIAL_SNOW_KEY, 0.1F, 0.5F, false, new BoundingBoxStatePair[]{
 				new BoundingBoxStatePair(1248, snowLayerBb),
 				new BoundingBoxStatePair(1249, snowLayerBb = snowLayerBb.offset(0F, 0.125F, 0F)),
 				new BoundingBoxStatePair(1250, snowLayerBb = snowLayerBb.offset(0F, 0.125F, 0F)),
@@ -220,7 +220,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Cactus", MATERIAL_CACTUS_KEY, 0.4F, 2.0F, BoundingBox.create(0.0625F, 0F, 0.0625F, 0.9375F, 1F, 0.9375F), new int[] { 1296, 1297, 1298, 1299, 1300, 1301, 1302, 1303, 1304, 1305, 1306, 1307, 1308, 1309, 1310, 1311 });
 
 		register("Clay", MATERIAL_CLAY_KEY, 0.6F, 3.0F, new int[] { 1312 });
-		register("Sugar cane", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, BoundingBox.create(0.125F, 0F, 0.125F, 0.875F, 1F, 0.875F), new int[] { 1328, 1329, 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, 1339, 1340, 1341, 1342, 1343 });
+		register("Sugar cane", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, BoundingBox.create(0.125F, 0F, 0.125F, 0.875F, 1F, 0.875F), new int[] { 1328, 1329, 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, 1339, 1340, 1341, 1342, 1343 });
 		register("Jukebox", MATERIAL_WOOD_KEY, 2.0F, 30.0F, new int[] { 1344, 1345 });
 
 		//TODO: calculate at runtime
@@ -248,8 +248,8 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		});
 
 		BoundingBox repeaterBb = BoundingBox.create(0F, 0F, 0F, 1F, 0.125F, 1F);
-		register("Repeater", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, repeaterBb, new int[] { 1488, 1489, 1490, 1491, 1492, 1493, 1494, 1495, 1496, 1497, 1498, 1499, 1500, 1501, 1502, 1503 });
-		register("Repeater", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, repeaterBb, new int[] { 1504, 1505, 1506, 1507, 1508, 1509, 1510, 1511, 1512, 1513, 1514, 1515, 1516, 1517, 1518, 1519 });
+		register("Repeater", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, repeaterBb, new int[] { 1488, 1489, 1490, 1491, 1492, 1493, 1494, 1495, 1496, 1497, 1498, 1499, 1500, 1501, 1502, 1503 });
+		register("Repeater", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, repeaterBb, new int[] { 1504, 1505, 1506, 1507, 1508, 1509, 1510, 1511, 1512, 1513, 1514, 1515, 1516, 1517, 1518, 1519 });
 
 		register("Stained Glass", MATERIAL_GLASS_KEY, 0.3F, 1.5F, new int[] { 1520, 1521, 1522, 1523, 1524, 1525, 1526, 1527, 1528, 1529, 1530, 1531, 1532, 1533, 1534, 1535 });
 
@@ -303,7 +303,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Nether Brick Fence", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 1808 });
 		register("Nether Brick Stairs", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 1824, 1825, 1826, 1827, 1828, 1829, 1830, 1831 });
 
-		register("Nether Wart", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, null, new int[] { 1840, 1841, 1842, 1843 });
+		register("Nether Wart", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, null, new int[] { 1840, 1841, 1842, 1843 });
 
 		register("Enchantment Table", MATERIAL_ROCK_KEY, 5.0F, 6000.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.75F, 1.0F), new int[] { 1856 });
 		register("Brewing Stand", MATERIAL_IRON_KEY, 0.5F, 2.5F, BoundingBox.create(0.4375F, 0.0F, 0.4375F, 0.5625F, 0.875F, 0.5625F), new int[] { 1872, 1873, 1874, 1875, 1876, 1877, 1878, 1879 });
@@ -341,8 +341,8 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Ender Chest", MATERIAL_ROCK_KEY, 22.5F, 3000.0F, BoundingBox.create(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F), new int[] { 2082, 2083, 2084, 2085 });
 
 		//TODO: maybe full block so you don't set one off? further: redstone tracer and analyser? :D
-		register("Tripwire Hook", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, null, new int[] { 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111 });
-		register("Tripwire", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, null, new int[] { 2112, 2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127 });
+		register("Tripwire Hook", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, null, new int[] { 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111 });
+		register("Tripwire", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, null, new int[] { 2112, 2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127 });
 
 		register("Block of Emerald", MATERIAL_IRON_KEY, 5.0F, 30.0F, new int[] { 2128 });
 
@@ -358,9 +358,9 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Cobblestone Wall", MATERIAL_ROCK_KEY, 2.0F, 30.0F, new int[] { 2224, 2225 });
 
 		register("Flower Pot", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, BoundingBox.create(0.3125F, 0F, 0.3125F, 0.6875F, 0.375F, 0.6875F), new int[] { 2240, 2241, 2242, 2243, 2244, 2245, 2246, 2247, 2248, 2249, 2250, 2251, 2252, 2253, 2254, 2255 });
-		register("Carrots", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, null, new int[] { 2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263 });
-		register("Potatoes", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, null, new int[] { 2272, 2273, 2274, 2275, 2276, 2277, 2278, 2279 });
-		register("Button", MATERIAL_CIRCUITS_KEY, 0.5F, 2.5F, null, new int[] { 2288, 2289, 2290, 2291, 2292, 2293, 2296, 2297, 2298, 2299, 2300, 2301 });
+		register("Carrots", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, null, new int[] { 2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263 });
+		register("Potatoes", MATERIAL_PLANTS_KEY, 0.0F, 0.0F, false, null, new int[] { 2272, 2273, 2274, 2275, 2276, 2277, 2278, 2279 });
+		register("Button", MATERIAL_CIRCUITS_KEY, 0.5F, 2.5F, false, null, new int[] { 2288, 2289, 2290, 2291, 2292, 2293, 2296, 2297, 2298, 2299, 2300, 2301 });
 		register("Severed Head", MATERIAL_CIRCUITS_KEY, 1.0F, 5.0F, BoundingBox.create(0.25F, 0.0F, 0.25F, 0.75F, 0.5F, 0.75F), new int[] { 2304, 2305, 2306, 2307, 2308, 2309, 2312, 2313, 2314, 2315, 2316, 2317 });
 
 		register("Anvil", MATERIAL_ANVIL_KEY, 5.0F, 6000.0F, new BoundingBoxStatePair[]{
@@ -380,11 +380,11 @@ public class VanillaBlockRegistry extends BlockRegistry {
 
 		register("Trapped Chest", MATERIAL_WOOD_KEY, 2.5F, 12.5F, BoundingBox.create(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F), new int[] { 2338, 2339, 2340, 2341 });
 		register("Weighted Pressure Plate (Light)", MATERIAL_IRON_KEY, 0.5F, 2.5F,
-				null, new int[] { 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365, 2366, 2367 });
+				false, null, new int[] { 2352, 2353, 2354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365, 2366, 2367 });
 		register("Weighted Pressure Plate (Heavy)", MATERIAL_IRON_KEY, 0.5F, 2.5F,
-				null, new int[] { 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381, 2382, 2383 });
-		register("Comparator", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F), new int[] { 2384, 2385, 2386, 2387, 2388, 2389, 2390, 2391, 2392, 2393, 2394, 2395, 2396, 2397, 2398, 2399 });
-		register("Comparator", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F), new int[] { 2400, 2401, 2402, 2403, 2404, 2405, 2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415 });
+				false, null, new int[] { 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381, 2382, 2383 });
+		register("Comparator", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F), new int[] { 2384, 2385, 2386, 2387, 2388, 2389, 2390, 2391, 2392, 2393, 2394, 2395, 2396, 2397, 2398, 2399 });
+		register("Comparator", MATERIAL_CIRCUITS_KEY, 0.0F, 0.0F, false, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F), new int[] { 2400, 2401, 2402, 2403, 2404, 2405, 2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415 });
 		register("Daylight Sensor", MATERIAL_WOOD_KEY, 0.2F, 1.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F), new int[] { 2416, 2417, 2418, 2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2427, 2428, 2429, 2430, 2431 });
 		register("Block of Redstone", MATERIAL_IRON_KEY, 5.0F, 30.0F, new int[] { 2432 });
 		register("Nether Quartz Ore", MATERIAL_ROCK_KEY, 3.0F, 15.0F, new int[] { 2448 });
@@ -395,7 +395,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 
 		register("Quartz Stairs", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2496, 2497, 2498, 2499, 2500, 2501, 2502, 2503 });
 
-		register("Activator Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, railBB, new int[] { 2512, 2513, 2514, 2515, 2516, 2517, 2520, 2521, 2522, 2523, 2524, 2525 });
+		register("Activator Rail", MATERIAL_CIRCUITS_KEY, 0.7F, 3.5F, false, railBB, new int[] { 2512, 2513, 2514, 2515, 2516, 2517, 2520, 2521, 2522, 2523, 2524, 2525 });
 
 		register("Dropper", MATERIAL_ROCK_KEY, 3.5F, 17.5F, new int[] { 2528, 2529, 2530, 2531, 2532, 2533, 2536, 2537, 2538, 2539, 2540, 2541 });
 
@@ -437,15 +437,15 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Prismarine", MATERIAL_ROCK_KEY, 1.5F, 30.0F, new int[] { 2688, 2689, 2690 });
 		register("Sea Lantern", MATERIAL_GLASS_KEY, 0.3F, 1.5F, new int[] { 2704 });
 		register("Hay Bale", MATERIAL_GRASS_KEY, 0.5F, 2.5F, new int[] { 2720, 2724, 2728 });
-		register("Carpet", MATERIAL_CARPET_KEY, 0.1F, 0.5F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F), new int[] { 2736, 2737, 2738, 2739, 2740, 2741, 2742, 2743, 2744, 2745, 2746, 2747, 2748, 2749, 2750, 2751 });
+		register("Carpet", MATERIAL_CARPET_KEY, 0.1F, 0.5F, false, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F), new int[] { 2736, 2737, 2738, 2739, 2740, 2741, 2742, 2743, 2744, 2745, 2746, 2747, 2748, 2749, 2750, 2751 });
 		register("Hardened Clay", MATERIAL_ROCK_KEY, 1.25F, 21.0F, new int[] { 2752 });
 		register("Block of Coal", MATERIAL_ROCK_KEY, 5.0F, 30.0F, new int[] { 2768 });
 		register("Packed Ice", MATERIAL_PACKEDICE_KEY, 0.5F, 2.5F, new int[] { 2784 });
 
-		register("Plant", MATERIAL_VINE_KEY, 0.0F, 0.0F, null, new int[] { 2800, 2801, 2802, 2803, 2804, 2805, 2808 });
+		register("Plant", MATERIAL_VINE_KEY, 0.0F, 0.0F, false, null, new int[] { 2800, 2801, 2802, 2803, 2804, 2805, 2808 });
 
-		register("Banner", MATERIAL_WOOD_KEY, 1.0F, 5.0F, null, new int[] { 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831 });
-		register("Banner", MATERIAL_WOOD_KEY, 1.0F, 5.0F, null, new int[] { 2834, 2835, 2836, 2837 });
+		register("Banner", MATERIAL_WOOD_KEY, 1.0F, 5.0F, false, null, new int[] { 2816, 2817, 2818, 2819, 2820, 2821, 2822, 2823, 2824, 2825, 2826, 2827, 2828, 2829, 2830, 2831 });
+		register("Banner", MATERIAL_WOOD_KEY, 1.0F, 5.0F, false, null, new int[] { 2834, 2835, 2836, 2837 });
 		register("Daylight Sensor", MATERIAL_WOOD_KEY, 0.2F, 1.0F, BoundingBox.create(0.0F, 0.0F, 0.0F, 1.0F, 0.375F, 1.0F), new int[] { 2848, 2849, 2850, 2851, 2852, 2853, 2854, 2855, 2856, 2857, 2858, 2859, 2860, 2861, 2862, 2863 });
 		register("Red Sandstone", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2864, 2865, 2866 });
 		register("Red Sandstone Stairs", MATERIAL_ROCK_KEY, 0.8F, 4.0F, new int[] { 2880, 2881, 2882, 2883, 2884, 2885, 2886, 2887 });
@@ -687,30 +687,42 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		for (int id : ids) {
 			boolean bottom = (id & 8) == 0;// bit 8 is the top/bottom
 			register(
-					new BlockId(id),
+					BlockId.create(id),
 					builder.hardness(hardness).blastResistence(blastResistence)
 							.boundingBox(bottom ? BoundingBox.create(0F, 0F, 0F, 1F, 0.5F, 1F) : BoundingBox.create(0F, 0.5F, 0F, 1F, 1F, 1F)).create());
 		}
 	}
 
 	protected void register(String name, String material, float hardness, float blastResistence, BoundingBoxStatePair[] pairs) {
-		Builder builder = builder(name, material).maxStack(64);
+		register(name, material, hardness, blastResistence, true, pairs);
+	}
+
+	protected void register(String name, String material, float hardness, float blastResistence, boolean solid, BoundingBoxStatePair[] pairs) {
+		Builder builder = builder(name, material).maxStack(64).solid(solid);
 		for (BoundingBoxStatePair pair : pairs) {
-			register(new BlockId(pair.getState()), builder.hardness(hardness).blastResistence(blastResistence).boundingBox(pair.getBox()).create());
+			register(BlockId.create(pair.getState()), builder.hardness(hardness).blastResistence(blastResistence).boundingBox(pair.getBox()).create());
 		}
 	}
 
 	protected void register(String name, String material, float hardness, float blastResistence, BoundingBox bb, int... ids) {
-		Builder builder = builder(name, material).maxStack(64);
+		register(name, material, hardness, blastResistence, true, bb, ids);
+	}
+
+	protected void register(String name, String material, float hardness, float blastResistence, boolean solid, BoundingBox bb, int... ids) {
+		Builder builder = builder(name, material).maxStack(64).solid(solid);
 		for (int id : ids) {
-			register(new BlockId(id), builder.hardness(hardness).blastResistence(blastResistence).boundingBox(bb).create());
+			register(BlockId.create(id), builder.hardness(hardness).blastResistence(blastResistence).boundingBox(bb).create());
 		}
 	}
 
 	protected void register(String name, String material, float hardness, float blastResistence, int... ids) {
+		register(name, material, hardness, blastResistence, true, ids);
+	}
+
+	protected void register(String name, String material, float hardness, float blastResistence, boolean solid, int... ids) {
 		Builder builder = builder(name, material).maxStack(64);
 		for (int id : ids) {
-			register(new BlockId(id), builder.hardness(hardness).blastResistence(blastResistence).boundingBox(BoundingBox.NORMAL_BOUNDING_BOX).create());
+			register(BlockId.create(id), builder.hardness(hardness).blastResistence(blastResistence).boundingBox(BoundingBox.NORMAL_BOUNDING_BOX).create());
 		}
 	}
 

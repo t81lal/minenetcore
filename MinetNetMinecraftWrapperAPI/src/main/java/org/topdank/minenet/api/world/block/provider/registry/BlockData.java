@@ -14,8 +14,9 @@ public class BlockData {
 	private final float friction;
 	private final int maxStack;
 	private final BoundingBox boundingBox;
+	private final boolean solid;
 
-	protected BlockData(BlockId id, Material material, String name, float hardness, float blastResistence, float friction, int maxStack, BoundingBox boundingBox) {
+	protected BlockData(BlockId id, Material material, String name, float hardness, float blastResistence, float friction, int maxStack, BoundingBox boundingBox, boolean solid) {
 		this.id = id;
 		this.material = material;
 		this.name = name;
@@ -24,6 +25,7 @@ public class BlockData {
 		this.friction = friction;
 		this.maxStack = maxStack;
 		this.boundingBox = boundingBox;
+		this.solid = solid;
 	}
 
 	public BlockId getId() {
@@ -58,6 +60,10 @@ public class BlockData {
 		return boundingBox;
 	}
 
+	public boolean isSolid() {
+		return solid;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof BlockData))
@@ -81,8 +87,10 @@ public class BlockData {
 		protected float friction;
 		protected int maxStack;
 		protected BoundingBox boundingBox;
+		protected boolean solid;
 
 		protected Builder() {
+			solid = true;
 		}
 
 		public Builder id(BlockId id) {
@@ -125,8 +133,13 @@ public class BlockData {
 			return this;
 		}
 
+		public Builder solid(boolean b) {
+			solid = b;
+			return this;
+		}
+
 		public BlockData create() {
-			return new BlockData(id, material, name, hardness, blastResistence, friction, maxStack, boundingBox);
+			return new BlockData(id, material, name, hardness, blastResistence, friction, maxStack, boundingBox, solid);
 		}
 	}
 

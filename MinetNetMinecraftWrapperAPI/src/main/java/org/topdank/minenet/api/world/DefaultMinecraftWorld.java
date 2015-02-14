@@ -1,6 +1,8 @@
 package org.topdank.minenet.api.world;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.BotVersionProvider;
@@ -16,14 +18,18 @@ import org.topdank.minenet.api.event.internal.world.InternalChunkLoadEvent;
 import org.topdank.minenet.api.event.internal.world.InternalMultiBlockChangeEvent;
 import org.topdank.minenet.api.event.internal.world.InternalMultiChunkLoadEvent;
 import org.topdank.minenet.api.event.world.TimeUpdateEvent;
+import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.ChunkLocation;
 import org.topdank.minenet.api.nbt.tag.builtin.CompoundTag;
 import org.topdank.minenet.api.provider.registry.NameRegistry;
+import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.Chunk;
 import org.topdank.minenet.api.world.block.art.PaintingRegistry;
+import org.topdank.minenet.api.world.block.id.BlockId;
 import org.topdank.minenet.api.world.block.material.MaterialRegistry;
 import org.topdank.minenet.api.world.block.provider.factory.BlockFactory;
+import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 import org.topdank.minenet.api.world.block.provider.registry.BlockRegistry;
 import org.topdank.minenet.api.world.settings.WorldSettings;
 
@@ -174,6 +180,24 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 
 		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
 		return chunk.getBlocks().get(x - chunkBaseX, y - chunkBaseY, z - chunkBaseZ);
+	}
+
+	@Override
+	public Block getBlock(BlockLocation loc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Block getBlock(int x, int y, int z) {
+		int chunkX = x >> 4, chunkY = y >> 4, chunkZ = z >> 4;
+		Chunk chunk = getChunkAt(new ChunkLocation(chunkX, chunkY, chunkZ));
+		if (chunk == null)
+			return null;
+
+		int chunkBaseX = chunkX << 4, chunkBaseY = chunkY << 4, chunkBaseZ = chunkZ << 4;
+		int data = chunk.getBlocks().get(x - chunkBaseX, y - chunkBaseY, z - chunkBaseZ);
+		return blockFactory.create(this, x, y, z, BlockId.create(data));
 	}
 
 	@Override
@@ -375,5 +399,58 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 	@Override
 	public PaintingRegistry getPaintingRegistry() {
 		return paintingRegistry;
+	}
+
+	@Override
+	public Set<Block> getCollidingBlocks(BoundingBox box) {
+		Set<Block> blocks = new HashSet<Block>();
+		int minX = (int) Math.floor(box.getMinX());
+		int minY = (int) Math.floor(box.getMinY() - 1);
+		int minZ = (int) Math.floor(box.getMinZ());
+		int maxX = (int) Math.ceil(box.getMaxX());
+		int maxY = (int) Math.ceil(box.getMaxY());
+		int maxZ = (int) Math.ceil(box.getMaxZ());
+		synchronized (chunks) {
+			Chunk chunk = null;
+			BlockLocation chunkBase = null;
+			for (int x = minX; x < maxX; x++) {
+				for (int z = minZ; z < maxZ; z++) {
+					for (int y = minY; y < maxY; y++) {
+						if ((chunkBase == null) || (x < chunkBase.getX()) || (y < chunkBase.getY()) || (z < chunkBase.getZ()) || ((x - chunkBase.getX()) >= 16)
+								|| ((y - chunkBase.getY()) >= 16) || ((z - chunkBase.getZ()) >= 16)) {
+							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
+							chunk = getChunkAt(chunkLocation);
+							chunkBase = new BlockLocation(chunkLocation);
+						}
+						if (chunk != null) {
+							Block block = getBlock(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
+							if (block == null)
+								continue;
+							boolean intersects = false;
+							for (BoundingBox blockBox : block.getBoundingBoxes()) {
+								if (box.intersectsWith(blockBox)) {
+									intersects = true;
+									break;
+								}
+							}
+							if (!intersects)
+								continue;
+							blocks.add(block);
+						}
+					}
+				}
+			}
+		}
+		return blocks;
+	}
+
+	@Override
+	public boolean isColliding(BoundingBox box) {
+		return false;
+	}
+
+	@Override
+	public boolean isInMaterial(BoundingBox box, BlockData... materials) {
+		return false;
 	}
 }

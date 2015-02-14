@@ -1,6 +1,11 @@
 package org.topdank.minenet.api.world;
 
+import java.util.Set;
+
+import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
+import org.topdank.minenet.api.world.block.Block;
+import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 
 public class SimpleWorldPhysics implements WorldPhysics {
 
@@ -146,5 +151,23 @@ public class SimpleWorldPhysics implements WorldPhysics {
 	@Override
 	public World getWorld() {
 		return world;
+	}
+
+	@Override
+	public Set<Block> getCollidingBlocks(BoundingBox box) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isColliding(BoundingBox box) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isInMaterial(BoundingBox box, BlockData... materials) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

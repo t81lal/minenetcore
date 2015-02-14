@@ -1,6 +1,5 @@
 package org.topdank.minenet.api.entity.living.player;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +7,7 @@ import java.util.Set;
 
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.entity.Entity;
-import org.topdank.minenet.api.event.entity.EntityHitEvent;
-import org.topdank.minenet.api.event.entity.EntityUseEvent;
-import org.topdank.minenet.api.event.player.ArmSwingEvent;
-import org.topdank.minenet.api.event.player.RequestRespawnEvent;
+import org.topdank.minenet.api.event.internal.player.RequestRespawnEvent;
 import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.PreciseLocation;
@@ -21,7 +17,8 @@ import org.topdank.minenet.api.item.PlayerInventory;
 import org.topdank.minenet.api.item.ToolType;
 import org.topdank.minenet.api.util.MathHelper;
 import org.topdank.minenet.api.world.block.Block;
-import org.topdank.minenet.api.world.block.BlockType;
+import org.topdank.minenet.api.world.block.id.BlockId;
+import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 
 import eu.bibl.eventbus.EventBus;
 
@@ -154,52 +151,12 @@ public class LocalPlayer extends PlayerEntity {
 		int x = (int) Math.floor(dx), z = (int) Math.floor(dz);
 		while (y > 0) {
 			int id = world.getBlockData(new BlockLocation(x, (y - 1), z));
-			BlockType type = BlockType.getById(id);
-			if (type.isSolid())
+			BlockData data = world.getBlockRegistry().getByKey(BlockId.create(id));
+			if (data.isSolid())
 				break;
 			y--;
 		}
 		return y;
-	}
-
-	public List<BlockLocation> getBlocksStoodOn() {
-		// TODO: write a proper algorithm, update: nvm
-
-		// cache results (faster?) yes
-		// if ((x == lastX) && (y == lastY) && (z == lastZ)) {
-		// return cache;
-		// }
-		List<BlockLocation> locs = new ArrayList<BlockLocation>();
-
-		double x = this.x;
-		double y = this.y - 1;
-		double z = this.z;
-		BlockLocation thisLocation = new BlockLocation(x, y, z);
-		// possible offsets for +ve/-ve locations
-		BlockLocation block1 = new BlockLocation(x + 0.3D, y, z + 0.3D);
-		BlockLocation block2 = new BlockLocation(x - 0.3D, y, z + 0.3D);
-		BlockLocation block3 = new BlockLocation(x + 0.3D, y, z - 0.3D);
-		BlockLocation block4 = new BlockLocation(x - 0.3D, y, z - 0.3D);
-
-		// cache never reaches 5 (shouldn't :|)
-		if (!locs.contains(thisLocation) && BlockType.getById(world.getBlockData(new BlockLocation(thisLocation.getX(), thisLocation.getY(), thisLocation.getZ()))).isSolid())
-			locs.add(thisLocation);
-
-		if (!locs.contains(block1) && BlockType.getById(world.getBlockData(new BlockLocation(block1.getX(), block1.getY(), block1.getZ()))).isSolid())
-			locs.add(block1);
-		if (!locs.contains(block2) && BlockType.getById(world.getBlockData(new BlockLocation(block2.getX(), block2.getY(), block2.getZ()))).isSolid())
-			locs.add(block2);
-		if (!locs.contains(block3) && BlockType.getById(world.getBlockData(new BlockLocation(block3.getX(), block3.getY(), block3.getZ()))).isSolid())
-			locs.add(block3);
-		if (!locs.contains(block4) && BlockType.getById(world.getBlockData(new BlockLocation(block4.getX(), block4.getY(), block4.getZ()))).isSolid())
-			locs.add(block4);
-
-		// System.out.println("on " + locs.size() + " blocks.");
-		// for (BlockLocation loc : locs) {
-		// System.out.println(loc);
-		// }
-
-		return locs;
 	}
 
 	@Deprecated

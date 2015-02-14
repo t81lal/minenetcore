@@ -1,10 +1,23 @@
 package org.topdank.minenet.api.world.block.id;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MetaBlockId extends BlockId {
+
+	private static Map<Integer, MetaBlockId> cache = new HashMap<Integer, MetaBlockId>();
+
+	public static MetaBlockId create(int id, int metadata) {
+		int index = (id << 4) | metadata;
+		MetaBlockId bId = cache.get(index);
+		if (bId != null)
+			return bId;
+		return new MetaBlockId(id, metadata);
+	}
 
 	protected final int metadata;
 
-	public MetaBlockId(int id, int metadata) {
+	private MetaBlockId(int id, int metadata) {
 		super(id);
 		this.metadata = metadata;
 	}

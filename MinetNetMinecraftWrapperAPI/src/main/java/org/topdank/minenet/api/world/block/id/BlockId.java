@@ -1,10 +1,23 @@
 package org.topdank.minenet.api.world.block.id;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BlockId {
+
+	private static Map<Integer, BlockId> cache = new HashMap<Integer, BlockId>();
+
+	// lots of objacts D:
+	public static BlockId create(int id) {
+		BlockId bId = cache.get(id);
+		if (bId != null)
+			return bId;
+		return new BlockId(id);
+	}
 
 	protected final int id;
 
-	public BlockId(int id) {
+	protected BlockId(int id) {
 		this.id = id;
 	}
 

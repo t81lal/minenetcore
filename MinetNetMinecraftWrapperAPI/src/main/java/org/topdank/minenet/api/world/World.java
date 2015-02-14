@@ -1,8 +1,10 @@
 package org.topdank.minenet.api.world;
 
+import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.entity.tile.TileEntity;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.game.location.ChunkLocation;
+import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.Chunk;
 import org.topdank.minenet.api.world.block.art.PaintingRegistry;
 import org.topdank.minenet.api.world.block.material.MaterialRegistry;
@@ -21,6 +23,10 @@ public abstract interface World extends WorldPhysics {
 	public abstract int getBlockData(BlockLocation loc);
 
 	public abstract int getBlockData(int x, int y, int z);
+
+	public abstract Block getBlock(BlockLocation loc);
+
+	public abstract Block getBlock(int x, int y, int z);
 
 	public abstract void setBlockData(int id, BlockLocation loc);
 
@@ -43,4 +49,6 @@ public abstract interface World extends WorldPhysics {
 	public abstract MaterialRegistry getMaterialRegistry();
 
 	public abstract PaintingRegistry getPaintingRegistry();
+
+	public abstract LocalPlayer getLocalPlayer();
 }
