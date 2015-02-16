@@ -245,6 +245,6 @@ public final class BoundingBox {
 
 	@Override
 	public String toString() {
-		return "BoundingBox[[" + minX + "," + minY + "," + minZ + "],[" + maxX + "," + maxY + "," + maxZ + "]]";
+		return String.format("BoundingBox[[%.4f, %.4f, %.4f], [%.4f, %.4f, %.4f]]", minX, minY, minZ, maxX, maxY, maxZ);
 	}
 }

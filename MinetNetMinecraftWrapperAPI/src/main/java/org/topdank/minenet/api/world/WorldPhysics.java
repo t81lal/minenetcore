@@ -5,7 +5,6 @@ import java.util.Set;
 import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.block.Block;
-import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 
 public abstract interface WorldPhysics {
 
@@ -19,7 +18,7 @@ public abstract interface WorldPhysics {
 
 	public abstract boolean isColliding(BoundingBox box);
 
-	public abstract boolean isInMaterial(BoundingBox box, BlockData... materials);
+	public abstract boolean isInBlocks(BoundingBox box, String... blocks);
 
 	public abstract World getWorld();
 }

@@ -15,20 +15,22 @@ import org.topdank.minenet.lib.network.io.bytebuf.ByteBufReadableInput;
 import org.topdank.minenet.lib.network.io.bytebuf.ByteBufWriteableOutput;
 
 public class PacketCompressionCodec extends ByteToMessageCodec<ByteBuf> {
-	
+
 	private static final int MAX_COMPRESSED_SIZE = 2097152;
 	private Client<?> client;
 	private Deflater deflater = new Deflater();
 	private Inflater inflater = new Inflater();
 	private byte buf[] = new byte[8192];
-	
+
 	public PacketCompressionCodec(Client<?> client) {
 		this.client = client;
 	}
-	
+
 	@Override
 	public void encode(ChannelHandlerContext ctx, ByteBuf in, ByteBuf out) throws Exception {
 		int readable = in.readableBytes();
+		// System.out.println((readable < client.getCompressionThreshold() ? "Not C" : "C") + "ompressing packet, len= " + readable +
+		// ", threshold= " + client.getCompressionThreshold());
 		ByteBufWriteableOutput output = new ByteBufWriteableOutput(out);
 		if (readable < client.getCompressionThreshold()) {
 			output.writeVarInt(0);
@@ -46,7 +48,7 @@ public class PacketCompressionCodec extends ByteToMessageCodec<ByteBuf> {
 			deflater.reset();
 		}
 	}
-	
+
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
 		if (buf.readableBytes() != 0) {

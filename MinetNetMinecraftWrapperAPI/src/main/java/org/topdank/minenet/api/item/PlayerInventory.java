@@ -1,22 +1,10 @@
 package org.topdank.minenet.api.item;
 
-import java.util.Arrays;
-
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
-import org.topdank.minenet.api.event.inventory.ChangeHeldItemEvent;
-import org.topdank.minenet.api.event.inventory.HeldItemChangeEvent;
-import org.topdank.minenet.api.event.inventory.HeldItemDropEvent;
-import org.topdank.minenet.api.event.inventory.InventoryChangeEvent;
-import org.topdank.minenet.api.event.inventory.InventoryCloseEvent;
-import org.topdank.minenet.api.event.window.WindowCloseEvent;
-import org.topdank.minenet.api.event.window.WindowTransactionCompleteEvent;
-
-import eu.bibl.eventbus.EventPriority;
-import eu.bibl.eventbus.EventTarget;
 
 public class PlayerInventory implements Inventory {
-	
+
 	private final BotContext context;
 	private final LocalPlayer player;
 	private final ItemStack[] armor = new ItemStack[4];
@@ -26,54 +14,54 @@ public class PlayerInventory implements Inventory {
 	private ItemStack selectedItem = null;
 	private int delay = 0, currentHeldSlot = 0;
 	private short transactionId = 0;
-	
+
 	public PlayerInventory(BotContext context, LocalPlayer player) {
 		this.context = context;
 		this.player = player;
 		context.getEventBus().register(this);
 	}
-	
-	@EventTarget(priority = EventPriority.HIGH)
-	public synchronized void onWindowClose(WindowCloseEvent event) {
-		if (event.getWindowId() == 0) {
-			selectedItem = null;
-			Arrays.fill(crafting, null);
-		}
-	}
-	
-	@EventTarget(priority = EventPriority.HIGH)
-	public void onChangeHeldItem(ChangeHeldItemEvent event) {
-		setCurrentHeldSlot(event.getSlot());
-	}
-	
-	@EventTarget(priority = EventPriority.HIGH)
-	public synchronized void onWindowTransactionComplete(WindowTransactionCompleteEvent event) {
-		if (!event.isAccepted())
-			selectedItem = null;
-	}
-	
+
+	// @EventTarget(priority = EventPriority.HIGH)
+	// public synchronized void onWindowClose(WindowCloseEvent event) {
+	// if (event.getWindowId() == 0) {
+	// selectedItem = null;
+	// Arrays.fill(crafting, null);
+	// }
+	// }
+	//
+	// @EventTarget(priority = EventPriority.HIGH)
+	// public void onChangeHeldItem(ChangeHeldItemEvent event) {
+	// setCurrentHeldSlot(event.getSlot());
+	// }
+	//
+	// @EventTarget(priority = EventPriority.HIGH)
+	// public synchronized void onWindowTransactionComplete(WindowTransactionCompleteEvent event) {
+	// if (!event.isAccepted())
+	// selectedItem = null;
+	// }
+
 	@Override
 	public synchronized int getSize() {
 		return items.length + armor.length;
 	}
-	
+
 	@Override
 	public synchronized ItemStack getItemAt(int slot) {
 		return slot < 36 ? items[slot] : slot < 40 ? armor[slot - 36] : slot < 44 ? crafting[slot - 40] : slot == 44 ? craftingOutput : null;
 	}
-	
+
 	public synchronized ItemStack getArmorAt(int slot) {
 		return armor[slot];
 	}
-	
+
 	public synchronized ItemStack getCraftingAt(int slot) {
 		return crafting[slot];
 	}
-	
+
 	public synchronized ItemStack getCraftingOutput() {
 		return craftingOutput;
 	}
-	
+
 	@Override
 	public synchronized void setItemAt(int slot, ItemStack item) {
 		if (slot < 36)
@@ -85,28 +73,28 @@ public class PlayerInventory implements Inventory {
 		else if (slot == 44)
 			craftingOutput = item;
 	}
-	
+
 	public synchronized void setArmorAt(int slot, ItemStack item) {
 		armor[slot] = item;
 	}
-	
+
 	public synchronized void setCraftingAt(int slot, ItemStack item) {
 		crafting[slot] = item;
 	}
-	
+
 	public synchronized void setCraftingOutput(ItemStack item) {
 		craftingOutput = item;
 	}
-	
+
 	@Override
 	public void setItemFromServerAt(int serverSlot, ItemStack item) {
 		setItemAt(getClientSlotFor(serverSlot), item);
 	}
-	
+
 	public synchronized void selectItemAt(int slot) {
 		selectItemAt(slot, true);
 	}
-	
+
 	@Override
 	public synchronized void selectItemAt(int slot, boolean leftClick) {
 		// TODO Fix: not entirely accurate, not yet sure why
@@ -134,7 +122,8 @@ public class PlayerInventory implements Inventory {
 				setItemAt(slot, selectedItem);
 				selectedItem = null;
 			}
-			context.getEventBus().dispatch(new InventoryChangeEvent(this, getServerSlotFor(slot), leftClick ? 0 : 1, transactionId++, item, false));
+			// context.getEventBus().dispatch(new InventoryChangeEvent(this, getServerSlotFor(slot), leftClick ? 0 : 1, transactionId++,
+			// item, false));
 			delay();
 			return;
 		}
@@ -211,26 +200,27 @@ public class PlayerInventory implements Inventory {
 				}
 			}
 		}
-		context.getEventBus().dispatch(new InventoryChangeEvent(this, getServerSlotFor(slot), leftClick ? 0 : 1, transactionId++, item, false));
+		// context.getEventBus().dispatch(new InventoryChangeEvent(this, getServerSlotFor(slot), leftClick ? 0 : 1, transactionId++, item,
+		// false));
 		delay();
 	}
-	
+
 	public synchronized void selectArmorAt(int slot) {
 		selectItemAt(slot + 36, true);
 	}
-	
+
 	public synchronized void selectCraftingAt(int slot) {
 		selectCraftingAt(slot, true);
 	}
-	
+
 	public synchronized void selectCraftingAt(int slot, boolean leftClick) {
 		selectItemAt(slot + 40, leftClick);
 	}
-	
+
 	public void selectCraftingOutput() {
 		selectItemAt(44, true);
 	}
-	
+
 	@Override
 	public synchronized void selectItemAtWithShift(int slot) {
 		// TODO Fix: not entirely accurate, not yet sure why either
@@ -262,9 +252,9 @@ public class PlayerInventory implements Inventory {
 		}
 		if (!slotFound)
 			return;
-		context.getEventBus().dispatch(new InventoryChangeEvent(this, slot, 0, (short) 0, item, true));
+		// context.getEventBus().dispatch(new InventoryChangeEvent(this, slot, 0, (short) 0, item, true));
 	}
-	
+
 	public synchronized boolean contains(int... ids) {
 		boolean air = false;
 		for (int id : ids)
@@ -279,7 +269,7 @@ public class PlayerInventory implements Inventory {
 				return true;
 		return false;
 	}
-	
+
 	public synchronized int getCount(int id) {
 		int amount = 0;
 		for (int slot = 0; slot < 36; slot++)
@@ -287,78 +277,78 @@ public class PlayerInventory implements Inventory {
 				amount += items[slot].getStackSize();
 		return amount;
 	}
-	
+
 	public synchronized ItemStack getFirstItem(int id) {
 		for (int slot = 0; slot < 36; slot++)
 			if ((items[slot] != null) && (items[slot].getId() == id))
 				return items[slot];
 		return null;
 	}
-	
+
 	public synchronized int getFirstSlot(int id) {
 		for (int slot = 0; slot < 36; slot++)
 			if (items[slot] != null ? items[slot].getId() == id : id == 0)
 				return slot;
 		return -1;
 	}
-	
+
 	@Override
 	public synchronized ItemStack getSelectedItem() {
 		return selectedItem;
 	}
-	
+
 	@Override
 	public synchronized void dropSelectedItem() {
 		selectedItem = null;
-		context.getEventBus().dispatch(new InventoryChangeEvent(this, -999, 0, transactionId++, null, true));
+		// context.getEventBus().dispatch(new InventoryChangeEvent(this, -999, 0, transactionId++, null, true));
 		delay();
 	}
-	
+
 	@Override
 	public synchronized void close() {
-		context.getEventBus().dispatch(new InventoryCloseEvent(this));
+		// context.getEventBus().dispatch(new InventoryCloseEvent(this));
 	}
-	
+
 	public synchronized int getCurrentHeldSlot() {
 		return currentHeldSlot;
 	}
-	
+
 	public synchronized ItemStack getCurrentHeldItem() {
 		return items[currentHeldSlot];
 	}
-	
+
 	public synchronized void dropCurrentHeldItem() {
 		dropItem(false);
 	}
-	
+
 	public synchronized void dropCurrentHeldItemStack() {
 		dropItem(true);
 	}
-	
+
 	private void dropItem(boolean stack) {
-		context.getEventBus().dispatch(new HeldItemDropEvent(this, stack));
+		// context.getEventBus().dispatch(new HeldItemDropEvent(this, stack));
 	}
-	
+
 	public void setCurrentHeldSlot(int currentHeldSlot) {
 		if ((currentHeldSlot < 0) || (currentHeldSlot >= 9))
 			throw new IllegalArgumentException();
 		int oldSlot = this.currentHeldSlot;
 		this.currentHeldSlot = currentHeldSlot;
-		context.getEventBus().dispatch(new HeldItemChangeEvent(this, oldSlot, currentHeldSlot));
+		// context.getEventBus().dispatch(new HeldItemChangeEvent(this, oldSlot, currentHeldSlot));
 	}
-	
+
 	public LocalPlayer getPlayer() {
 		return player;
 	}
-	
+
 	public int getDelay() {
 		return delay;
 	}
-	
+
 	public void setDelay(int delay) {
 		this.delay = delay;
 	}
-	
+
 	private void delay() {
 		if (delay > 0) {
 			try {
@@ -368,7 +358,7 @@ public class PlayerInventory implements Inventory {
 			}
 		}
 	}
-	
+
 	private int getClientSlotFor(int serverSlot) {
 		if (serverSlot > 35)
 			return serverSlot - 36;
@@ -380,7 +370,7 @@ public class PlayerInventory implements Inventory {
 			return serverSlot + 31;
 		return serverSlot;
 	}
-	
+
 	private int getServerSlotFor(int clientSlot) {
 		if (clientSlot < 9)
 			return 36 + clientSlot;
@@ -392,12 +382,12 @@ public class PlayerInventory implements Inventory {
 			return clientSlot - 31;
 		return clientSlot;
 	}
-	
+
 	@Override
 	public int getWindowId() {
 		return 0;
 	}
-	
+
 	public void destroy() {
 		context.getEventBus().unregister(this);
 	}

@@ -7,6 +7,7 @@ import org.topdank.minenet.api.entity.object.projectile.ArrowEntity;
 import org.topdank.minenet.api.entity.object.projectile.FireBallEntity;
 import org.topdank.minenet.api.entity.object.projectile.WitherSkullEntity;
 import org.topdank.minenet.api.entity.object.projectile.thrown.FishingBobEntity;
+import org.topdank.minenet.api.entity.object.projectile.thrown.PotionEntity;
 import org.topdank.minenet.api.entity.object.projectile.thrown.SnowBallEntity;
 import org.topdank.minenet.api.entity.object.vehicle.BoatEntity;
 import org.topdank.minenet.api.entity.object.vehicle.MinecartEntity;
@@ -39,6 +40,8 @@ public class VanillaObjectEntityFactory extends ObjectEntityFactory {
 				return new WitherSkullEntity(world, id);
 			case 71:
 				return new ItemFrameEntity(world, id);
+			case 73:
+				return new PotionEntity(world, id);
 			case 90:
 				return new FishingBobEntity(world, id);
 			default:

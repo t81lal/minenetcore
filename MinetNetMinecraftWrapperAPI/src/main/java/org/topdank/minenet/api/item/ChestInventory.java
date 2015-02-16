@@ -1,43 +1,37 @@
 package org.topdank.minenet.api.item;
 
 import org.topdank.minenet.api.BotContext;
-import org.topdank.minenet.api.event.inventory.InventoryChangeEvent;
-import org.topdank.minenet.api.event.inventory.InventoryCloseEvent;
-import org.topdank.minenet.api.event.window.WindowCloseEvent;
-
-import eu.bibl.eventbus.EventPriority;
-import eu.bibl.eventbus.EventTarget;
 
 public class ChestInventory implements Inventory {
-	
+
 	private final BotContext context;
 	private final ItemStack[] items;
 	private final ItemStack[] inventory = new ItemStack[36];
 	private final int id;
 	private ItemStack selectedItem = null;
-	
+
 	public ChestInventory(BotContext context, int id, boolean large) {
 		this.context = context;
 		this.id = id;
 		items = new ItemStack[large ? 54 : 27];
 	}
-	
-	@EventTarget(priority = EventPriority.HIGH)
-	public synchronized void onWindowClose(WindowCloseEvent event) {
-		if (id == event.getWindowId())
-			selectedItem = null;
-	}
-	
+
+	// @EventTarget(priority = EventPriority.HIGH)
+	// public synchronized void onWindowClose(WindowCloseEvent event) {
+	// if (id == event.getWindowId())
+	// selectedItem = null;
+	// }
+
 	@Override
 	public synchronized int getSize() {
 		return items.length;
 	}
-	
+
 	@Override
 	public synchronized ItemStack getItemAt(int slot) {
 		return slot < items.length ? items[slot] : inventory[slot - items.length];
 	}
-	
+
 	@Override
 	public synchronized void setItemAt(int slot, ItemStack item) {
 		System.out.println("Set chest item at " + slot + ": " + item);
@@ -46,16 +40,16 @@ public class ChestInventory implements Inventory {
 		else
 			inventory[slot - items.length] = item;
 	}
-	
+
 	@Override
 	public void setItemFromServerAt(int serverSlot, ItemStack item) {
 		setItemAt(serverSlot, item);
 	}
-	
+
 	public synchronized void selectItemAt(int slot) {
 		selectItemAt(slot, true);
 	}
-	
+
 	@Override
 	public synchronized void selectItemAt(int slot, boolean leftClick) {
 		delay();
@@ -124,21 +118,21 @@ public class ChestInventory implements Inventory {
 			}
 		}
 		System.out.println("Clicked at " + slot + " | left: " + leftClick + " item: " + item + " selected: " + oldSelected);
-		context.getEventBus().dispatch(new InventoryChangeEvent(this, slot, leftClick ? 0 : 1, (short) 0, item, false));
+		// context.getEventBus().dispatch(new InventoryChangeEvent(this, slot, leftClick ? 0 : 1, (short) 0, item, false));
 	}
-	
+
 	public synchronized void selectArmorAt(int slot) {
 		selectItemAt(slot + 36, true);
 	}
-	
+
 	public synchronized void selectCraftingAt(int slot) {
 		selectCraftingAt(slot, true);
 	}
-	
+
 	public synchronized void selectCraftingAt(int slot, boolean leftClick) {
 		selectItemAt(slot + 40, leftClick);
 	}
-	
+
 	@Override
 	public synchronized void selectItemAtWithShift(int slot) {
 		delay();
@@ -169,26 +163,26 @@ public class ChestInventory implements Inventory {
 		}
 		if (!slotFound)
 			return;
-		context.getEventBus().dispatch(new InventoryChangeEvent(this, slot, 0, (short) 0, item, true));
+		// context.getEventBus().dispatch(new InventoryChangeEvent(this, slot, 0, (short) 0, item, true));
 	}
-	
+
 	@Override
 	public synchronized ItemStack getSelectedItem() {
 		return selectedItem;
 	}
-	
+
 	@Override
 	public synchronized void dropSelectedItem() {
 		delay();
 		selectedItem = null;
-		context.getEventBus().dispatch(new InventoryChangeEvent(this, -999, 0, (short) 0, null, true));
+		// context.getEventBus().dispatch(new InventoryChangeEvent(this, -999, 0, (short) 0, null, true));
 	}
-	
+
 	@Override
 	public synchronized void close() {
-		context.getEventBus().dispatch(new InventoryCloseEvent(this));
+		// context.getEventBus().dispatch(new InventoryCloseEvent(this));
 	}
-	
+
 	private void delay() {
 		int delay = context.getWorld().getLocalPlayer().getInventory().getDelay();
 		if (delay > 0) {
@@ -199,7 +193,7 @@ public class ChestInventory implements Inventory {
 			}
 		}
 	}
-	
+
 	@Override
 	public int getWindowId() {
 		return id;

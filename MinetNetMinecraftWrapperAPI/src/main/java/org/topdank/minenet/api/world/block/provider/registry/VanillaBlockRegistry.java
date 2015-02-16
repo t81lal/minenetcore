@@ -627,7 +627,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 	}
 
 	public static BoundingBox calcDoorBounds(int meta) {
-		float thickness = 0.1875F;
+		final float thickness = 0.1875F;
 		// 0 = east
 		// 1 = south
 		// 2 = west

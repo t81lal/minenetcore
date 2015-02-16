@@ -13,21 +13,23 @@ import org.topdank.minenet.lib.network.io.bytebuf.ByteBufWriteableOutput;
 import org.topdank.minenet.lib.network.packet.WriteablePacket;
 
 public class PacketWriterCodec extends ByteToMessageCodec<WriteablePacket> {
-	
+
 	private Client<?> client;
-	
+
 	public PacketWriterCodec(Client<?> client) {
 		this.client = client;
 	}
-	
+
 	@Override
 	protected void encode(ChannelHandlerContext ctx, WriteablePacket packet, ByteBuf buf) throws Exception {
 		WriteableOutput out = new ByteBufWriteableOutput(buf);
 		Protocol protocol = client.getProtocol();
 		protocol.getPacketHeader().writePacketId(out, protocol.getOutgoingId(packet.getClass()));
 		packet.write(out);
+
+		// System.out.println("buf len= " + buf.readableBytes());
 	}
-	
+
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
 	}

@@ -50,8 +50,6 @@ public class TcpClient extends Client<YggdrasilSession> {
 	protected EventLoopGroup group;
 	protected Bootstrap bootstrap;
 
-	protected int compressionThreshold;
-
 	public TcpClient(YggdrasilSession session, String host, int port, Protocol protocol, EventBus bus) throws IOException {
 		super(session, host, port, protocol, bus);
 		packets = new ArrayList<ReadablePacket>();
@@ -67,29 +65,20 @@ public class TcpClient extends Client<YggdrasilSession> {
 		if (disconnected || (bootstrap != null))
 			throw new IllegalStateException("Client already disconnected");
 
-		// int i = 0;
-		// System.out.println("yolo " + ++i);
-
 		bootstrap = new Bootstrap();
-		// System.out.println("yolo " + ++i);
 		group = new NioEventLoopGroup(0, new ThreadFactoryBuilder().setName(session.getUserID() + " Client Netty Thread").build());
-		// System.out.println("yolo " + ++i);
 		bootstrap.channel(NioSocketChannel.class);
-		// System.out.println("yolo " + ++i);
 		bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-		// System.out.println("yolo " + ++i);
 
 		bootstrap.handler(new ChannelInitializer<Channel>() {
 			@Override
 			public void initChannel(Channel channel) throws Exception {
-				// int i = 0;
-				// System.out.println("bolo " + ++i);
 				channel.config().setOption(ChannelOption.IP_TOS, 0x18);
 				channel.config().setOption(ChannelOption.TCP_NODELAY, false);
 
 				ChannelPipeline pipeline = channel.pipeline();
 				pipeline.addFirst("readTimeout", new ReadTimeoutHandler(3));
-				pipeline.addFirst("writeTimeout", new WriteTimeoutHandler(0));
+				pipeline.addFirst("writeTimeout", new WriteTimeoutHandler(1));
 
 				if (protocol.requiresEncryption()) {
 					pipeline.addLast("encrypter", new PacketEncryptorCodec(TcpClient.this));
@@ -100,15 +89,11 @@ public class TcpClient extends Client<YggdrasilSession> {
 				pipeline.addLast("readerCodec", new PacketReaderCodec(TcpClient.this));
 				pipeline.addLast("writerCodec", new PacketWriterCodec(TcpClient.this));
 				pipeline.addLast("manager", TcpClient.this);
-				// System.out.println("bolo " + ++i);
 			}
 		}).group(group).remoteAddress(host, port);
-		// System.out.println("yolo " + ++i);
 		final AtomicBoolean calledTimeout = new AtomicBoolean(false);
 		try {
-			// System.out.println("yolo " + ++i);
 			bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-			// System.out.println("yolo " + ++i);
 			ChannelFuture future = bootstrap.connect();
 			if (!future.isSuccess()) {
 				new Thread() {
@@ -124,22 +109,16 @@ public class TcpClient extends Client<YggdrasilSession> {
 					}
 				}.start();
 			}
-			// System.out.println("yolo " + ++i);
 			bootstrap = null;
-			// System.out.println("yolo " + ++i);
 			if (wait) {
-				// System.out.println("yolo " + ++i);
 				while ((channel == null) && !disconnected) {
 					try {
 						Thread.sleep(5);
 					} catch (InterruptedException e) {
-						// System.out.println("yolok " + ++i);
 						e.printStackTrace();
 					}
 				}
-				// System.out.println("yolo " + ++i);
 			} else {
-				// System.out.println("yolo " + ++i);
 				future.addListener(new ChannelFutureListener() {
 					@Override
 					public void operationComplete(ChannelFuture channelFuture) throws Exception {
@@ -159,12 +138,11 @@ public class TcpClient extends Client<YggdrasilSession> {
 				e.printStackTrace();
 			}
 		}
-		// System.out.println("yolo " + ++i);
 	}
 
 	@Override
 	public void setCompressionThreshold(int ct) {
-		compressionThreshold = ct;
+		super.setCompressionThreshold(ct);
 		if (compressionThreshold >= 0) {
 			if (channel.pipeline().get("compression") == null) {
 				channel.pipeline().addBefore("readerCodec", "compression", new PacketCompressionCodec(this));
@@ -250,9 +228,9 @@ public class TcpClient extends Client<YggdrasilSession> {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		System.out.println("bot ");
+		// System.out.println("bot ");
 		if (disconnected) {
-			System.out.println("done");
+			// System.out.println("done");
 			ctx.channel().close().syncUninterruptibly();
 			return;
 		}
@@ -264,7 +242,7 @@ public class TcpClient extends Client<YggdrasilSession> {
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		disconnect("Connection closed.");
+		disconnect("Connection closed (inactive).");
 	}
 
 	@Override

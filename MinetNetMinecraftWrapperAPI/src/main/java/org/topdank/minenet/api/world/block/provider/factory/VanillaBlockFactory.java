@@ -51,10 +51,10 @@ public class VanillaBlockFactory extends BlockFactory {
 
 		if (STAIR_IDS[id] == id) {
 			BoundingBox[] bb = calcStairBbs(world, x, y, z, data);
-			return new Block(world, x, y, z, id, data & 0x0F, bb);
+			return new Block(world, x, y, z, blockId, blockData, bb);
 		}
 
-		return new Block(world, x, y, z, id, data & 0x0F);
+		return new Block(world, x, y, z, blockId, blockData);
 	}
 
 	public static BoundingBox[] calcStairBbs(World world, int x, int y, int z, int data) {

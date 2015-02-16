@@ -35,7 +35,7 @@ public class CreeperEntity extends LivingEntity {
 		super.updateMetadata(metadata);
 
 		if (metadata.containsKey(16)) {
-			setState(CreeperState.values()[(byte) metadata.get(16)]);
+			// setState(CreeperState.values()[(byte) metadata.get(16)]);
 		}
 
 		if (metadata.containsKey(17)) {

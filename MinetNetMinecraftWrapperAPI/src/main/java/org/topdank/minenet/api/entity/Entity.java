@@ -281,11 +281,17 @@ public abstract class Entity extends WatchableObject {
 	}
 
 	public void updateProperty(Map<String, EntityProperty> properties) {
-
 	}
 
 	@Override
 	public void update() {
+		if ((motX >= -1E-6) && (motX <= 1E-6))
+			motX = 0;
+		if ((motY >= -1E-6) && (motY <= 1E-6))
+			motY = 0;
+		if ((motZ >= -1E-6) && (motZ <= 1E-6))
+			motZ = 0;
+
 		x += motX;
 		y += motY;
 		z += motZ;

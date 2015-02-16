@@ -1,7 +1,6 @@
 package org.topdank.minenet.api.entity.living.player;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,61 +45,80 @@ public class LocalPlayer extends PlayerEntity {
 		inventory = new PlayerInventory(context, this);
 	}
 
-	public void updateGravity() {
-		double dist = distanceToGround();
-		// BoundingBox bb = getBoundingBox();
-		// boolean inWater = world.isInMaterial(bb, BlockType.WATER,
-		// BlockType.STATIONARY_WATER);
-		// boolean inLava = world.isInMaterial(bb, BlockType.LAVA,
-		// BlockType.STATIONARY_LAVA);
+	@Override
+	public void update() {
+		updateGravity();
+
+		super.update();
+	}
+
+	public void updatePosition() {
+		boolean move = (x != lastX) || (y != lastY) || (z != lastZ);
+		boolean rotate = (yaw != lastYaw) || (pitch != lastPitch);
+		updatePosition(move, rotate);
+	}
+
+	public void updatePosition(boolean move, boolean rotate) {
+		if (move && rotate) {
+			lastX = x;
+			lastY = y;
+			lastZ = z;
+			lastPitch = pitch;
+			lastYaw = yaw;
+		} else if (move) {
+			lastX = x;
+			lastY = y;
+			lastZ = z;
+		} else if (rotate) {
+			lastPitch = pitch;
+			lastYaw = yaw;
+		}
+	}
+
+	private void updateGravity() {
+		BoundingBox bb = getBoundingBox();
+		boolean inWater = world.isInBlocks(bb, "Water");
+		boolean inLava = world.isInBlocks(bb, "Lava");
+
+		double distanceToGround = distanceToGround();
+		// boolean onGround = isOnGround();
+
+		// System.out.println(String.format("bb: %s water:%b lava:%b onground:%b", bb.toString(), inWater, inLava, onGround));
 		// double horizFactor = 0.91;
-		if (dist <= 0.08) {
-			// BlockType type = BlockType.getById(world.getBlockIdAt((int)
-			// Math.floor(x), (int) Math.floor(y - 0.1),
-			// (int) Math.floor(z)));
-			// if (type.isSolid())
-			// horizFactor *= friction; 1F atm
+		if (distanceToGround <= 0.08) {
+			// BlockData data = world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData((int) Math.floor(x), (int) Math.floor(y
+			// - 0.1), (int) Math.floor(z))));
+			// if (data.isSolid())
+			// horizFactor *= data.getFriction();
+			// System.out.println(String.format("Standing on %s solid:%b friction:%.3f", data.getName(), data.isSolid(),
+			// data.getFriction()));
+			// System.out.println("onground at y " + y + " moty " + motY);
 			motY = 0;
 		} else {
-			if (motY > 3.92)
-				motY -= 0.08;
+			// else if (!inWater && !inLava)
+			// System.out.println("not onground at y " + y + " moty " + motY);
+			if (motY >= -3.92)
+				motY -= 0.08D;
+			if (Math.abs(motY) > distanceToGround)
+				motY = -distanceToGround;
 		}
-		// } else if (!inWater && !inLava)
-		// accelerate(0, -Math.PI / 2, 0.08, 3.92);
 
-		// motX *= horizFactor;
-		// motZ *= horizFactor;
-		//
-		// x += motX;
-		// y += motY;
-		// z += motZ;
+		if (inLava) {
+			motX *= 0.5D;
+			motY *= 0.5D;
+			motZ *= 0.5D;
+			motY -= 0.02D;
+		} else if (inWater) {
+			motX *= 0.800000011920929D;
+			motY *= 0.800000011920929D;
+			motZ *= 0.800000011920929D;
+			motY -= 0.02D;
+		}
 
-		// motX *= horizFactor;
-		// motY *= 0.98;
-		// motZ *= horizFactor;
-		// if (inLava) {
-		// motX *= 0.5D;
-		// motY *= 0.5D;
-		// motZ *= 0.5D;
-		// motY -= 0.02D;
-		// } else if (inWater) {
-		// motX *= 0.800000011920929D;
-		// motY *= 0.800000011920929D;
-		// motZ *= 0.800000011920929D;
-		// motY -= 0.02D;
-		// }
-		//
+		// System.out.println(String.format("motX: %f, motY: %f, motZ: %f", motX, motY, motZ));
+
+		// handleSteppingUp();
 		// handleCollision();
-		//
-		// if (motX >= -1E-6 && motX <= 1E-6)
-		// motX = 0;
-		// if (motY >= -1E-6 && motY <= 1E-6)
-		// motY = 0;
-		// if (motZ >= -1E-6 && motZ <= 1E-6)
-		// motZ = 0;
-		// x += motX;
-		// y += motY;
-		// z += motZ;
 	}
 
 	public void handleCollision() {
@@ -136,7 +154,7 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public double distanceToGround() {
-		int standingOnY = (int) Math.floor(y);
+		int standingOnY = (int) Math.floor(y);// floor or ceil?
 
 		int groundY = distToGround(x, standingOnY, z);
 		groundY = Math.max(groundY, distToGround(x + 0.3, standingOnY, z + 0.3));
@@ -144,6 +162,8 @@ public class LocalPlayer extends PlayerEntity {
 		groundY = Math.max(groundY, distToGround(x - 0.3, standingOnY, z + 0.3));
 		groundY = Math.max(groundY, distToGround(x - 0.3, standingOnY, z - 0.3));
 
+		// double d = y - groundY;
+		// System.out.println(d + " from the ground.");
 		return y - groundY;
 	}
 
@@ -151,66 +171,20 @@ public class LocalPlayer extends PlayerEntity {
 		int x = (int) Math.floor(dx), z = (int) Math.floor(dz);
 		while (y > 0) {
 			int id = world.getBlockData(new BlockLocation(x, (y - 1), z));
+			if (id == 0) {
+				y--;
+				continue;
+			}
 			BlockData data = world.getBlockRegistry().getByKey(BlockId.create(id));
+			if (data == null) {
+				y--;
+				continue;
+			}
 			if (data.isSolid())
 				break;
 			y--;
 		}
 		return y;
-	}
-
-	@Deprecated
-	public double distToGround() {
-		// if ((x == lastX) && (y == lastY) && (z == lastZ)) {
-		// return lastDist;
-		// }
-
-		// TODO: optimise by checking if only y changed and --ing it?
-
-		double smallest = 256;// TODO: fix, bit unsafe, don't want it to jump
-								// 256 blocks
-		List<BlockLocation> locs = getBlocksStoodOn();
-		// System.out.println("Entering " + cache.size());
-		if (locs.size() > 0) {
-			for (BlockLocation loc : locs) {
-				int currentY = (int) Math.floor(loc.getY());
-				int x = (int) Math.floor(loc.getX());
-				int z = (int) Math.floor(loc.getZ());
-				while (currentY > 0) {
-					int id = world.getBlockData(new BlockLocation(x, currentY, z));
-					BlockType type = BlockType.getById(id);
-					if (type.isSolid()) {
-						double d = (y - currentY) - 1;
-						if (d < smallest) {
-							smallest = d;
-							// System.out.println("    Smallest: " + smallest);
-						}
-						break;
-					}
-					currentY--;
-				}
-			}
-		} else {
-			int currentY = (int) Math.floor(y);
-			int x = (int) Math.floor(this.x);
-			int z = (int) Math.floor(this.z);
-			while (currentY > 0) {
-				int id = world.getBlockData(new BlockLocation(x, currentY, z));
-				BlockType type = BlockType.getById(id);
-				if (type.isSolid()) {
-					double d = (y - currentY) - 1;
-					if (d < smallest) {
-						smallest = d;
-						// System.out.println("    Smallest: " + smallest);
-					}
-					break;
-				}
-				currentY--;
-			}
-		}
-
-		// System.out.println("Returning with " + smallest);
-		return smallest;
 	}
 
 	private void resetMotion() {
@@ -421,39 +395,6 @@ public class LocalPlayer extends PlayerEntity {
 	@Override
 	public boolean isOnGround() {
 		return distanceToGround() < 0.08;
-		// BoundingBox bounds = getBoundingBox();
-		// Set<Block> colliding = world.getCollidingBlocks(bounds.offset(0,
-		// -0.1, 0));
-		// colliding.removeAll(world.getCollidingBlocks(bounds));
-		// return !colliding.isEmpty();
-	}
-
-	public void accelerate(double horizAngle, double vertAngle, double accel) {
-		motX += accel * Math.cos(horizAngle) * Math.cos(vertAngle);
-		motZ += accel * Math.sin(horizAngle) * Math.cos(vertAngle);
-		motY += accel * Math.sin(vertAngle);
-	}
-
-	public void accelerate(double horizAngle, double vertAngle, double accel, double velocityBound) {
-		double ax = Math.abs(accel * Math.cos(horizAngle) * Math.cos(vertAngle));
-		double az = Math.abs(accel * Math.sin(horizAngle) * Math.cos(vertAngle));
-		double ay = Math.abs(accel * Math.sin(vertAngle));
-		double vxb = velocityBound * Math.cos(horizAngle) * Math.cos(vertAngle);
-		double vzb = velocityBound * Math.sin(horizAngle) * Math.cos(vertAngle);
-		double vyb = velocityBound * Math.sin(vertAngle);
-		if ((vxb < 0) && (motX > vxb))
-			motX = Math.max(vxb, motX - ax);
-		else if ((vxb > 0) && (motX < vxb))
-			motX = Math.min(vxb, motX + ax);
-		if ((vzb < 0) && (motZ > vzb))
-			motZ = Math.max(vzb, motZ - az);
-		else if ((vzb > 0) && (motZ < vzb))
-			motZ = Math.min(vzb, motZ + az);
-		if ((vyb < 0) && (motY > vyb))
-			motY = Math.max(vyb, motY - ay);
-		else if ((vyb > 0) && (motY < vyb))
-			motY = Math.min(vyb, motY + ay);
-		System.out.println("motx " + motX + " moty " + motY + " motz " + motZ);
 	}
 
 	public boolean isInLiquid() {
@@ -461,23 +402,11 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public boolean isInWater() {
-		return isInBlockType(BlockType.WATER) || isInBlockType(BlockType.STATIONARY_WATER);
+		return world.isInBlocks(getBoundingBox(), "Water");
 	}
 
 	public boolean isInLava() {
-		return isInBlockType(BlockType.LAVA) || isInBlockType(BlockType.STATIONARY_LAVA);
-	}
-
-	private boolean isInBlockType(BlockType type) {
-		return checkBlockType(type, x + 0.3, y, z + 0.3) || checkBlockType(type, x + 0.3, y, z - 0.3) || checkBlockType(type, x - 0.3, y, z + 0.3)
-				|| checkBlockType(type, x - 0.3, y, z - 0.3) || checkBlockType(type, x + 0.3, y + 1, z + 0.3) || checkBlockType(type, x + 0.3, y + 1, z - 0.3)
-				|| checkBlockType(type, x - 0.3, y + 1, z + 0.3) || checkBlockType(type, x - 0.3, y + 1, z - 0.3) || checkBlockType(type, x + 0.3, y + 1.8, z + 0.3)
-				|| checkBlockType(type, x + 0.3, y + 1.8, z - 0.3) || checkBlockType(type, x - 0.3, y + 1.8, z + 0.3) || checkBlockType(type, x - 0.3, y + 1.8, z - 0.3);
-	}
-
-	private boolean checkBlockType(BlockType type, double dx, double dy, double dz) {
-		int x = (int) Math.floor(dx), y = (int) Math.floor(dy), z = (int) Math.floor(dz);
-		return type.getData() == world.getBlockData(new BlockLocation(x, y, z));
+		return world.isInBlocks(getBoundingBox(), "Lava");
 	}
 
 	@Override
@@ -497,14 +426,14 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public void swingArm() {
-		bus.dispatch(new ArmSwingEvent());
+		// bus.dispatch(new ArmSwingEvent());
 	}
 
 	public boolean switchTools(ToolType tool) {
 		LocalPlayer player = world.getLocalPlayer();
 		if (player == null)
 			return false;
-		PlayerInventory inventory = player.getInventory();
+		PlayerInventory inventory = getInventory();
 		ItemStack bestTool = null;
 		int bestToolSlot = -1, bestToolValue = -1;
 		for (int i = 0; i < 36; i++) {
@@ -574,13 +503,13 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	public void hit(Entity entity) {
-		bus.dispatch(new ArmSwingEvent());
-		bus.dispatch(new EntityHitEvent(entity));
+		// bus.dispatch(new ArmSwingEvent());
+		// bus.dispatch(new EntityHitEvent(entity));
 	}
 
 	public void use(Entity entity) {
-		bus.dispatch(new ArmSwingEvent());
-		bus.dispatch(new EntityUseEvent(entity));
+		// bus.dispatch(new ArmSwingEvent());
+		// bus.dispatch(new EntityUseEvent(entity));
 	}
 
 	@Override

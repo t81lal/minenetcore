@@ -95,7 +95,5 @@ public class PlayerEntity extends LivingEntity {
 	@Override
 	public void update() {
 		super.update();
-
-		System.out.println(name + " vel: " + motX + " " + motY + " " + motZ);
 	}
 }
