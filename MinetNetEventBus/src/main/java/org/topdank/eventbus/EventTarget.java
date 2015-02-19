@@ -1,4 +1,4 @@
-package eu.bibl.eventbus;
+package org.topdank.eventbus;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

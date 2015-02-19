@@ -1,8 +1,7 @@
 package org.topdank.minenet.api.event.spawn;
 
+import org.topdank.eventbus.Event;
 import org.topdank.minenet.api.entity.living.LivingEntity;
-
-import eu.bibl.eventbus.Event;
 
 public class LivingEntitySpawnEvent implements Event {
 

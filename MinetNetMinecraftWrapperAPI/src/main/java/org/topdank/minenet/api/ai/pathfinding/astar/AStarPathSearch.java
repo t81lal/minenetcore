@@ -84,9 +84,8 @@ public class AStarPathSearch implements PathSearch {
 				adjacent = nodeWorld.get(adjacentLocation);
 			if (closedSet.contains(adjacent))
 				continue;
-			if (!physics.canWalk(location, adjacentLocation)) {
+			if (!physics.canWalk(location, adjacentLocation))
 				continue;
-			}
 			if (reverse && !physics.canWalk(adjacentLocation, location))
 				continue;
 			double cost = current.getCost() + heuristic.calculateCost(location, adjacentLocation);

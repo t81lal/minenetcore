@@ -1,8 +1,7 @@
 package org.topdank.minenet.api.event.internal.world;
 
+import org.topdank.eventbus.Event;
 import org.topdank.minenet.api.game.location.BlockLocation;
-
-import eu.bibl.eventbus.Event;
 
 public class InternalBlockChangeEvent implements Event {
 

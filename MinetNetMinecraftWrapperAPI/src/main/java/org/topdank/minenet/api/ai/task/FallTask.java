@@ -5,7 +5,8 @@ import org.topdank.minenet.api.ai.task.activity.WalkActivity;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.World;
-import org.topdank.minenet.api.world.block.BlockType;
+import org.topdank.minenet.api.world.block.id.BlockId;
+import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 
 public class FallTask implements Task {
 
@@ -47,8 +48,8 @@ public class FallTask implements Task {
 		int lowestY = location.getY();
 		while (true) {
 			int id = world.getBlockData(new BlockLocation(location.getX(), (lowestY - 1), location.getZ()));
-			BlockType type = BlockType.getById(id);
-			if (type.isSolid() || (lowestY <= 0))
+			BlockData data = world.getBlockRegistry().getByKey(BlockId.create(id));
+			if (data.isSolid() || (lowestY <= 0))
 				break;
 			lowestY--;
 		}

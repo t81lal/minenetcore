@@ -1,11 +1,10 @@
 package org.topdank.minenet.api.event.player;
 
+import org.topdank.eventbus.Event;
 import org.topdank.minenet.api.world.settings.Difficulty;
 import org.topdank.minenet.api.world.settings.Dimension;
 import org.topdank.minenet.api.world.settings.GameMode;
 import org.topdank.minenet.api.world.settings.WorldType;
-
-import eu.bibl.eventbus.Event;
 
 public class RespawnEvent implements Event {
 

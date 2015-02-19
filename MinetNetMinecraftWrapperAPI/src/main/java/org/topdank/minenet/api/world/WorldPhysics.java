@@ -2,6 +2,7 @@ package org.topdank.minenet.api.world;
 
 import java.util.Set;
 
+import org.topdank.minenet.api.ai.pathfinding.PathSearchProvider;
 import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.block.Block;
@@ -19,6 +20,8 @@ public abstract interface WorldPhysics {
 	public abstract boolean isColliding(BoundingBox box);
 
 	public abstract boolean isInBlocks(BoundingBox box, String... blocks);
+
+	public abstract PathSearchProvider getPathSearchProvider();
 
 	public abstract World getWorld();
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +40,10 @@ public abstract class Registry<T, K> {
 
 	public K getByKey(T t) {
 		return cache.get(t);
+	}
+
+	public Map<T, K> asMap() {
+		return Collections.unmodifiableMap(cache);
 	}
 
 	protected abstract void register();
@@ -81,7 +86,7 @@ public abstract class Registry<T, K> {
 			int j;
 			if (i >= bytesRead.length) {
 				j = Math.min(maxLength - i, bytesRead.length + 1024);
-				if (bytesRead.length < i + j)
+				if (bytesRead.length < (i + j))
 					bytesRead = Arrays.copyOf(bytesRead, i + j);
 			} else {
 				j = bytesRead.length - i;

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import org.topdank.eventbus.EventBus;
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.event.internal.player.RequestRespawnEvent;
@@ -18,8 +19,6 @@ import org.topdank.minenet.api.util.MathHelper;
 import org.topdank.minenet.api.world.block.Block;
 import org.topdank.minenet.api.world.block.id.BlockId;
 import org.topdank.minenet.api.world.block.provider.registry.BlockData;
-
-import eu.bibl.eventbus.EventBus;
 
 public class LocalPlayer extends PlayerEntity {
 
@@ -37,6 +36,8 @@ public class LocalPlayer extends PlayerEntity {
 	private int experienceLevel, experienceTotal;
 	private double lastX, lastY, lastZ, lastYaw, lastPitch;
 
+	private boolean activatedJump;
+
 	public LocalPlayer(BotContext context, int id, String name) {
 		super(context.getWorld(), id, name, context.getWorld().getSettings().getGameMode());
 		this.context = context;
@@ -45,11 +46,27 @@ public class LocalPlayer extends PlayerEntity {
 		inventory = new PlayerInventory(context, this);
 	}
 
+	private double highY;
+
+	public void jump() {
+		if (activatedJump || !isOnGround())
+			return;
+		motY = 0.42;
+		activatedJump = true;
+		super.update();
+	}
+
 	@Override
 	public void update() {
 		updateGravity();
+		checkCollisions();
 
 		super.update();
+
+		if (y > highY) {
+			highY = y;
+			System.out.println("High Y: " + highY);
+		}
 	}
 
 	public void updatePosition() {
@@ -76,49 +93,58 @@ public class LocalPlayer extends PlayerEntity {
 	}
 
 	private void updateGravity() {
-		BoundingBox bb = getBoundingBox();
-		boolean inWater = world.isInBlocks(bb, "Water");
-		boolean inLava = world.isInBlocks(bb, "Lava");
-
 		double distanceToGround = distanceToGround();
-		// boolean onGround = isOnGround();
-
-		// System.out.println(String.format("bb: %s water:%b lava:%b onground:%b", bb.toString(), inWater, inLava, onGround));
 		// double horizFactor = 0.91;
-		if (distanceToGround <= 0.08) {
-			// BlockData data = world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData((int) Math.floor(x), (int) Math.floor(y
+		if (!activatedJump && (distanceToGround <= 0.08)) {
+			// BlockData data = world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData((int) Math.floor(x), (int)
+			// Math.floor(y
 			// - 0.1), (int) Math.floor(z))));
 			// if (data.isSolid())
 			// horizFactor *= data.getFriction();
 			// System.out.println(String.format("Standing on %s solid:%b friction:%.3f", data.getName(), data.isSolid(),
 			// data.getFriction()));
 			// System.out.println("onground at y " + y + " moty " + motY);
+
+			// if (world.getBlockData((int) x, (int) y - 1, (int) z) != -1) {
+			// System.out.println("Block under = " + world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData((int) x, (int) y -
+			// 1, (int) z))).getName() + " at "
+			// + new BlockLocation((int) x, (int) y - 1, (int) z));
+			// }
+
 			motY = 0;
 		} else {
-			// else if (!inWater && !inLava)
-			// System.out.println("not onground at y " + y + " moty " + motY);
 			if (motY >= -3.92)
 				motY -= 0.08D;
-			if (Math.abs(motY) > distanceToGround)
+			if (!activatedJump && (Math.abs(motY) > distanceToGround))
 				motY = -distanceToGround;
+			// motY = motY - (motY * 0.02);// drag
+
+			// if (activatedJump) {
+			// System.out.println(String.format("Jumping after motY:%.3f", motY));
+			// }
+			activatedJump = false;
 		}
 
-		if (inLava) {
-			motX *= 0.5D;
-			motY *= 0.5D;
-			motZ *= 0.5D;
-			motY -= 0.02D;
-		} else if (inWater) {
-			motX *= 0.800000011920929D;
-			motY *= 0.800000011920929D;
-			motZ *= 0.800000011920929D;
-			motY -= 0.02D;
-		}
+		// System.out.println(String.format("Jumping x:%.3f, y:%.3f, z:%.3f, motX:%.3f, motY:%.3f, motZ:%.3f, pitch:%.3f, yaw:%.3f", x, y,
+		// z, motX, motY, motZ, pitch, yaw));
+	}
 
-		// System.out.println(String.format("motX: %f, motY: %f, motZ: %f", motX, motY, motZ));
+	private void checkCollisions() {
+		if (colliding(x, y, z) && !colliding(x, y + 1, z))
+			// y = (int) Math.ceil(y) + 1;
+			jump();
 
-		// handleSteppingUp();
-		// handleCollision();
+	}
+
+	private boolean colliding(BoundingBox bb) {
+		return false;
+	}
+
+	private boolean colliding(double x, double y, double z) {
+		BlockData dataAt = world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z))));
+		if ((dataAt == null) || !dataAt.isSolid())
+			return false;
+		return true;
 	}
 
 	public void handleCollision() {
@@ -521,10 +547,5 @@ public class LocalPlayer extends PlayerEntity {
 		}
 
 		System.out.println("i got: " + Arrays.toString(metadata.keySet().toArray()));
-	}
-
-	public void jump() {
-		motY = 0;
-		motY += 0.24;
 	}
 }

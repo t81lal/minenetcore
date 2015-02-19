@@ -1,6 +1,6 @@
 package org.topdank.minenet.api.event;
 
-import eu.bibl.eventbus.Event;
+import org.topdank.eventbus.Event;
 
 public final class TickEvent implements Event {
 	

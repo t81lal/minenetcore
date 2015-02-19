@@ -1,4 +1,4 @@
-package eu.bibl.eventbus;
+package org.topdank.eventbus;
 
 public abstract interface Event {
 	

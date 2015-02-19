@@ -7,6 +7,7 @@ import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.DefaultMinecraftWorld;
+import org.topdank.minenet.api.world.block.id.BlockId;
 
 public class FollowTask implements Task {
 
@@ -56,13 +57,13 @@ public class FollowTask implements Task {
 			lastLocation = location;
 			BlockLocation original = location;
 			BlockLocation below = location.offset(0, -1, 0);
-			while (!BlockType.getById(world.getBlockData(below)).isSolid() && !world.canClimb(below)) {
+			while (!world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData(below))).isSolid() && !world.canClimb(below)) {
 				location = below;
 				below = below.offset(0, -1, 0);
 				if ((original.getY() - location.getY()) >= 5)
 					return;
 			}
-			context.getTaskManager().setActivity(new WalkActivity(context, location, true));
+			context.getTaskManager().setActivity(new WalkActivity(context, world.getPathSearchProvider(), location, true));
 			System.out.println("set");
 		}
 	}

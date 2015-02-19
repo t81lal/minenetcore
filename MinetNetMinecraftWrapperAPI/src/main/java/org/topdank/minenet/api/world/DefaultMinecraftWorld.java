@@ -2,11 +2,19 @@ package org.topdank.minenet.api.world;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.topdank.eventbus.EventBus;
+import org.topdank.eventbus.EventPriority;
+import org.topdank.eventbus.EventTarget;
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.BotVersionProvider;
+import org.topdank.minenet.api.ai.pathfinding.EuclideanHeuristic;
+import org.topdank.minenet.api.ai.pathfinding.PathSearchProvider;
+import org.topdank.minenet.api.ai.pathfinding.astar.AStarPathSearchProvider;
 import org.topdank.minenet.api.entity.Entity;
 import org.topdank.minenet.api.entity.living.LivingEntity;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
@@ -34,11 +42,21 @@ import org.topdank.minenet.api.world.block.provider.registry.BlockData;
 import org.topdank.minenet.api.world.block.provider.registry.BlockRegistry;
 import org.topdank.minenet.api.world.settings.WorldSettings;
 
-import eu.bibl.eventbus.EventBus;
-import eu.bibl.eventbus.EventPriority;
-import eu.bibl.eventbus.EventTarget;
-
 public class DefaultMinecraftWorld implements World, EntityHandler {
+
+	private static final BlockLocation[] SURROUNDING_BLOCKLOCATION_TEMPLATES = new BlockLocation[] {
+			// middle y + 0
+			new BlockLocation(-1, 0, 1), new BlockLocation(0, 0, 1), new BlockLocation(1, 0, 1), new BlockLocation(-1, 0, 0), new BlockLocation(1, 0, 0), new BlockLocation(-1, 0, -1),
+			new BlockLocation(0, 0, -1),
+			new BlockLocation(1, 0, -1),
+			// bottom y - 1
+			new BlockLocation(-1, -1, 1), new BlockLocation(0, -1, 1), new BlockLocation(1, -1, 1), new BlockLocation(-1, -1, 0), new BlockLocation(0, -1, 0), new BlockLocation(1, -1, 0),
+			new BlockLocation(-1, -1, -1), new BlockLocation(0, -1, -1), new BlockLocation(1, -1, -1),
+			// top y + 1
+			new BlockLocation(-1, 1, 1), new BlockLocation(0, 1, 1), new BlockLocation(1, 1, 1), new BlockLocation(-1, 1, 0), new BlockLocation(0, 1, 0), new BlockLocation(1, 1, 0),
+			new BlockLocation(-1, 1, -1), new BlockLocation(0, 1, -1), new BlockLocation(1, 1, -1),
+
+	};
 
 	protected final BotContext context;
 	protected final EventBus eventBus;
@@ -58,13 +76,19 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 	protected final MaterialRegistry materialRegistry;
 	protected final PaintingRegistry paintingRegistry;
 
+	protected final Map<ChunkLocation, Chunk> chunks;
+
+	protected final Map<Integer, Entity> entityCache;
+	protected final Map<String, PlayerEntity> playerCache;
+
+	protected final AStarPathSearchProvider pathSearchProvider;
+
+	protected final boolean[] solidBlockData;
+	protected final Map<Integer, Boolean> pathableBlocks;
+
 	protected WorldSettings worldSettings;
 
 	protected long worldAge, worldTime;
-	protected Map<ChunkLocation, Chunk> chunks;
-
-	protected Map<Integer, Entity> entityCache;
-	protected Map<String, PlayerEntity> playerCache;
 
 	protected LocalPlayer localPlayer;
 
@@ -90,7 +114,52 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 		entityCache = new HashMap<Integer, Entity>();
 		playerCache = new HashMap<String, PlayerEntity>();
 
+		pathSearchProvider = new AStarPathSearchProvider(new EuclideanHeuristic(), this);
+
+		// fill fast solid block data lookup cache
+		Map<BlockId, BlockData> blockDatas = blockRegistry.asMap();
+		// not the size of the map because the data is discontiguous
+		solidBlockData = new boolean[highBlockId(blockDatas) + 1]; // +1 because array[highest] is 1 based whereas array is 0 based
+		// System.out.println(String.format("solidBlockData.length = %d", solidBlockData.length));
+		for (Entry<BlockId, BlockData> entry : blockDatas.entrySet()) {
+			solidBlockData[entry.getKey().getId()] = entry.getValue().isSolid();
+			// System.out.println(String.format("Setting [%d] as [%b]", index - 1, bd.isSolid()));
+		}
+
+		// invalid standing on blocks: water, lava, fences
+		pathableBlocks = new HashMap<Integer, Boolean>(); // get is pretty fast because its a hash cache
+		for (Entry<BlockId, BlockData> entry : blockDatas.entrySet()) {
+			// WE DO THIS ANYWAY
+			// {we probably shouldnt put 'false's into the map because null checks are fast on the cpu
+			// (not sure if faster than bool checks)}
+			String name = entry.getValue().getName();
+			switch (name) {
+				case "Water":
+				case "Lava":
+					pathableBlocks.put(entry.getKey().getId(), false);
+					break;
+				default:
+					if (name.contains("Fence"))
+						pathableBlocks.put(entry.getKey().getId(), false);
+					else
+						pathableBlocks.put(entry.getKey().getId(), true);
+					break;
+			}
+		}
+
 		eventBus.register(this);
+	}
+
+	private static int highBlockId(Map<BlockId, BlockData> map) {
+		int highest = 0;
+		Iterator<BlockId> idIt = map.keySet().iterator();
+		while (idIt.hasNext()) {
+			BlockId id = idIt.next();
+			if (id.getId() > highest)
+				highest = id.getId();
+		}
+		System.out.println(String.format("Highest id = %d", highest));
+		return highest;
 	}
 
 	public DefaultMinecraftWorld(BotContext context, WorldSettings worldSettings) {
@@ -160,23 +229,111 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 
 	@Override
 	public BlockLocation[] findAdjacent(BlockLocation location) {
-		throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support adject block finding yet.");
+		BlockLocation[] locations = new BlockLocation[SURROUNDING_BLOCKLOCATION_TEMPLATES.length];
+		for (int i = 0; i < locations.length; i++)
+			locations[i] = location.offset(SURROUNDING_BLOCKLOCATION_TEMPLATES[i]);
+		return locations;
 
-		// return null;
+		// throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support adject block finding yet.");
 	}
 
 	@Override
-	public boolean canWalk(BlockLocation from, BlockLocation to) {
-		throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support pathing yet.");
+	public boolean canWalk(BlockLocation location, BlockLocation location2) {
+		int x = location.getX(), y = location.getY(), z = location.getZ();
+		int x2 = location2.getX(), y2 = location2.getY(), z2 = location2.getZ();
+		if (y2 < 0)
+			return false;
+		boolean valid = true;
+		valid = valid && isEmpty(x2, y2, z2); // Block at must be non-solid
+		valid = valid && isEmpty(x2, y2 + 1, z2); // Block above must be non-solid
 
-		// return false;
+		int lowerBlock = getBlockData(x2, y2 - 1, z2);
+
+		boolean b = isPathable(lowerBlock);
+		valid = valid && b;
+		// System.out.println(String.format("Block [%d] at [%d, %d, %d] climable = %b, empty = %b", lowerBlock, x2, y2 - 1, z2, b,
+		// isEmpty(x2, y2 - 1, z2)));
+		// valid = valid && (lowerBlock != 10);
+		// valid = valid && (lowerBlock != 11);
+		if (isEmpty(x, y - 1, z))
+			valid = valid
+					&& (((y2 < y) && (x2 == x) && (z2 == z))
+							|| ((canClimb(location) && canClimb(location2)) || (!canClimb(location) && canClimb(location2)) || (canClimb(location) && !canClimb(location2) && ((x2 == x)
+									&& (z2 == z) ? true : !isEmpty(x2, y2 - 1, z2)))) || !isEmpty(x2, y2 - 1, z2));
+		if ((y != y2) && ((x != x2) || (z != z2)))
+			return false;
+		if ((x != x2) && (z != z2)) {
+			valid = valid && isEmpty(x2, y, z);
+			valid = valid && isEmpty(x, y, z2);
+			valid = valid && isEmpty(x2, y + 1, z);
+			valid = valid && isEmpty(x, y + 1, z2);
+			if (y != y2) {
+				valid = valid && isEmpty(x2, y2, z);
+				valid = valid && isEmpty(x, y2, z2);
+				valid = valid && isEmpty(x, y2, z);
+				valid = valid && isEmpty(x2, y, z2);
+				valid = valid && isEmpty(x2, y + 1, z2);
+				valid = valid && isEmpty(x, y2 + 1, z);
+				valid = false;
+			}
+		} else if ((x != x2) && (y != y2)) {
+			valid = valid && isEmpty(x2, y, z);
+			valid = valid && isEmpty(x, y2, z);
+			if (y > y2)
+				valid = valid && isEmpty(x2, y + 1, z);
+			else
+				valid = valid && isEmpty(x, y2 + 1, z);
+			valid = false;
+		} else if ((z != z2) && (y != y2)) {
+			valid = valid && isEmpty(x, y, z2);
+			valid = valid && isEmpty(x, y2, z);
+			if (y > y2)
+				valid = valid && isEmpty(x, y + 1, z2);
+			else
+				valid = valid && isEmpty(x, y2 + 1, z);
+			valid = false;
+		}
+		// int nodeBlockUnder = getBlockData(x2, y2 - 1, z2);
+		if (!isPathable(lowerBlock))
+			valid = false;
+		return valid;
+
+		// throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support pathing yet.");
+	}
+
+	private boolean isPathable(int id) {
+		Boolean b = pathableBlocks.get(id);
+		// if (b == null)
+		// System.out.println(String.format("Null entry [%d]", id));
+		// if (b == null)// not in the map so 'false' which means its climable
+		// return true;
+		// return !b;
+		return b;
+	}
+
+	private boolean isEmpty(int x, int y, int z) {
+		int id = getBlockData(x, y, z);
+		// boolean b = (id >= 0) && (id < solidBlockData.length);
+		// if (!b) {
+		// System.out.println(String.format("Block [%d] at [%d, %d, %d] doesn't fit in solid block array.", id, x, y, z));
+		// }
+		return (id >= 0) && (id < solidBlockData.length) && !solidBlockData[id];
 	}
 
 	@Override
 	public boolean canClimb(BlockLocation location) {
-		throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support pathing yet.");
-
-		// return false;
+		int id = getBlockData(location);
+		BlockData data = blockRegistry.getByKey(BlockId.create(id));
+		String name = data.getName();
+		if (name.equals("Water") || name.equals("Ladder")) // Water / Moving Water / Ladder
+			return true;
+		if (name.equals("Vines")) { // Vines (which require an adjacent solid block)
+			if (!isEmpty(location.getX(), location.getY(), location.getZ() + 1) || !isEmpty(location.getX(), location.getY(), location.getZ() - 1)
+					|| !isEmpty(location.getX() + 1, location.getY(), location.getZ()) || !isEmpty(location.getX() - 1, location.getY(), location.getZ()))
+				return true;
+		}
+		return false;
+		// throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support pathing yet.");
 	}
 
 	@Override
@@ -480,9 +637,54 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 
 	@Override
 	public boolean isColliding(BoundingBox box) {
-		throw new UnsupportedOperationException("DefaultMinecraftWorlds don't collision management yet.");
+		int minX = (int) Math.floor(box.getMinX());
+		int minY = (int) Math.floor(box.getMinY() - 1);
+		int minZ = (int) Math.floor(box.getMinZ());
+		int maxX = (int) Math.ceil(box.getMaxX());
+		int maxY = (int) Math.ceil(box.getMaxY());
+		int maxZ = (int) Math.ceil(box.getMaxZ());
+		synchronized (chunks) {
+			Chunk chunk = null;
+			BlockLocation chunkBase = null;
+			for (int x = minX; x < maxX; x++) {
+				for (int z = minZ; z < maxZ; z++) {
+					for (int y = minY; y < maxY; y++) {
+						if ((chunkBase == null) || (x < chunkBase.getX()) || (y < chunkBase.getY()) || (z < chunkBase.getZ()) || ((x - chunkBase.getX()) >= 16)
+								|| ((y - chunkBase.getY()) >= 16) || ((z - chunkBase.getZ()) >= 16)) {
+							ChunkLocation chunkLocation = new ChunkLocation(new BlockLocation(x, y, z));
+							chunk = getChunkAt(chunkLocation);
+							if (chunk != null)
+								chunkBase = chunk.getBlockLocation();
+							else
+								chunkBase = new BlockLocation(chunkLocation);
+						}
+						if (chunk != null) {
+							// x - chunkBase.getX() is the relative x of the block inside of the chunk
+							int id = chunk.getBlocks().get(x - chunkBase.getX(), y - chunkBase.getY(), z - chunkBase.getZ());
+							if (id == 0) {
+								continue;
+							}
+							Block block = blockFactory.create(this, x, y, z, BlockId.create(id));
+							if (block == null)
+								continue;
 
-		// return false;
+							boolean intersects = false;
+							for (BoundingBox blockBox : block.getBoundingBoxes()) {
+								if (box.intersectsWith(blockBox)) {
+									intersects = true;
+									break;
+								}
+							}
+							if (!intersects)
+								continue;
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+		// throw new UnsupportedOperationException("DefaultMinecraftWorlds don't support collision management yet.");
 	}
 
 	@Override
@@ -547,5 +749,10 @@ public class DefaultMinecraftWorld implements World, EntityHandler {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public PathSearchProvider getPathSearchProvider() {
+		return pathSearchProvider;
 	}
 }

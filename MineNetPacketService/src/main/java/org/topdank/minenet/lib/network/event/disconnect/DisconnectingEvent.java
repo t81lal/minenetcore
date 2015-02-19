@@ -1,8 +1,7 @@
 package org.topdank.minenet.lib.network.event.disconnect;
 
+import org.topdank.eventbus.Event;
 import org.topdank.minenet.lib.network.Client;
-
-import eu.bibl.eventbus.Event;
 
 public class DisconnectingEvent implements Event {
 

@@ -297,6 +297,33 @@ public abstract class Entity extends WatchableObject {
 		z += motZ;
 	}
 
+	public void accelerate(double horizAngle, double vertAngle, double accel) {
+		motX += accel * Math.cos(horizAngle) * Math.cos(vertAngle);
+		motZ += accel * Math.sin(horizAngle) * Math.cos(vertAngle);
+		motY += accel * Math.sin(vertAngle);
+	}
+
+	public void accelerate(double horizAngle, double vertAngle, double accel, double velocityBound) {
+		double ax = Math.abs(accel * Math.cos(horizAngle) * Math.cos(vertAngle));
+		double az = Math.abs(accel * Math.sin(horizAngle) * Math.cos(vertAngle));
+		double ay = Math.abs(accel * Math.sin(vertAngle));
+		double vxb = velocityBound * Math.cos(horizAngle) * Math.cos(vertAngle);
+		double vzb = velocityBound * Math.sin(horizAngle) * Math.cos(vertAngle);
+		double vyb = velocityBound * Math.sin(vertAngle);
+		if ((vxb < 0) && (motX > vxb))
+			motX = Math.max(vxb, motX - ax);
+		else if ((vxb > 0) && (motX < vxb))
+			motX = Math.min(vxb, motX + ax);
+		if ((vzb < 0) && (motZ > vzb))
+			motZ = Math.max(vzb, motZ - az);
+		else if ((vzb > 0) && (motZ < vzb))
+			motZ = Math.min(vzb, motZ + az);
+		if ((vyb < 0) && (motY > vyb))
+			motY = Math.max(vyb, motY - ay);
+		else if ((vyb > 0) && (motY < vyb))
+			motY = Math.min(vyb, motY + ay);
+	}
+
 	public static class EntityProperty {
 
 		private final String name;

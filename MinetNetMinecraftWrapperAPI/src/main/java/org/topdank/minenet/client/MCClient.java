@@ -4,6 +4,9 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.io.IOException;
 
+import org.topdank.eventbus.EventBus;
+import org.topdank.eventbus.EventPriority;
+import org.topdank.eventbus.EventTarget;
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.util.Timer;
 import org.topdank.minenet.client.event.RequestPacketSendEvent;
@@ -13,10 +16,6 @@ import org.topdank.minenet.lib.network.Protocol;
 import org.topdank.minenet.lib.network.TcpClient;
 import org.topdank.minenet.lib.network.event.connection.ConnectedEvent;
 import org.topdank.minenet.lib.network.event.packet.PacketReceivedEvent;
-
-import eu.bibl.eventbus.EventBus;
-import eu.bibl.eventbus.EventPriority;
-import eu.bibl.eventbus.EventTarget;
 
 public class MCClient extends TcpClient {
 

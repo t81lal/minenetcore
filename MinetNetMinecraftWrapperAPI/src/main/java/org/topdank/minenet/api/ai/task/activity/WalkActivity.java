@@ -1,6 +1,5 @@
 package org.topdank.minenet.api.ai.task.activity;
 
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,12 +8,11 @@ import java.util.concurrent.Future;
 import org.topdank.minenet.api.BotContext;
 import org.topdank.minenet.api.ai.pathfinding.PathNode;
 import org.topdank.minenet.api.ai.pathfinding.PathSearch;
+import org.topdank.minenet.api.ai.pathfinding.PathSearchProvider;
 import org.topdank.minenet.api.entity.living.player.LocalPlayer;
-import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.World;
-import org.topdank.minenet.api.world.block.Block;
-import org.topdank.minenet.api.world.block.BlockType;
+import org.topdank.minenet.api.world.block.id.BlockId;
 
 public class WalkActivity implements Activity {
 
@@ -36,11 +34,11 @@ public class WalkActivity implements Activity {
 	private boolean searchCompleted;
 	private int ticksSinceStepChange = 0;
 
-	public WalkActivity(BotContext context, BlockLocation target) {
-		this(context, target, false);
+	public WalkActivity(BotContext context, PathSearchProvider searchProvider, BlockLocation target) {
+		this(context, searchProvider, target, false);
 	}
 
-	public WalkActivity(BotContext context, BlockLocation target, boolean keepWalking) {
+	public WalkActivity(BotContext context, PathSearchProvider searchProvider, BlockLocation target, boolean keepWalking) {
 		this.context = context;
 		this.target = target;
 		if (keepWalking) {
@@ -59,7 +57,7 @@ public class WalkActivity implements Activity {
 				if ((world == null) || (player == null) || (target == null))
 					return null;
 				BlockLocation ourLocation = new BlockLocation(player.getLocation());
-				PathSearch search = world.getPathSearchProvider().provideSearch(ourLocation, target);
+				PathSearch search = searchProvider.provideSearch(ourLocation, target);
 				while (!search.isDone() && ((thread == null) || !thread.isCancelled())) {
 					search.step();
 				}
@@ -71,130 +69,72 @@ public class WalkActivity implements Activity {
 
 	@Override
 	public void run() {
-		if (!thread.isDone()) {
-			if (TIMEOUT_MS_TIME > 0 && System.currentTimeMillis() - startTime > TIMEOUT_MS_TIME) {
-				thread.cancel(true);
-				setNextStep(null);
-			} else {
-				LocalPlayer player = context.getWorld().getLocalPlayer();
-				player.setYaw((player.getYaw() + 15) % 360);
-			}
-			return;
-		} else if (thread.isDone() && !thread.isCancelled() && !searchCompleted) {
-			searchCompleted = true;
+		if ((thread != null) && !thread.isDone()) {
+			// if ((timeout > 0) && ((System.currentTimeMillis() - startTime) > timeout)) {
+			// thread.cancel(true);
+			// thread = null;
+			// nextStep = null;
+			// return;
+			// }
+		} else if ((thread != null) && thread.isDone() && !thread.isCancelled()) {
 			try {
-				setNextStep(thread.get());
-				if (nextStep == null) {
-					System.out.println("Error! Could not find path!");
-					return;
-				} else
-					System.out.println("Path found, walking...");
+				nextStep = thread.get();
+				System.out.println("Path found, walking...");
+				ticksSinceStepChange = 0;
 			} catch (Exception exception) {
 				exception.printStackTrace();
-				setNextStep(null);
+				nextStep = null;
 				return;
+			} finally {
+				thread = null;
 			}
-		} else if (thread.isCancelled())
-			return;
-		searchCompleted = true;
+		}
 		if (nextStep != null) {
 			LocalPlayer player = context.getWorld().getLocalPlayer();
-			if (player.getLocation().distanceSquared(stepTarget) > 4) {
+			System.out.println(" -> Moving from " + player.getLocation() + " to " + nextStep);
+			if ((nextStep.getNext() != null) && (player.getLocation().distanceSquared(nextStep.getNext().getLocation()) < 0.2)) {
+				nextStep = nextStep.getNext();
+				ticksSinceStepChange = 0;
+			}
+			if (player.getLocation().distanceSquared(nextStep.getLocation()) > 4) {
 				nextStep = null;
-				System.out.println("Failed1");
 				return;
 			}
 			ticksSinceStepChange++;
-			if (ticksSinceStepChange > 80 || context.getWorld().isColliding(player.getBoundingBox())) {
+			if (ticksSinceStepChange > 80) {
 				nextStep = null;
-				System.out.println("Failed2");
 				return;
 			}
-			BlockLocation nextStepTarget = findNextStepTarget();
-			if (player.getLocation().distance(stepTarget.getX(),
-					Math.abs(player.getY() - stepTarget.getY()) < 1 ? player.getY() : stepTarget.getY(), stepTarget.getZ()) < 0.3
-					|| (nextStepTarget != null && player.getLocation().distance(nextStepTarget) < stepTarget
-							.distance(nextStepTarget))) {
-				setNextStep(nextStep.getNext());
-				if (nextStep == null) {
-					System.out.println("Failed3");
-					return;
-				}
-				stepTarget = nextStepTarget;
-				nextStepTarget = findNextStepTarget();
+			double speed = WALKING_SPEED;
+			BlockLocation location = nextStep.getLocation();
+			BlockLocation block = new BlockLocation(player.getLocation());
+			double x = location.getX() + 0.5, y = location.getY(), z = location.getZ() + 0.5;
+			boolean inLiquid = player.isInLiquid();
+
+			if (context.getWorld().getBlockRegistry().getByKey(BlockId.create(context.getWorld().getBlockData(block.offset(0, -1, 0)))).getName().equals("Soul Sand")) {
+				if (context.getWorld().getBlockRegistry().getByKey(BlockId.create(context.getWorld().getBlockData(location.offset(0, -1, 0)))).getName().equals("Soul Sand"))
+					y -= 0.12;
+				speed *= LIQUID_FACTOR;
+			} else if (inLiquid)
+				speed *= LIQUID_FACTOR;
+			if (player.getY() != y) {
+				if (!inLiquid && !context.getWorld().getPathSearchProvider().getWorldPhysics().canClimb(block))
+					if (player.getY() < y)
+						player.jump();
+				// speed *= jumpFactor;
+				// else
+				// speed *= fallFactor;
+				player.setY(player.getY() + (player.getY() < y ? Math.min(speed, y - player.getY()) : Math.max(-speed, y - player.getY())));
 			}
-			System.out.println(" -> Moving from " + player.getLocation() + " to " + nextStep);
-
-			double x = stepTarget.getX(), y = stepTarget.getY(), z = stepTarget.getZ();
-			// System.out.println("TARGETING [" + x + "," + y + "," + z + "]");
-			double dist = Math.hypot(x - player.getX(), z - player.getZ());
-			if (dist < 0.5 && nextStepTarget == null) {
-				player.setMotionX(0);
-				player.setMotionZ(0);
-				player.accelerate(Math.atan2(z - player.getZ(), x - player.getX()), 0, Math.min(dist / 4, WALKING_SPEED / 4),
-						Math.min(dist, WALKING_SPEED));
-			} else
-				player.accelerate(Math.atan2(z - player.getZ(), x - player.getX()), 0, WALKING_SPEED / 4,
-						Math.min(dist, WALKING_SPEED));
-			if (y > player.getY()
-					&& (y - player.getY() > 0.5 || dist > 1.5 || !context.getWorld().isColliding(
-							player.getBoundingBoxAt(stepTarget.getX(), stepTarget.getY() - 1, stepTarget.getZ()))))
-				player.jump();
-		}
-	}
-
-	private BlockLocation findNextStepTarget() {
-		LocalPlayer player = context.getWorld().getLocalPlayer();
-		BlockLocation nextStepTarget = getNextStep(1);
-		if (nextStepTarget != null
-				&& nextStepTarget.getY() > stepTarget.getY()
-				&& nextStepTarget.getX() == stepTarget.getX()
-				&& nextStepTarget.getY() == stepTarget.getY()
-				&& !context.getWorld().isInMaterial(
-						player.getBoundingBoxAt(nextStepTarget.getX() + 0.5, nextStepTarget.getY(), nextStepTarget.getZ() + 0.5),
-						BlockType.WATER, BlockType.STATIONARY_WATER, BlockType.LAVA, BlockType.STATIONARY_LAVA, BlockType.LADDER,
-						BlockType.VINE))
-			nextStepTarget = getNextStep(2);
-		if (nextStepTarget != null) {
-			BoundingBox bounds = player.getBoundingBox();
-			if (nextStepTarget.getY() > player.getY() && nextStepTarget.getY() - player.getY() > 0.5) {
-				if (!collides(
-						context.getWorld(),
-						player.getBoundingBoxAt(player.getX() + (nextStepTarget.getX() - player.getX()) / 2,
-								nextStepTarget.getY() - 0.5, player.getZ() + (nextStepTarget.getZ() - player.getZ()) / 2), bounds)) {
-					BlockLocation nextNextStepTarget = getNextStep(2);
-					if (nextNextStepTarget != null
-							&& nextNextStepTarget.getY() == nextStepTarget.getY()
-							&& !collides(context.getWorld(), player.getBoundingBoxAt(nextNextStepTarget.getX(),
-									nextStepTarget.getY() - 0.5, nextNextStepTarget.getZ()), bounds)) {
-						nextStepTarget = new BlockLocation(nextNextStepTarget.getX(), nextStepTarget.getY() - 0.5,
-								nextNextStepTarget.getZ());
-					}
-				}
+			if (player.getX() != x)
+				player.setX(player.getX() + (player.getX() < x ? Math.min(speed, x - player.getX()) : Math.max(-speed, x - player.getX())));
+			if (player.getZ() != z)
+				player.setZ(player.getZ() + (player.getZ() < z ? Math.min(speed, z - player.getZ()) : Math.max(-speed, z - player.getZ())));
+			if ((player.getX() == x) && (player.getY() == y) && (player.getZ() == z)) {
+				nextStep = nextStep.getNext();
+				ticksSinceStepChange = 0;
 			}
 		}
-		return nextStepTarget;
-	}
-
-	private boolean collides(World world, BoundingBox target, BoundingBox current) {
-		Set<Block> blocks = world.getCollidingBlocks(target);
-		blocks.removeAll(world.getCollidingBlocks(current));
-		return !blocks.isEmpty();
-	}
-
-	private BlockLocation getNextStep(int lookahead) {
-		PathNode nextStep = this.nextStep;
-		for (int i = 0; i < lookahead && nextStep != null; i++)
-			nextStep = nextStep.getNext();
-		if (nextStep == null)
-			return null;
-		return new BlockLocation(nextStep.getLocation());
-	}
-
-	private void setNextStep(PathNode step) {
-		nextStep = step;
-		stepTarget = nextStep != null ? new BlockLocation(nextStep.getLocation()) : null;
-		ticksSinceStepChange = 0;
 	}
 
 	@Override

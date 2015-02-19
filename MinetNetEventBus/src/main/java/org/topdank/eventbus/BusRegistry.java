@@ -1,14 +1,16 @@
-package eu.bibl.eventbus;
+package org.topdank.eventbus;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.topdank.eventbus.impl.EventBuses;
 
 public final class BusRegistry {
 
 	private static final BusRegistry instance = new BusRegistry();
 
 	static {
-		EventBus bus = new EventBus();
+		EventBus bus = EventBuses.singleThreadBus();
 		instance.add("global", bus);
 	}
 

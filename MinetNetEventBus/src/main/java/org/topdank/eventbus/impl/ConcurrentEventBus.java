@@ -1,4 +1,4 @@
-package eu.bibl.eventbus;
+package org.topdank.eventbus.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -7,27 +7,32 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class ConcurrentEventBus extends EventBus {
-	
+import org.topdank.eventbus.Event;
+import org.topdank.eventbus.EventListenerData;
+import org.topdank.eventbus.EventStoppable;
+
+public class ConcurrentEventBus extends DefaultEventBus {
+
 	private final Lock readLock /* ,writeLock */;
-	
-	public ConcurrentEventBus() {
+
+	protected ConcurrentEventBus() {
 		super();
 		ReadWriteLock lock = new ReentrantReadWriteLock(true);
 		readLock = lock.readLock();
 		// writeLock = lock.writeLock();
 	}
-	
+
 	@Override
 	public void dispatch(Event event) {
 		Class<? extends Event> eventClass = event.getClass();
 		List<EventListenerData> dataList = copyFindListenerDataTargets(eventClass);
-		
+
 		if (dataList == null)
 			return;
-		
-		// System.out.println("Fired " + event.getClass().getSimpleName());
-		
+
+		// System.out.println("Fired " +
+		// event.getClass().getSimpleName());
+
 		if (event instanceof EventStoppable) {
 			EventStoppable stoppable = (EventStoppable) event;
 			for (EventListenerData data : dataList) {
@@ -47,7 +52,7 @@ public class ConcurrentEventBus extends EventBus {
 			}
 		}
 	}
-	
+
 	private List<EventListenerData> copyFindListenerDataTargets(Class<?> eventClass) {
 		List<EventListenerData> data;
 		readLock.lock();

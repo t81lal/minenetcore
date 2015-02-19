@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.topdank.eventbus.EventBus;
 import org.topdank.minenet.lib.auth.yggdrasil.YggdrasilSession;
 import org.topdank.minenet.lib.network.event.connection.ConnectedEvent;
 import org.topdank.minenet.lib.network.event.disconnect.DisconnectedEvent;
@@ -37,8 +38,6 @@ import org.topdank.minenet.lib.network.packet.codecs.PacketEncryptorCodec;
 import org.topdank.minenet.lib.network.packet.codecs.PacketReaderCodec;
 import org.topdank.minenet.lib.network.packet.codecs.PacketSizerCodec;
 import org.topdank.minenet.lib.network.packet.codecs.PacketWriterCodec;
-
-import eu.bibl.eventbus.EventBus;
 
 public class TcpClient extends Client<YggdrasilSession> {
 

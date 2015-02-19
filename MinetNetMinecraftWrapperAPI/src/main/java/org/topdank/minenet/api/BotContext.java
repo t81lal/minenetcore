@@ -1,11 +1,10 @@
 package org.topdank.minenet.api;
 
+import org.topdank.eventbus.EventBus;
 import org.topdank.minenet.api.ai.task.BasicTaskManager;
 import org.topdank.minenet.api.ai.task.TaskManager;
 import org.topdank.minenet.api.world.DefaultMinecraftWorld;
 import org.topdank.minenet.client.MCClient;
-
-import eu.bibl.eventbus.EventBus;
 
 public class BotContext {
 

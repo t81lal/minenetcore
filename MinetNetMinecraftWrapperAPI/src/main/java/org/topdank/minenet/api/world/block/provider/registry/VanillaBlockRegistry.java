@@ -107,7 +107,7 @@ public class VanillaBlockRegistry extends BlockRegistry {
 		register("Sticky Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, new int[] { 528, 529, 530, 531, 532, 533, 536, 537, 538, 539, 540, 541 });
 		register("Piston", MATERIAL_PISTON_KEY, 0.5F, 2.5F, new int[] { 544, 545, 546, 547, 548, 549, 552, 553, 554, 555, 556, 557 });
 		register("Wool", MATERIAL_CLOTH_KEY, 0.8F, 4.0F, new int[] { 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575 });
-		register("Piston Head", MATERIAL_PISTON_KEY, -1.0F, 0.0F, new int[] { 576, 577, 578, 579, 580, 581, 584, 585, 586, 587, 588, 589 });
+		register("Piston Head", MATERIAL_PISTON_KEY, -1.0F, 0.0F, false, new int[] { 576, 577, 578, 579, 580, 581, 584, 585, 586, 587, 588, 589 });
 
         BoundingBox flowerBb = BoundingBox.create(0.3F, 0F, 0.3F, 0.7F, 0.6F, 0.7F);
         flowerBb = null;

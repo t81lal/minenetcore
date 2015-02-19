@@ -2,6 +2,7 @@ package org.topdank.minenet.api.world;
 
 import java.util.Set;
 
+import org.topdank.minenet.api.ai.pathfinding.PathSearchProvider;
 import org.topdank.minenet.api.game.BoundingBox;
 import org.topdank.minenet.api.game.location.BlockLocation;
 import org.topdank.minenet.api.world.block.Block;
@@ -168,5 +169,11 @@ public class SimpleWorldPhysics implements WorldPhysics {
 	public boolean isInBlocks(BoundingBox box, String... blocks) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public PathSearchProvider getPathSearchProvider() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

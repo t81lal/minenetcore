@@ -7,12 +7,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.topdank.eventbus.Event;
+import org.topdank.eventbus.EventBus;
 import org.topdank.minenet.lib.auth.Session;
 import org.topdank.minenet.lib.network.packet.ReadablePacket;
 import org.topdank.minenet.lib.network.packet.WriteablePacket;
-
-import eu.bibl.eventbus.Event;
-import eu.bibl.eventbus.EventBus;
 
 public abstract class Client<T extends Session> extends SimpleChannelInboundHandler<ReadablePacket> {
 

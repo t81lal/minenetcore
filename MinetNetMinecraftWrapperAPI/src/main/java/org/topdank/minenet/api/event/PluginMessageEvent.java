@@ -1,6 +1,6 @@
 package org.topdank.minenet.api.event;
 
-import eu.bibl.eventbus.EventCancellable;
+import org.topdank.eventbus.EventCancellable;
 
 public class PluginMessageEvent extends EventCancellable {
 	

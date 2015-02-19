@@ -1,8 +1,7 @@
 package org.topdank.minenet.api.event.internal.world;
 
+import org.topdank.eventbus.Event;
 import org.topdank.minenet.api.world.block.Chunk;
-
-import eu.bibl.eventbus.Event;
 
 public class InternalChunkLoadEvent implements Event {
 	

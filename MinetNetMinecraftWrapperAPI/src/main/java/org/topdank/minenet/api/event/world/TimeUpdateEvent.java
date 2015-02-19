@@ -1,6 +1,6 @@
 package org.topdank.minenet.api.event.world;
 
-import eu.bibl.eventbus.Event;
+import org.topdank.eventbus.Event;
 
 public class TimeUpdateEvent implements Event {
 
