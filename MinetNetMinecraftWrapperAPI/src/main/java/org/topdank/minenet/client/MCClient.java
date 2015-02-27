@@ -17,7 +17,7 @@ import org.topdank.minenet.lib.network.TcpClient;
 import org.topdank.minenet.lib.network.event.connection.ConnectedEvent;
 import org.topdank.minenet.lib.network.event.packet.PacketReceivedEvent;
 
-public class MCClient extends TcpClient {
+public class MCClient extends TcpClient<YggdrasilSession> {
 
 	protected BotContext context;
 

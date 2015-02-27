@@ -8,8 +8,7 @@ import java.util.List;
 
 import org.topdank.minenet.lib.network.Client;
 import org.topdank.minenet.lib.network.Protocol;
-import org.topdank.minenet.lib.network.io.WriteableOutput;
-import org.topdank.minenet.lib.network.io.bytebuf.ByteBufWriteableOutput;
+import org.topdank.minenet.lib.network.io.bytebuf.ByteBufReadWriteInOut;
 import org.topdank.minenet.lib.network.packet.WriteablePacket;
 
 public class PacketWriterCodec extends ByteToMessageCodec<WriteablePacket> {
@@ -22,12 +21,14 @@ public class PacketWriterCodec extends ByteToMessageCodec<WriteablePacket> {
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, WriteablePacket packet, ByteBuf buf) throws Exception {
-		WriteableOutput out = new ByteBufWriteableOutput(buf);
-		Protocol protocol = client.getProtocol();
-		protocol.getPacketHeader().writePacketId(out, protocol.getOutgoingId(packet.getClass()));
+		ByteBufReadWriteInOut out = new ByteBufReadWriteInOut(buf);
+		if (packet.isIdentifiable()) {// write id
+			Protocol protocol = client.getProtocol();
+			protocol.getPacketHeader().writePacketId(out, protocol.getOutgoingId(packet.getClass()));
+		}
 		packet.write(out);
-
-		// System.out.println("buf len= " + buf.readableBytes());
+		// System.out.println(String.format("Writing %d bytes (avail=%d)",
+		// out.written(), out.getWriterIndex()));
 	}
 
 	@Override

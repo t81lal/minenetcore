@@ -8,42 +8,44 @@ import java.util.UUID;
 import org.topdank.minenet.lib.network.io.WriteableOutput;
 
 /**
- * A WriteableOutput implementation using a ByteBuf as a backend.
+ * A WriteableOutput implementation using a ByteBuf as a
+ * backend.
+ *
  * @author Bibl
  */
 public class ByteBufWriteableOutput implements WriteableOutput {
-	
+
 	private ByteBuf buf;
-	
+
 	public ByteBufWriteableOutput(ByteBuf buf) {
 		this.buf = buf;
 	}
-	
+
 	@Override
 	public void writeBoolean(boolean b) throws IOException {
 		buf.writeBoolean(b);
 	}
-	
+
 	@Override
 	public void writeByte(int b) throws IOException {
 		buf.writeByte(b);
 	}
-	
+
 	@Override
 	public void writeShort(int s) throws IOException {
 		buf.writeShort(s);
 	}
-	
+
 	@Override
 	public void writeChar(int c) throws IOException {
 		buf.writeChar(c);
 	}
-	
+
 	@Override
 	public void writeInt(int i) throws IOException {
 		buf.writeInt(i);
 	}
-	
+
 	@Override
 	public void writeVarInt(int i) throws IOException {
 		while ((i & ~0x7F) != 0) {
@@ -52,12 +54,12 @@ public class ByteBufWriteableOutput implements WriteableOutput {
 		}
 		writeByte(i);
 	}
-	
+
 	@Override
 	public void writeLong(long l) throws IOException {
 		buf.writeLong(l);
 	}
-	
+
 	@Override
 	public void writeVarLong(long l) throws IOException {
 		while ((l & ~0x7F) != 0) {
@@ -66,33 +68,33 @@ public class ByteBufWriteableOutput implements WriteableOutput {
 		}
 		writeByte((int) l);
 	}
-	
+
 	@Override
 	public void writeFloat(float f) throws IOException {
 		buf.writeFloat(f);
 	}
-	
+
 	@Override
 	public void writeDouble(double d) throws IOException {
 		buf.writeDouble(d);
 	}
-	
+
 	@Override
 	public void writePrefixedBytes(byte b[]) throws IOException {
 		buf.writeShort(b.length);
 		buf.writeBytes(b);
 	}
-	
+
 	@Override
 	public void writeBytes(byte b[]) throws IOException {
 		buf.writeBytes(b);
 	}
-	
+
 	@Override
 	public void writeBytes(byte b[], int length) throws IOException {
 		buf.writeBytes(b, 0, length);
 	}
-	
+
 	@Override
 	public void writeString(String s) throws IOException {
 		if (s == null) {
@@ -106,18 +108,33 @@ public class ByteBufWriteableOutput implements WriteableOutput {
 			this.writeBytes(bytes);
 		}
 	}
-	
+
 	@Override
 	public void writeUUID(UUID uuid) throws IOException {
 		writeLong(uuid.getMostSignificantBits());
 		writeLong(uuid.getLeastSignificantBits());
 	}
-	
+
 	@Override
 	public void flush() throws IOException {
 	}
-	
+
 	@Override
 	public void close() throws IOException {
+	}
+
+	@Override
+	public int written() throws IOException {
+		return buf.writerIndex();
+	}
+
+	@Override
+	public int writerIndex() {
+		return buf.writerIndex();
+	}
+
+	@Override
+	public void writerIndex(int pos) {
+		buf.writerIndex(pos);
 	}
 }

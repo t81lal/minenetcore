@@ -136,9 +136,9 @@ public class LocalPlayer extends PlayerEntity {
 
 	}
 
-	private boolean colliding(BoundingBox bb) {
-		return false;
-	}
+	//	private boolean colliding(BoundingBox bb) {
+	//		return false;
+	//	}
 
 	private boolean colliding(double x, double y, double z) {
 		BlockData dataAt = world.getBlockRegistry().getByKey(BlockId.create(world.getBlockData((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z))));

@@ -4,13 +4,16 @@ import java.io.IOException;
 
 import org.topdank.minenet.lib.network.io.ReadableInput;
 
-public abstract interface ReadablePacket extends Packet {
+public abstract class IdentifiableReadablePacket implements IdentifiablePacket, ReadablePacket {
 
+	@Override
 	public abstract void read(ReadableInput in) throws IOException;
 
 	@Override
 	public abstract boolean isPriorityPacket();
 
 	@Override
-	public abstract boolean isIdentifiable();
+	public final boolean isIdentifiable() {
+		return true;
+	}
 }

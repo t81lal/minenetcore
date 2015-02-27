@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.topdank.minenet.lib.network.Client;
 import org.topdank.minenet.lib.network.Protocol;
+import org.topdank.minenet.lib.network.Protocol.PacketMode;
 import org.topdank.minenet.lib.network.event.packet.PacketReceivedEvent;
 import org.topdank.minenet.lib.network.io.ReadableInput;
 import org.topdank.minenet.lib.network.io.bytebuf.ByteBufReadableInput;
 import org.topdank.minenet.lib.network.packet.ReadablePacket;
+import org.topdank.minenet.lib.network.packet.UnidentifiableReadablePacket;
 
 public class PacketReaderCodec extends ByteToMessageCodec<ReadablePacket> {
 
@@ -41,18 +43,25 @@ public class PacketReaderCodec extends ByteToMessageCodec<ReadablePacket> {
 			}
 		}
 
-		int initial = buf.readerIndex();
+		ReadablePacket packet = null;
 		ReadableInput in = new ByteBufReadableInput(buf);
-		int id = protocol.getPacketHeader().readPacketId(in);
-		if (id == -1) {
-			buf.readerIndex(initial);
-			return;
+
+		if (protocol.getPacketMode() == PacketMode.IDENTIFIABLE) {
+			int initial = buf.readerIndex();
+			int id = protocol.getPacketHeader().readPacketId(in);
+			if (id == -1) {
+				buf.readerIndex(initial);
+				return;
+			}
+			packet = protocol.createIncomingPacket(id);
+		} else {// PacketMode.UNIDENTIFIABLE
+			packet = new UnidentifiableReadablePacket();
 		}
-		ReadablePacket packet = protocol.createIncomingPacket(id);
 		packet.read(in);
-		if (packet.isPriorityPacket()) {
+
+		if (packet.isPriorityPacket())
 			protocol.onPacketReceived(new PacketReceivedEvent(client, packet));
-		}
-		out.add(packet);
+		else
+			out.add(packet);
 	}
 }

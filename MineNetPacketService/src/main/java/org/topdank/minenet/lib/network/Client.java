@@ -57,7 +57,8 @@ public abstract class Client<T extends Session> extends SimpleChannelInboundHand
 	}
 
 	public void setCompressionThreshold(int ct) {
-		// System.out.println("Setting compression threshold to " + compressionThreshold);
+		// System.out.println("Setting compression threshold to "
+		// + compressionThreshold);
 		compressionThreshold = ct;
 	}
 

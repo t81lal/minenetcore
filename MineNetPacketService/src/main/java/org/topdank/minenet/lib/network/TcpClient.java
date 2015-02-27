@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.topdank.eventbus.EventBus;
-import org.topdank.minenet.lib.auth.yggdrasil.YggdrasilSession;
+import org.topdank.minenet.lib.auth.Session;
 import org.topdank.minenet.lib.network.event.connection.ConnectedEvent;
 import org.topdank.minenet.lib.network.event.disconnect.DisconnectedEvent;
 import org.topdank.minenet.lib.network.event.disconnect.DisconnectingEvent;
@@ -39,7 +39,7 @@ import org.topdank.minenet.lib.network.packet.codecs.PacketReaderCodec;
 import org.topdank.minenet.lib.network.packet.codecs.PacketSizerCodec;
 import org.topdank.minenet.lib.network.packet.codecs.PacketWriterCodec;
 
-public class TcpClient extends Client<YggdrasilSession> {
+public class TcpClient<T extends Session> extends Client<T> {
 
 	protected Channel channel;
 	protected boolean disconnected;
@@ -49,7 +49,7 @@ public class TcpClient extends Client<YggdrasilSession> {
 	protected EventLoopGroup group;
 	protected Bootstrap bootstrap;
 
-	public TcpClient(YggdrasilSession session, String host, int port, Protocol protocol, EventBus bus) throws IOException {
+	public TcpClient(T session, String host, int port, Protocol protocol, EventBus bus) throws IOException {
 		super(session, host, port, protocol, bus);
 		packets = new ArrayList<ReadablePacket>();
 	}
@@ -72,22 +72,7 @@ public class TcpClient extends Client<YggdrasilSession> {
 		bootstrap.handler(new ChannelInitializer<Channel>() {
 			@Override
 			public void initChannel(Channel channel) throws Exception {
-				channel.config().setOption(ChannelOption.IP_TOS, 0x18);
-				channel.config().setOption(ChannelOption.TCP_NODELAY, false);
-
-				ChannelPipeline pipeline = channel.pipeline();
-				pipeline.addFirst("readTimeout", new ReadTimeoutHandler(3));
-				pipeline.addFirst("writeTimeout", new WriteTimeoutHandler(1));
-
-				if (protocol.requiresEncryption()) {
-					pipeline.addLast("encrypter", new PacketEncryptorCodec(TcpClient.this));
-				}
-				if (protocol.requiresPacketSizer()) {
-					pipeline.addLast("sizer", new PacketSizerCodec(TcpClient.this));
-				}
-				pipeline.addLast("readerCodec", new PacketReaderCodec(TcpClient.this));
-				pipeline.addLast("writerCodec", new PacketWriterCodec(TcpClient.this));
-				pipeline.addLast("manager", TcpClient.this);
+				setupChannel(channel.pipeline());
 			}
 		}).group(group).remoteAddress(host, port);
 		final AtomicBoolean calledTimeout = new AtomicBoolean(false);
@@ -137,6 +122,24 @@ public class TcpClient extends Client<YggdrasilSession> {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	protected void setupChannel(ChannelPipeline pipeline) {
+		channel.config().setOption(ChannelOption.IP_TOS, 0x18);
+		channel.config().setOption(ChannelOption.TCP_NODELAY, false);
+
+		pipeline.addFirst("readTimeout", new ReadTimeoutHandler(10));
+		pipeline.addFirst("writeTimeout", new WriteTimeoutHandler(10));
+
+		if (protocol.requiresEncryption()) {
+			pipeline.addLast("encrypter", new PacketEncryptorCodec(TcpClient.this));
+		}
+		if (protocol.requiresPacketSizer()) {
+			pipeline.addLast("sizer", new PacketSizerCodec(TcpClient.this));
+		}
+		pipeline.addLast("readerCodec", new PacketReaderCodec(TcpClient.this));
+		pipeline.addLast("writerCodec", new PacketWriterCodec(TcpClient.this));
+		pipeline.addLast("manager", TcpClient.this);
 	}
 
 	@Override
@@ -195,7 +198,8 @@ public class TcpClient extends Client<YggdrasilSession> {
 
 	@Override
 	public void send(WriteablePacket packet) {
-		// System.out.println("sending " + packet.getClass().getSimpleName());
+		// System.out.println("sending " +
+		// packet.getClass().getSimpleName());
 		if (channel == null) {
 			writing = false;
 			return;
@@ -264,7 +268,9 @@ public class TcpClient extends Client<YggdrasilSession> {
 
 	@Override
 	protected void messageReceived(ChannelHandlerContext ctx, ReadablePacket packet) throws Exception {
-		if (!packet.isPriorityPacket()) { // already fired oio event for it
+		if (!packet.isPriorityPacket()) { // already fired
+											// oio event for
+											// it
 			packets.add(packet);
 		}
 	}

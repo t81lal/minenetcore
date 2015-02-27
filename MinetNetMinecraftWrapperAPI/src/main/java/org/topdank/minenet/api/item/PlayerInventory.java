@@ -13,7 +13,8 @@ public class PlayerInventory implements Inventory {
 	private ItemStack craftingOutput = null;
 	private ItemStack selectedItem = null;
 	private int delay = 0, currentHeldSlot = 0;
-	private short transactionId = 0;
+
+	//	private short transactionId = 0;
 
 	public PlayerInventory(BotContext context, LocalPlayer player) {
 		this.context = context;
@@ -332,7 +333,7 @@ public class PlayerInventory implements Inventory {
 	public void setCurrentHeldSlot(int currentHeldSlot) {
 		if ((currentHeldSlot < 0) || (currentHeldSlot >= 9))
 			throw new IllegalArgumentException();
-		int oldSlot = this.currentHeldSlot;
+		//		int oldSlot = this.currentHeldSlot;
 		this.currentHeldSlot = currentHeldSlot;
 		// context.getEventBus().dispatch(new HeldItemChangeEvent(this, oldSlot, currentHeldSlot));
 	}
@@ -371,17 +372,17 @@ public class PlayerInventory implements Inventory {
 		return serverSlot;
 	}
 
-	private int getServerSlotFor(int clientSlot) {
-		if (clientSlot < 9)
-			return 36 + clientSlot;
-		else if (clientSlot > 43)
-			return clientSlot - 44;
-		else if (clientSlot > 39)
-			return clientSlot - 39;
-		else if (clientSlot > 35)
-			return clientSlot - 31;
-		return clientSlot;
-	}
+	//	private int getServerSlotFor(int clientSlot) {
+	//		if (clientSlot < 9)
+	//			return 36 + clientSlot;
+	//		else if (clientSlot > 43)
+	//			return clientSlot - 44;
+	//		else if (clientSlot > 39)
+	//			return clientSlot - 39;
+	//		else if (clientSlot > 35)
+	//			return clientSlot - 31;
+	//		return clientSlot;
+	//	}
 
 	@Override
 	public int getWindowId() {

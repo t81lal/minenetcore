@@ -29,9 +29,9 @@ public class WalkActivity implements Activity {
 	private final BlockLocation target;
 	private final long startTime;
 	private Future<PathNode> thread;
-	private BlockLocation stepTarget;
+	//	private BlockLocation stepTarget;
 	private PathNode nextStep;
-	private boolean searchCompleted;
+	//	private boolean searchCompleted;
 	private int ticksSinceStepChange = 0;
 
 	public WalkActivity(BotContext context, PathSearchProvider searchProvider, BlockLocation target) {
@@ -65,6 +65,10 @@ public class WalkActivity implements Activity {
 			}
 		});
 		startTime = System.currentTimeMillis();
+	}
+
+	public long getStartTime() {
+		return startTime;
 	}
 
 	@Override
